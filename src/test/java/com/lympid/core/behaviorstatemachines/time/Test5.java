@@ -26,6 +26,7 @@ import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 /**
@@ -61,12 +62,6 @@ public class Test5 extends AbstractStateMachineTest {
   private void run(final int count) throws InterruptedException {    
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("A");
-    for (int i = 0; i < count; i++) {
-      expected.exit("A").effect("t2").enter("A");
-    }
-    expected
-      .exit("A").effect("t1").enter("B")
-      .exit("B").effect("t3");
     
     Event incEvent = new StringEvent("inc");
     
@@ -76,20 +71,29 @@ public class Test5 extends AbstractStateMachineTest {
     
     assertStateConfiguration(fsm, new ActiveStateTree("A"));
 
-    for (int i = 1; i <= count; i++) {
-      Thread.sleep(1);
+    int actualCount = 0;
+    for (int i = 1; i <= count && ctx.latch.getCount() != 0; i++) {
       fsm.take(incEvent);
       assertEquals(i, ctx.c);
+      
+      expected.exit("A").effect("t2").enter("A");
+      actualCount++;
+      
+      Thread.sleep(1);
     }
     
-    ctx.latch.await(10 * DELAY, TimeUnit.MILLISECONDS);
+    expected
+      .exit("A").effect("t1").enter("B")
+      .exit("B").effect("t3");
+    
+    ctx.latch.await();
     
     assertStateConfiguration(fsm, new ActiveStateTree("B"));
 
     fsm.take(new StringEvent("end"));
     assertStateConfiguration(fsm, new ActiveStateTree("end"));
     assertSequentialContextEquals(expected, ctx);
-    assertEquals(count, ctx.c);
+    assertEquals(actualCount, ctx.c);
   }
 
   @Override
