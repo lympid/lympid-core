@@ -1,8 +1,8 @@
 # Overview
 
-This project is a Java implementation of the *UML state machine* specification as
+This project is a Java implementation of the **UML state machine** specification as
 described in [UML superstructure 2.4.1](http://fabienrenaud.github.io/lympid/lympid-core/docs/UML superstructure 2.4.1.pdf).
-It is implemented with *Java 8* and packaged as a valid *OSGi bundle*.
+It is implemented with **Java 8** and packaged as a valid **OSGi bundle**.
 
 The implementation supports nearly every single feature of behavioral state machines:
 
@@ -26,7 +26,7 @@ Other features include, but not only:
   * prioritized transitions: when more than one transition is enabled for a (pseudo) state, only one will be fired. You can define which it will be.
   * configurable state machine executor: auto start, thread pool for asynchronous events and activities, ...
 
-It is heavily *tested with more than 120 state machines and more than 700 unit tests*. Code and branch coverage is above 90%.
+It is heavily **tested with more than 120 state machines and more than 700 unit tests**. Code and branch coverage is above 90%.
 
 This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -34,7 +34,7 @@ This project is licensed under the [Apache License 2.0](http://www.apache.org/li
 
 ## Maven
 
-Functionality of this project is contained the Java package `com.lympid.core`.
+Functionality of this project is contained in the Java package `com.lympid.core`.
 
 Add the following dependency to your `pom` to use this package:
 
@@ -136,21 +136,10 @@ System.out.println(fsm.snapshot().activateStates()); // outputs on
 fsm.take(new StringEvent("OFF"));
 System.out.println(fsm.snapshot().activateStates()); // outputs off
 
-fsm.take(new StringEvent("off"));                    // "off" is not an event of the state machine
-System.out.println(fsm.snapshot().activateStates()); // outputs off
-
-fsm.take(new StringEvent("ON"));
-System.out.println(fsm.snapshot().activateStates()); // outputs on
-
-fsm.take(new StringEvent("ON"));                     // the state "on" has no outgoing transition accepting the "ON" event so this does nothing
-System.out.println(fsm.snapshot().activateStates()); // outputs on
-
-fsm.take(new StringEvent("OFF"));
-System.out.println(fsm.snapshot().activateStates()); // outputs off
-
 fsm.take(new StringEvent("KILL"));
 System.out.println(fsm.snapshot().activateStates()); // outputs end
 ```
+And that's it!
 
 ## More tutorials to come...
 
