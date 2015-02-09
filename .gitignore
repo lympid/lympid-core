@@ -1,0 +1,22 @@
+*.class
+*.bak
+.DS_Store
+*~
+
+# Building
+/target
+
+# NetBeans
+settings.xml
+nb-configuration.xml
+
+# Eclipse
+.classpath
+.project
+.settings
+
+# IDEA
+*.iml
+*.ipr
+*.iws
+
