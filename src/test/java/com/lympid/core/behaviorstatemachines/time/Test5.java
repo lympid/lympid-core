@@ -23,10 +23,10 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 /**
@@ -69,7 +69,10 @@ public class Test5 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    StateMachineSnapshot snapshot = fsm.snapshot();
+    if (ctx.latch.getCount() > 0) {
+        assertStateConfiguration(snapshot, new ActiveStateTree("A"));
+    }
 
     int actualCount = 0;
     for (int i = 1; i <= count && ctx.latch.getCount() != 0; i++) {
