@@ -51,7 +51,7 @@ public class Test6 extends AbstractStateMachineTest {
     
     ctx.latch.await();
     
-    expected.exit("compo").effect("t1");
+    expected.activity("someactivity").exit("compo").effect("t1");
     snapshot = fsm.snapshot();
     assertSequentialContextEquals(expected, snapshot.context());
     assertStateConfiguration(fsm, new ActiveStateTree("end"));
@@ -72,6 +72,7 @@ public class Test6 extends AbstractStateMachineTest {
         .state(new CompositeStateBuilder<>("compo"))
           .activity(Activity.class)
           .transition("t1")
+            .effect((e, c) -> c.latch.countDown())
             .target("end");
     
     builder
@@ -94,7 +95,7 @@ public class Test6 extends AbstractStateMachineTest {
 
     @Override
     public void accept(Context ctx) {
-      ctx.latch.countDown();
+        ctx.activity("someactivity");
     }
     
   }
