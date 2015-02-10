@@ -30,6 +30,9 @@ It is heavily **tested with more than 120 state machines and more than 700 unit 
 
 This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
+[![Build Status](https://travis-ci.org/lympid/lympid-core.svg?branch=master)](https://travis-ci.org/lympid/lympid-core) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.lympid/lympid-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.lympid/lympid-core)
+
+
 # Get it!
 
 ## Maven
