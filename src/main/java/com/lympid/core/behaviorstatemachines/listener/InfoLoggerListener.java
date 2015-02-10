@@ -30,7 +30,7 @@ import org.slf4j.Logger;
  * @author Fabien Renaud
  */
 public class InfoLoggerListener extends WarnLoggerListener
-  implements MachineStartedListener, MachineTerminatedListener, EventAcceptedListener {
+        implements MachineStartedListener, MachineTerminatedListener, EventAcceptedListener {
 
   public InfoLoggerListener(Logger log) {
     super(log);
@@ -45,7 +45,7 @@ public class InfoLoggerListener extends WarnLoggerListener
   public void onMachineTerminated(StateMachineExecutor executor, StateMachine machine, Object context) {
     log(MACHINE_TERMINATED, executor, machine, context);
   }
-  
+
   private void log(ExecutorEvent tag, StateMachineExecutor executor, StateMachine machine, Object context) {
     log.info("executor=\"{}\" machine=\"{}\" tag=\"{}\" context=\"{}\"", executor.getId(), VertexUtils.nameOrId(machine), tag, context);
   }
@@ -54,5 +54,5 @@ public class InfoLoggerListener extends WarnLoggerListener
   public void onEventAccepted(StateMachineExecutor executor, StateMachine machine, Object context, Event event) {
     log.info("executor=\"{}\" machine=\"{}\" tag=\"{}\" event=\"{}\" context=\"{}\"", executor.getId(), VertexUtils.nameOrId(machine), EVENT_ACCEPTED, event, context);
   }
-  
+
 }

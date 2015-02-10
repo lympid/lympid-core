@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.lympid.core.behaviorstatemachines.builder;
 
 import com.lympid.core.behaviorstatemachines.PseudoState;
@@ -22,14 +21,14 @@ import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#ENTRY_POINT
- * 
+ *
  * @author Fabien Renaud
  */
 public interface EntryPoint<C> extends ExitPoint<C> {
-  
+
   EntryPoint<C> entryPoint(EntryPointReference<?, C> entryPoint);
-  
+
 }

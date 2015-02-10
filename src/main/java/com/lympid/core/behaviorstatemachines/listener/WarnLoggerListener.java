@@ -26,5 +26,5 @@ public class WarnLoggerListener extends ErrorLoggerListener {
   public WarnLoggerListener(Logger log) {
     super(log);
   }
-  
+
 }

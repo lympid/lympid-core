@@ -25,6 +25,6 @@ import com.lympid.core.behaviorstatemachines.Transition;
  * @author Fabien Renaud
  */
 public interface TransitionEndedListener<C> {
-  
+
   void onTransitionEnded(StateMachineExecutor executor, StateMachine machine, C context, Event event, Transition transition);
 }

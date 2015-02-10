@@ -28,7 +28,7 @@ import org.junit.Test;
  * Tests a time transition can reach a pseudo state and result in the state
  * machine termination.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test8 extends AbstractStateMachineTest {
 

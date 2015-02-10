@@ -25,6 +25,6 @@ import com.lympid.core.behaviorstatemachines.Transition;
  * @author Fabien Renaud
  */
 public interface TransitionGuardBeforeExecutionListener<C> {
-  
+
   void onTransitionGuardBeforeExecution(StateMachineExecutor executor, StateMachine machine, C context, Event event, Transition transition);
 }

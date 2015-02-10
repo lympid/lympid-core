@@ -33,7 +33,7 @@ import org.junit.Test;
 /**
  * Tests a time transition is NOT canceled  when an internal transition is fired.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
 

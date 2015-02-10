@@ -44,7 +44,7 @@ import org.junit.Test;
 /**
  * Tests entry/exit points sequence with multiple exit points.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test11 extends AbstractStateMachineTest {
   

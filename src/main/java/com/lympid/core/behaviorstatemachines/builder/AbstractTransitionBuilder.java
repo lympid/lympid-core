@@ -35,12 +35,12 @@ import java.util.concurrent.TimeUnit;
  * @param <V> Type of the {@code VertexBuilder} this transition builder has for
  * source.
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see Transition
  * @see ErnalTransitionBuilder
  * @see PseudoErnalTransitionBuilder
  * @see SelfTransitionBuilder
- * 
+ *
  * @author Fabien Renaud
  */
 public abstract class AbstractTransitionBuilder<V extends VertexBuilder, C> implements TransitionBuilder<V, C> {
@@ -129,8 +129,8 @@ public abstract class AbstractTransitionBuilder<V extends VertexBuilder, C> impl
       return (BiTransitionConstraint) guard;
     }
     return guardElse
-      ? (BiTransitionConstraint) ConstraintFactory.getNegation((Class<? extends Constraint>) guard)
-      : (BiTransitionConstraint) ConstraintFactory.get((Class<? extends Constraint>) guard);
+            ? (BiTransitionConstraint) ConstraintFactory.getNegation((Class<? extends Constraint>) guard)
+            : (BiTransitionConstraint) ConstraintFactory.get((Class<? extends Constraint>) guard);
   }
 
   @Override

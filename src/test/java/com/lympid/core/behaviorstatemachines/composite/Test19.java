@@ -43,7 +43,7 @@ import org.junit.Test;
  * Tests a local transition that starts from an entry point and targets the
  * composite state of that entry point.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test19 extends AbstractStateMachineTest {
   

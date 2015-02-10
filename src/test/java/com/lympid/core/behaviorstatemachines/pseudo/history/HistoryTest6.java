@@ -44,7 +44,7 @@ import org.junit.Test;
  * reached its final state. Because the history pseudo state has an outgoing
  * transition, the test is expected to be successful.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext> {
   

@@ -33,9 +33,9 @@ import java.util.Map;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see State
- * 
+ *
  * @author Fabien Renaud
  */
 public final class OrthogonalStateBuilder<C> extends StateBuilder<OrthogonalStateBuilder<C>, C> implements CompositeStateEntry<OrthogonalStateBuilder<C>, C> {
@@ -143,7 +143,7 @@ public final class OrthogonalStateBuilder<C> extends StateBuilder<OrthogonalStat
   @Override
   MutableState vertex(final VertexSet vertices) {
     final MutableState vertex = super.vertex(vertices);
-    
+
     if (regionBuilders.size() < 2) {
       throw new StateConstraintException(vertex, "An orthogonal state is a composite state with at least 2 regions.");
     }

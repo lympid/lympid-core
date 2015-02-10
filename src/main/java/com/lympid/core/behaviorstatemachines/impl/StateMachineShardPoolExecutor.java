@@ -29,7 +29,7 @@ import java.util.concurrent.ThreadFactory;
 public class StateMachineShardPoolExecutor {
 
   private final Worker[] pool;
-  
+
   public StateMachineShardPoolExecutor(final int poolSize) {
     this(poolSize, Executors.defaultThreadFactory());
   }
@@ -42,7 +42,7 @@ public class StateMachineShardPoolExecutor {
       worker.start();
     }
   }
-  
+
   void start(final PoolStateMachineExecutor executor) {
     queue(executor).add(new StateMachineStart(executor));
   }

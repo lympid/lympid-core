@@ -32,10 +32,10 @@ import com.lympid.core.behaviorstatemachines.validation.StateMachineConstraintEx
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see State
  * @see StateMachine
- * 
+ *
  * @author Fabien Renaud
  */
 public final class SubMachineStateBuilder<C> extends StateBuilder<SubMachineStateBuilder<C>, C> implements StateEntry<SubMachineStateBuilder<C>, C> {
@@ -137,7 +137,7 @@ public final class SubMachineStateBuilder<C> extends StateBuilder<SubMachineStat
      */
     stateMachineBuilder.accept(idMakerVisitor);
     connectionPointReferenceBuilder.accept(idMakerVisitor);
-    
+
     MutableStateMachine subMachine = stateMachineBuilder.build();
 
     for (Region r : subMachine.region()) {
@@ -159,13 +159,13 @@ public final class SubMachineStateBuilder<C> extends StateBuilder<SubMachineStat
      *
      * In addition, the current submachine state is defined as owner of the
      * connection points of the sub state machine and all exit points defined
-     * via the ConnectionPointReferenceBuilder have their ids replaced with
-     * the matching exit points of the sub state machine.
+     * via the ConnectionPointReferenceBuilder have their ids replaced with the
+     * matching exit points of the sub state machine.
      */
     if (!subMachine.connectionPoint().isEmpty()) {
       MutableConnectionPointReference ref = new MutableConnectionPointReference(connectionPointReferenceBuilder.getId());
       ref.setState(vertex);
-      
+
       final String namePrefix = getName() + "::";
       for (PseudoState cp : subMachine.connectionPoint()) {
         vertices.add(namePrefix + cp.getName(), cp);

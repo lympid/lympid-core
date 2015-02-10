@@ -20,13 +20,13 @@ import com.lympid.core.basicbehaviors.Event;
 /**
  * Provides an interface for building local, internal (aka self) and external
  * transitions.
- * 
+ *
  * @param <V> A {@link CompositeStateBuilder} or {@link OrthogonalStateBuilder}.
  * @param <T> Type of the first step that can taken in a transition. Not useful
  * here.
  * @param <C> Type of the state machine context.
  * @param <E> {@code Event} type which lead to this step in the transition.
- * 
+ *
  * @see StateTransitionSource
  * @author Fabien Renaud
  */

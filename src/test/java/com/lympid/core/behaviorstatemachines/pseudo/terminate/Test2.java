@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests a terminate pseudo state which is the target of a transition which 
  * source is a simple state.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test2 extends AbstractStateMachineTest {
   

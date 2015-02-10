@@ -36,12 +36,12 @@ public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
     super();
     this.pool = pool;
   }
-  
+
   @Override
   public void start() {
     pool.start(this);
   }
-  
+
   public void doStart() {
     super.start();
   }

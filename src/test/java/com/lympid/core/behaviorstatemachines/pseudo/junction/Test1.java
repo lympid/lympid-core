@@ -33,7 +33,7 @@ import org.junit.Test;
  * state has no effect on which outgoing transition of the junction pseudo state
  * will be selected.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test1 extends AbstractStateMachineTest {
 

@@ -30,8 +30,8 @@ import java.util.Iterator;
 /**
  * Constraints due to implementation limitations or specificities.
  *
- * TODO: a transition can not have more than 1 time event
- * TODO: a transition with a time event can only have a state as source
+ * TODO: a transition can not have more than 1 time event TODO: a transition
+ * with a time event can only have a state as source
  *
  * @author Fabien Renaud
  */
@@ -88,8 +88,8 @@ public final class ImplementationValidator {
     switch (kind) {
       case LOCAL:
         State nSource = source instanceof State
-          ? (State) source
-          : ((PseudoState) source).state();
+                ? (State) source
+                : ((PseudoState) source).state();
         /*
          * The source is always the ancestor of the target
          */

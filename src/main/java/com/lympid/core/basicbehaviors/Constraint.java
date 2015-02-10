@@ -17,7 +17,7 @@ package com.lympid.core.basicbehaviors;
 
 /**
  * Represents a constraint.
- * 
+ *
  * @author Fabien Renaud
  */
 public interface Constraint {

@@ -36,7 +36,7 @@ import org.junit.Test;
  * Ordering is the default one, i.e.: t1, t2, t3
  * t2 can never be fired.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

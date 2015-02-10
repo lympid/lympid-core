@@ -38,7 +38,7 @@ import org.slf4j.Logger;
 /**
  * Tests an external transition with 1 trigger, 1 guard and 1 effect.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test9 extends AbstractStateMachineTest {
   

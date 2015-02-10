@@ -21,7 +21,7 @@ package com.lympid.core.behaviorstatemachines.builder;
  *
  * @param <V> {@code VertexBuilder} type which is the source of the transition.
  * @param <C> Type of the state machine context.
- * 
+ *
  * @author Fabien Renaud
  */
 public interface TransitionTarget<V extends VertexBuilder<?, ?, C>, C> extends TransitionStep<V> {

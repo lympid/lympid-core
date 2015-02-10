@@ -17,6 +17,7 @@ package com.lympid.core.basicbehaviors;
 
 /**
  * Provides an interface every event must implement.
+ *
  * @author Fabien Renaud
  */
 public interface Event {

@@ -21,12 +21,12 @@ import com.lympid.core.basicbehaviors.Event;
  * Represents a transition constraint (guard) that accepts only a context
  * argument. This type of transition constraint should only be used when it is
  * known that the event does not carry any information that could be useful to
- * the implementer of the constraint.
- * This operation must NOT operate via side-effects.
+ * the implementer of the constraint. This operation must NOT operate via
+ * side-effects.
  *
  * In a behavioral state machine, a {@code TransitionConstraint} can be used as
- * a guard for any transitions outgoing a pseudo state.
- * For transition guards outgoing states, see {@link BiTransitionConstraint}.
+ * a guard for any transitions outgoing a pseudo state. For transition guards
+ * outgoing states, see {@link BiTransitionConstraint}.
  *
  * @param <C> Type of the state machine context.
  *
@@ -36,8 +36,8 @@ import com.lympid.core.basicbehaviors.Event;
 public interface TransitionConstraint<C> extends BiTransitionConstraint<Event, C> {
 
   /**
-   * Evaluates the predicate with the context.
-   * This method must NOT have side-effects
+   * Evaluates the predicate with the context. This method must NOT have
+   * side-effects
    *
    * @param ctx The context to use.
    * @return true when the guard has been fully validated.

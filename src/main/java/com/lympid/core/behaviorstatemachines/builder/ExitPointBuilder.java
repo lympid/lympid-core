@@ -22,14 +22,14 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#EXIT_POINT
- * 
+ *
  * @author Fabien Renaud
  */
 public final class ExitPointBuilder<C> extends PseudoStateBuilder<ExitPointBuilder<C>, C> implements PseudoStateTransitionSource<PseudoTransitionGuard<ExitPointBuilder<C>, C>> {
-  
+
   public ExitPointBuilder(final String name) {
     super(PseudoStateKind.EXIT_POINT, name);
   }

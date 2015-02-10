@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * Tests the initial transition can fire its effect.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test2 extends AbstractStateMachineTest {
     

@@ -22,15 +22,14 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 
 /**
  * Implementation for building internal and/or external transition for
- * <strong>pseudo states</strong>.
- * For building internal and/or external transition for states, see
- * {@link ErnalTransitionBuilder}.
+ * <strong>pseudo states</strong>. For building internal and/or external
+ * transition for states, see {@link ErnalTransitionBuilder}.
  *
  * @param <V> {@code VertexBuilder} type which is the source of the transition.
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see Transition
- * 
+ *
  * @author Fabien Renaud
  */
 public final class PseudoErnalTransitionBuilder<V extends VertexBuilder<?, ?, C>, C> extends AbstractTransitionBuilder<V, C> implements PseudoTransitionGuard<V, C> {

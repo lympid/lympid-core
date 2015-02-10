@@ -18,6 +18,7 @@ package com.lympid.core.basicbehaviors;
 /**
  * Provides an interface to define time events, i.e. events that will happen in
  * the future.
+ *
  * @author Fabien Renaud
  */
 public interface TimeEvent extends Event {

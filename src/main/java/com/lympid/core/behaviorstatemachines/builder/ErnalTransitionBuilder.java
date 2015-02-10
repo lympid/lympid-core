@@ -26,16 +26,15 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Implementation for building internal and/or external transition for
- * <strong>states</strong>.
- * For building internal and/or external transition for pseudo states, see
- * {@link PseudoErnalTransitionBuilder}.
+ * <strong>states</strong>. For building internal and/or external transition for
+ * pseudo states, see {@link PseudoErnalTransitionBuilder}.
  *
  * @param <V> {@code VertexBuilder} type which is the source of the transition.
  * @param <C> Type of the state machine context.
  * @param <E> {@code Event} type which lead to this step in the transition.
- * 
+ *
  * @see Transition
- * 
+ *
  * @author Fabien Renaud
  */
 public final class ErnalTransitionBuilder<V extends VertexBuilder<?, ?, C>, C, E extends Event> extends AbstractTransitionBuilder<V, C> implements TransitionTrigger<V, C, E> {

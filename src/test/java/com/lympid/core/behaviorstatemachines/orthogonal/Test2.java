@@ -33,7 +33,7 @@ import org.junit.Test;
  * until all its region have been completed.
  * The orthogonal state is entered an incoming transition targeting its edge.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test2 extends AbstractStateMachineTest {
     

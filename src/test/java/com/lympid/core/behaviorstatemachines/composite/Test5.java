@@ -42,7 +42,7 @@ import org.junit.Test;
  * Tests the final state of a composite state triggers a completion event and
  * leaves the composite state when appropriate.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
   

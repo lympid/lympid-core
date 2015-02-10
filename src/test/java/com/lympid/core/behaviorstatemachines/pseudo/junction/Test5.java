@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  * Test the full tree of possible path is traversed before picking one enabled.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
   

@@ -41,7 +41,7 @@ import org.junit.Test;
  * Tests a shallow/deep history pseudo state as a default entry of a composite
  * state.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class HistoryTest2 extends AbstractHistoryTest {
   

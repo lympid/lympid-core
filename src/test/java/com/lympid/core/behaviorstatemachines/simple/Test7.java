@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * Tests an external transition with 1 trigger and 1 guard but no effect.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test7 extends AbstractStateMachineTest {
   

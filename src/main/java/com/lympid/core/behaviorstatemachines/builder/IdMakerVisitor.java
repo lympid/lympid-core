@@ -17,7 +17,7 @@ package com.lympid.core.behaviorstatemachines.builder;
 
 /**
  * Visitor to set unique identifiers for the various builders.
- * 
+ *
  * @author Fabien Renaud
  */
 final class IdMakerVisitor implements Visitor {

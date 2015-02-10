@@ -22,9 +22,9 @@ import org.slf4j.Logger;
  * @author Fabien Renaud
  */
 public abstract class LoggerListener {
-  
+
   protected final Logger log;
-  
+
   public LoggerListener(final Logger log) {
     this.log = log;
   }

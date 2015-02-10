@@ -23,7 +23,7 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
  *
  * @see PseudoState
  * @see PseudoStateKind#FORK
- * 
+ *
  * @author Fabien Renaud
  */
 public final class ForkBuilder<C> extends PseudoStateBuilder<ForkBuilder<C>, C> implements PseudoStateTransitionSource<PseudoTransitionEffect<ForkBuilder<C>, C>> {

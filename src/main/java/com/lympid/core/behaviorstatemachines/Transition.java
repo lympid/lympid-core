@@ -47,8 +47,8 @@ public interface Transition extends UmlElement, Visitable {
    * expressions without side effects. Guard expressions with side effects are
    * ill formed.
    *
-   * @return A guard is a constraint that provides a fine-grained control over the
-   * firing of the transition.
+   * @return A guard is a constraint that provides a fine-grained control over
+   * the firing of the transition.
    */
   BiTransitionConstraint guard();
 
@@ -79,7 +79,6 @@ public interface Transition extends UmlElement, Visitable {
    * @return The transition of which this is a replacement.
    */
 //  Transition redefinedTransition();
-
   /**
    * Designates the region that owns this transition.
    *

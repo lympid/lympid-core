@@ -20,7 +20,6 @@ import com.lympid.core.common.TestUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
@@ -29,7 +28,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class BehaviorFactoryTest {
   

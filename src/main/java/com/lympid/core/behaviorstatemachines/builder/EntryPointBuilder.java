@@ -23,7 +23,7 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
  *
  * @see PseudoState
  * @see PseudoStateKind#ENTRY_POINT
- * 
+ *
  * @author Fabien Renaud
  */
 public final class EntryPointBuilder<C> extends EntryPointReference<EntryPointBuilder<C>, C> implements PseudoStateTransitionSource<PseudoTransitionGuard<EntryPointReference<?, C>, C>> {

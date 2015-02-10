@@ -81,8 +81,8 @@ public class MutableStateMachineMeta implements StateMachineMeta {
 
   public void register(final Region region) {
     final State parentState = region.state() == null
-      ? ownedStateMachines.get(region.stateMachine())
-      : region.state();
+            ? ownedStateMachines.get(region.stateMachine())
+            : region.state();
 
     if (parentState == null) { // top level state machine
       tree = new TreeNode<>(region);

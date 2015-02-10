@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class SequentialContextInjector implements Visitor {
 

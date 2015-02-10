@@ -16,13 +16,12 @@
 package com.lympid.core.behaviorstatemachines;
 
 /**
- * Abstract implementing the Visitor pattern paradigm.
- * I.e., a class that implements this interface can handle all types of
- * instructions with the properly typed methods just by calling the accept()
- * method.
- * 
+ * Abstract implementing the Visitor pattern paradigm. I.e., a class that
+ * implements this interface can handle all types of instructions with the
+ * properly typed methods just by calling the accept() method.
+ *
  * @see Visitor
- * 
+ *
  * @author Fabien Renaud
  */
 public abstract class SimpleVisitor implements Visitor {

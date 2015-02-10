@@ -30,7 +30,7 @@ import org.junit.Test;
  * Tests time transitions apply guards and that multiple time transitions can
  * be fired from the same state under different conditions.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test3 extends AbstractStateMachineTest {
 

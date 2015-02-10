@@ -18,7 +18,7 @@ package com.lympid.core.behaviorstatemachines;
 /**
  * Provide information about the state machine that typically requires a full
  * traversal to collect.
- * 
+ *
  * @author Fabien Renaud
  */
 public interface StateMachineMeta {

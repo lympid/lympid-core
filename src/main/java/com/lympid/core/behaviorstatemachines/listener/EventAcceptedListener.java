@@ -24,6 +24,6 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
  * @author Fabien Renaud
  */
 public interface EventAcceptedListener<C> extends MachineListener {
-  
+
   void onEventAccepted(StateMachineExecutor executor, StateMachine machine, C context, Event event);
 }

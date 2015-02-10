@@ -15,7 +15,6 @@
  */
 package com.lympid.core.behaviorstatemachines.validation;
 
-import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
 import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
@@ -36,7 +35,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class PseudoStateConstraintsTest {
 

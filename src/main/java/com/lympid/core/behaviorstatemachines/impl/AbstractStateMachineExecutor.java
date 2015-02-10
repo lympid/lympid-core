@@ -143,8 +143,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     }
 
     /*
-     * Fire all the transition paths found for the given event applied to
-     * the active state configuration.
+     * Fire all the transition paths found for the given event applied to the
+     * active state configuration.
      */
     fireManyAndBeyond(event, transitionPaths(event, machineState.activeStates()));
   }
@@ -188,8 +188,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
 
   private void postFire() {
     /*
-     * Completion events have priority over any over events that might be in
-     * the queue.
+     * Completion events have priority over any over events that might be in the
+     * queue.
      */
     if (!machineState.isTerminated() && machine.metadata().hasCompletionEvents()) {
       internalTakeCompletionEvents();
@@ -207,9 +207,9 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     while (machineState.hasCompletedStates()) {
       int stateHashBefore = machineState.completedStates().hashCode();
       int contextHashBefore = Objects.hashCode(context);
-      
+
       fireMany(CompletionEvent.INSTANCE, transitionPaths(CompletionEvent.INSTANCE, machineState.completedStates()));
-      
+
       int stateHashAfter = machineState.completedStates().hashCode();
       int contextHashAfter = Objects.hashCode(context);
 
@@ -220,11 +220,9 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
        * satisfying the guard is never met, this loop will keep trying to fire
        * the transition unaware of what and when the guard may be satisfied.
        * Instead of letting this loop run infinitely, let it process as many
-       * transitions as possible until an iteration shows no changes in the
-       * set
+       * transitions as possible until an iteration shows no changes in the set
        * of completed states. When such 'event' happens, it is assumed the set
-       * hasn't changed and that firing transitions for that set of states
-       * will
+       * hasn't changed and that firing transitions for that set of states will
        * not result in any changes in the next few iterations.
        */
       if ((stateHashBefore == stateHashAfter && contextHashBefore == contextHashAfter) || machineState.isTerminated()) { // possible infinite loop detected.
@@ -295,8 +293,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   /**
    * Fire all transition trees.
    *
-   * Each transition in the given collection must belong to distinct
-   * orthogonal regions.
+   * Each transition in the given collection must belong to distinct orthogonal
+   * regions.
    *
    * @param event The event that triggered those transitions.
    * @param paths A collection of transitions that can be fired in parallel.
@@ -564,21 +562,19 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
 
   private void enterPseudoState(final Transition incomingTransition, final PseudoState pseudoState, final List<TreeNode<Transition>> paths) {
     /*
-     * Section 15.3.14 Transition:
-     * - [5] Transitions outgoing pseudostates may not have a trigger
-     * (except for those coming out of the initial pseudostate). Therefore,
-     * there is always at least one transition to fire. None results in an
-     * exception.
+     * Section 15.3.14 Transition: - [5] Transitions outgoing pseudostates may
+     * not have a trigger (except for those coming out of the initial
+     * pseudostate). Therefore, there is always at least one transition to fire.
+     * None results in an exception.
      */
     switch (pseudoState.kind()) {
       case CHOICE:
         /*
-         * Section 15.3.8 Pseudostate:
-         * - [8] In a complete statemachine, a choice vertex must have at least
-         * one incoming and one outgoing transition.
-         * # Semantics: If more than one of the guards evaluates to true, an
-         * arbitrary one is selected. If none of the guards evaluates to true,
-         * then the model is considered ill-formed.
+         * Section 15.3.8 Pseudostate: - [8] In a complete statemachine, a
+         * choice vertex must have at least one incoming and one outgoing
+         * transition. # Semantics: If more than one of the guards evaluates to
+         * true, an arbitrary one is selected. If none of the guards evaluates
+         * to true, then the model is considered ill-formed.
          */
         TreeNode<Transition> newPath = transitionPath(CompletionEvent.INSTANCE, pseudoState);
         if (newPath.isLeaf()) {
@@ -588,18 +584,18 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
         break;
       case FORK:
         /*
-         * Section 15.3.8 Pseudostate:
-         * - [5] In a complete statemachine, a fork vertex must have at least
-         * two outgoing transitions and exactly one incoming transition.
+         * Section 15.3.8 Pseudostate: - [5] In a complete statemachine, a fork
+         * vertex must have at least two outgoing transitions and exactly one
+         * incoming transition.
          *
-         * Section 15.3.14 Transition:
-         * - [1] A fork segment must not have guards or triggers.
+         * Section 15.3.14 Transition: - [1] A fork segment must not have guards
+         * or triggers.
          *
          * In addition, outgoing transitions of a fork can only be external.
          */
         /*
-         * There are one pseudo state to leave (leave once), many transitions
-         * to fire and many states to enter.
+         * There are one pseudo state to leave (leave once), many transitions to
+         * fire and many states to enter.
          */
         leave(pseudoState.container());
         for (TreeNode<Transition> node : paths) {
@@ -717,24 +713,21 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
           switch (ps.kind()) {
             /*
              * Terminating the state machine means the executor must go no
-             * farther that vertex.
-             * Reaching a choice vertex requires to fire all transitions to go
-             * to that vertex first and then figure out where to go from there
-             * (dynamic conditional branching).
+             * farther that vertex. Reaching a choice vertex requires to fire
+             * all transitions to go to that vertex first and then figure out
+             * where to go from there (dynamic conditional branching).
              */
             case CHOICE:
             case TERMINATE:
               found = paths.add(tn);
               break;
             /*
-             * For history vertices, either:
-             * - an history does not exist in which case the outgoing
-             * transition of the history vertex will be fired; if such\
-             * transition does not exist, the transition might not be enabled or
-             * the code may throw an exception depending on the running
-             * configuration.
-             * - an history exists in which case we want to reach directly that
-             * history pseudo vertex.
+             * For history vertices, either: - an history does not exist in
+             * which case the outgoing transition of the history vertex will be
+             * fired; if such\ transition does not exist, the transition might
+             * not be enabled or the code may throw an exception depending on
+             * the running configuration. - an history exists in which case we
+             * want to reach directly that history pseudo vertex.
              */
             case SHALLOW_HISTORY:
             case DEEP_HISTORY:
@@ -776,14 +769,13 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   /**
    * Finds the immediate parent state of the given vertex.
    *
-   * There are four possibilities.
-   * 1) the given vertex is a sub state of a composite state.
-   * 2) the given vertex belongs to the topmost region of a sub state
-   * machine, in which case the state containing the state machine is returned.
-   * 3) the given vertex belongs to the topmost region of the top level
-   * state machine in which case it has no parent and null is returned.
-   * 4) the vertex is an entry or exit point and its parent state is
-   * immediately known via the state() method.
+   * There are four possibilities. 1) the given vertex is a sub state of a
+   * composite state. 2) the given vertex belongs to the topmost region of a sub
+   * state machine, in which case the state containing the state machine is
+   * returned. 3) the given vertex belongs to the topmost region of the top
+   * level state machine in which case it has no parent and null is returned. 4)
+   * the vertex is an entry or exit point and its parent state is immediately
+   * known via the state() method.
    *
    * @param childVertex The vertex of which to find the parent state.
    * @return The parent containing state or null when such does not exist.

@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.impl.ExecutorListener;
 import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 
 /**
- * 
+ *
  * @author Fabien Renaud
  */
 public interface StateMachineExecutor<C> {

@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests termination in a composite state prevents the completion transition
  * of the composite state to be fired.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

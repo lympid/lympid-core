@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests an external transition with 1 trigger can execute upon a given event.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

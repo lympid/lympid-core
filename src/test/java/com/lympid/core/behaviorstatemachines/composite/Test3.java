@@ -40,7 +40,7 @@ import org.junit.Test;
 /**
  * Tests a composite state with initial pseudo state and final state.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test3 extends AbstractStateMachineTest {
   

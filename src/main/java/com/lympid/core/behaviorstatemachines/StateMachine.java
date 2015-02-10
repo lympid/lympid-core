@@ -40,7 +40,7 @@ import java.util.List;
  * @author Fabien Renaud
  */
 public interface StateMachine extends Behavior, UmlElement, Visitable, RegionOwner {
-  
+
   /**
    * The regions owned directly by the state machine.
    *
@@ -63,10 +63,9 @@ public interface StateMachine extends Behavior, UmlElement, Visitable, RegionOwn
    * @return The state machines of which this is an extension.
    */
 //  Collection<? extends StateMachine> extendedStateMachine();
-
   /**
    * Preprocessed information about the state machine.
-   * 
+   *
    * @return The state machine meta data
    */
   StateMachineMeta metadata();

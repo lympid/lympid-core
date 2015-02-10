@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  * Tests parallel time transitions in an orthogonal state.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test6 extends AbstractStateMachineTest {
   

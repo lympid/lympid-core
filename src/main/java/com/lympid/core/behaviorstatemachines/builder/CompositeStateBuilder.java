@@ -152,7 +152,7 @@ public final class CompositeStateBuilder<C> extends StateBuilder<CompositeStateB
 
   /**
    * Gets the unique connection point builder of the composite state.
-   * 
+   *
    * @return The unique connection point builder of the composite state.
    */
   public ConnectionPointBuilder<C> connectionPoint() {

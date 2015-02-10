@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * Tests a cascade of choice pseudo states outgoing the initial pseudo state.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test3 extends AbstractStateMachineTest {
     

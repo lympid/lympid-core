@@ -31,9 +31,9 @@ import java.util.Map;
  * Provides a builder for a behavioral {@link StateMachine}.
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see StateMachine
- * 
+ *
  * @author Fabien Renaud
  */
 public class StateMachineBuilder<C> implements Visitable {
@@ -132,8 +132,8 @@ public class StateMachineBuilder<C> implements Visitable {
    *
    * <p>
    * This operation transforms all the data collected via the builders into an
-   * actual {@link StateMachine} that can be executed.
-   * Validation and metadata are collected as part of that build.</p>
+   * actual {@link StateMachine} that can be executed. Validation and metadata
+   * are collected as part of that build.</p>
    *
    * <p>
    * The newly built machine is then cached and calling further this method will
@@ -166,8 +166,8 @@ public class StateMachineBuilder<C> implements Visitable {
   }
 
   /**
-   * Turns the state machine builder into an actual state machine instance.
-   * No validation of any kind is performed here.
+   * Turns the state machine builder into an actual state machine instance. No
+   * validation of any kind is performed here.
    *
    * @return A non-validated state machine.
    */

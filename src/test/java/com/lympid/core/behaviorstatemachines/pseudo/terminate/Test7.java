@@ -34,7 +34,7 @@ import org.junit.Test;
  * The terminate pseudo state parent state is always an ancestor of the simple
  * state.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test7 extends AbstractStateMachineTest {
   

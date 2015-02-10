@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * Tests a terminate pseudo state in a composite state.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test3 extends AbstractStateMachineTest {
   

@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * Entering a simple state executes all its entry actions in the default order.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test14 extends AbstractStateMachineTest {
   

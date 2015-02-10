@@ -24,6 +24,6 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
  * @author Fabien Renaud
  */
 public interface EventDeferredListener<C> extends MachineListener {
-  
+
   void onEventDeferred(StateMachineExecutor executor, StateMachine machine, C context, Event event);
 }

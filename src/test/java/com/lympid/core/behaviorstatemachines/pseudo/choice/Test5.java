@@ -36,7 +36,7 @@ import org.junit.Test;
  * Ordering is the default one, i.e.: t1, t2, t3
  * All transitions can be fired.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
   

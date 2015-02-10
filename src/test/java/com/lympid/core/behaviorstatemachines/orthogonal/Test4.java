@@ -36,7 +36,7 @@ import org.junit.Test;
  *  - unamed internal transition
  *  - unamed local transition
  *  - unamed external transition
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

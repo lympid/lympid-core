@@ -27,7 +27,7 @@ import org.junit.Test;
 
 /**
  * Tests an internal transition on a simple state.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test19 extends AbstractStateMachineTest {
   

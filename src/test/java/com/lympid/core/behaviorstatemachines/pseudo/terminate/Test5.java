@@ -31,7 +31,7 @@ import org.junit.Test;
  * composite pseudo state exits properly the simple state source which belongs
  * to the composite state.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
   

@@ -20,7 +20,7 @@ package com.lympid.core.behaviorstatemachines.listener;
  * @author Fabien Renaud
  */
 public interface AllMachineListener<C> extends
-  EventAcceptedListener<C>, EventDeferredListener<C>, EventDeniedListener<C>,
-  MachineStartedListener<C>, MachineTerminatedListener<C> {
+        EventAcceptedListener<C>, EventDeferredListener<C>, EventDeniedListener<C>,
+        MachineStartedListener<C>, MachineTerminatedListener<C> {
 
 }

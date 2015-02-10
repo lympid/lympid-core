@@ -41,7 +41,7 @@ import org.junit.Test;
 /**
  * Tests the innermost transitions have priority on the outermost transitions.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test7 extends AbstractStateMachineTest {
   

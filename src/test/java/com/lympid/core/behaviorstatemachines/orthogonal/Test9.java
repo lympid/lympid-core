@@ -28,7 +28,7 @@ import org.junit.Test;
  * Transitions from an entry point to an exit point of the same orthogonal state
  * are not supported yet.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test9  {
   

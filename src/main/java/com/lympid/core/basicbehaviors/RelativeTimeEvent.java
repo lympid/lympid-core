@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Defines a time event that happens in the future, starting from <em>now</em>.
+ *
  * @author Fabien Renaud
  */
 public final class RelativeTimeEvent implements TimeEvent {

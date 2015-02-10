@@ -82,7 +82,7 @@ public abstract class MutableVertex implements Vertex {
     Collection<Transition> transitions = outgoingByEvent.get(event);
     return transitions == null ? Collections.emptyList() : transitions;
   }
-  
+
   @Override
   public Collection<? extends TimeEvent> outgoingTimeEvents() {
     return outgoingTimeEvents;
@@ -143,8 +143,8 @@ public abstract class MutableVertex implements Vertex {
        */
       this.outgoingByEvent = optimize(outgoingByEvent);
       this.outgoingTimeEvents = outgoingTimeEvents.isEmpty()
-        ? Collections.EMPTY_LIST
-        : new ArrayList<>(outgoingTimeEvents);
+              ? Collections.EMPTY_LIST
+              : new ArrayList<>(outgoingTimeEvents);
     }
   }
 

@@ -22,10 +22,10 @@ package com.lympid.core.behaviorstatemachines.builder;
 public class IncrementIdProvider implements IdProvider {
 
   private int count;
-  
+
   @Override
   public String nextId() {
     return Integer.toString(++count);
   }
-  
+
 }

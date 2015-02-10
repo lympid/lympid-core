@@ -22,7 +22,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public final class ActiveStateTree {
 

@@ -40,7 +40,8 @@ public interface StateEntry<V extends StateBuilder<?, C>, C> extends StateExit<V
    * Adds an entry behavior to the simple/submachine state.
    *
    * @param entry The entry behavior.
-   * @return An interface to add more entry behaviors to the simple/submachine state.
+   * @return An interface to add more entry behaviors to the simple/submachine
+   * state.
    */
   StateEntry<V, C> entry(StateBehavior<C> entry);
 
@@ -51,7 +52,8 @@ public interface StateEntry<V extends StateBuilder<?, C>, C> extends StateExit<V
    * {@link BehaviorFactory}.
    *
    * @param entry The {@code StateBehavior} class of the entry behavior.
-   * @return An interface to add more entry behaviors to the simple/submachine state.
+   * @return An interface to add more entry behaviors to the simple/submachine
+   * state.
    */
   StateEntry<V, C> entry(Class<? extends StateBehavior<C>> entry);
 }

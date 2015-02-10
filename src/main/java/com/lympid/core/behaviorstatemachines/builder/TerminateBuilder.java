@@ -21,10 +21,10 @@ import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#TERMINATE
- * 
+ *
  * @author Fabien Renaud
  */
 final class TerminateBuilder<C> extends PseudoStateBuilder<TerminateBuilder<C>, C> {

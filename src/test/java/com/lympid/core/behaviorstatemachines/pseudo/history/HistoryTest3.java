@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * Tests the shallow history is shallow and reenters sub composite states.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class HistoryTest3 extends AbstractHistoryTest {
   

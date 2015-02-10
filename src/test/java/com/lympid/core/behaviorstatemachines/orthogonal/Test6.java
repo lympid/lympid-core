@@ -15,7 +15,6 @@
  */
 package com.lympid.core.behaviorstatemachines.orthogonal;
 
-import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
@@ -31,7 +30,7 @@ import org.junit.Test;
 /**
  * Tests an entry point can be connect to a sub exit point
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test6 extends AbstractStateMachineTest {
   

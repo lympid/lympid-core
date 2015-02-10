@@ -22,7 +22,7 @@ import com.lympid.core.behaviorstatemachines.PseudoStateKind;
  *
  * @see PseudoState
  * @see PseudoStateKind#SHALLOW_HISTORY
- * 
+ *
  * @author Fabien Renaud
  */
 public abstract class ShallowHistoryReference<B extends PseudoStateBuilder<?, C>, C> extends PseudoStateBuilder<B, C> {

@@ -22,10 +22,10 @@ import com.lympid.core.behaviorstatemachines.PseudoStateKind;
  *
  * @param <B> Type of the extended {@link PseudoStateBuilder}.
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#ENTRY_POINT
- * 
+ *
  * @author Fabien Renaud
  */
 public abstract class EntryPointReference<B extends PseudoStateBuilder<?, C>, C> extends PseudoStateBuilder<B, C> {

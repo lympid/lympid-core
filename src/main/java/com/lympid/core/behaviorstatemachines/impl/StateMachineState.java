@@ -39,9 +39,9 @@ public interface StateMachineState<T> {
   boolean completedOne(final State state);
 
   Set<State> completedStates();
-  
+
   void removeCompletedState(final State state);
-  
+
   void deactivate(final State state);
 
   boolean hasCompletedStates();

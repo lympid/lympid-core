@@ -23,12 +23,12 @@ import java.util.function.Consumer;
  * returns no result. This {@code TransitionBehavior} is expected to operate via
  * side-effects.
  *
- * In a behavioral state machine, a {@code TransitionBehavior} can be used as
- * an effect for any transitions outgoing a pseudo state.
- * For transition effects outgoing states, see {@link BiTransitionBehavior}.
+ * In a behavioral state machine, a {@code TransitionBehavior} can be used as an
+ * effect for any transitions outgoing a pseudo state. For transition effects
+ * outgoing states, see {@link BiTransitionBehavior}.
  *
  * @param <C> the state machine context
- * 
+ *
  * @see java.util.function.Consumer
  * @author Fabien Renaud
  */

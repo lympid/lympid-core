@@ -31,10 +31,10 @@ import java.util.concurrent.TimeUnit;
  * @param <V> Type of the {@code VertexBuilder} this transition builder has for
  * source.
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see Transition
  * @see AbstractTransitionBuilder
- * 
+ *
  * @author Fabien Renaud
  */
 public interface TransitionBuilder<V extends VertexBuilder, C> {
@@ -80,7 +80,7 @@ public interface TransitionBuilder<V extends VertexBuilder, C> {
    * Sets a guard that is the binary opposite of the given class.
    *
    * @param guardClass A class implementing a {@link BiTransitionConstraint}.
-   * 
+   *
    * @see OppositeBiTransitionConstraint
    */
   void setGuardElse(Class<? extends BiTransitionConstraint> guardClass);
@@ -144,7 +144,7 @@ public interface TransitionBuilder<V extends VertexBuilder, C> {
 
   /**
    * Gets the name of the target for the transition when defined as such.
-   * 
+   *
    * <p>
    * When undefined, it is then guaranteed {@link #getTargetAsVertexBuilder()}
    * will return a non-null value.</p>
@@ -166,7 +166,8 @@ public interface TransitionBuilder<V extends VertexBuilder, C> {
   VertexBuilderReference getTargetAsVertexBuilder();
 
   /**
-   * Gets the {@link com.lympid.core.common.UmlElement} unique identifier of the transition.
+   * Gets the {@link com.lympid.core.common.UmlElement} unique identifier of the
+   * transition.
    *
    * @return The unique identifier of the transition.
    */

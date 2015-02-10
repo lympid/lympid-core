@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class MethodReferencesTest extends AbstractStateMachineTest {
 

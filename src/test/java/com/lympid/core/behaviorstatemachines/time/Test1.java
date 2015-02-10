@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests a time transition gets fired.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test1 extends AbstractStateMachineTest {
 

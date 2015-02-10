@@ -23,6 +23,6 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
  * @author Fabien Renaud
  */
 public interface MachineStartedListener<C> extends MachineListener {
-  
+
   void onMachineStarted(StateMachineExecutor executor, StateMachine machine, C context);
 }

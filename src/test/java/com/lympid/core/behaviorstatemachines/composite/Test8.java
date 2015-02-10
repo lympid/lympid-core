@@ -43,7 +43,7 @@ import org.junit.Test;
 /**
  * Tests entry/exit points with simple states.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test8 extends AbstractStateMachineTest {
   

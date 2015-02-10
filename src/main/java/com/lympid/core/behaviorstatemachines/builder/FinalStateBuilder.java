@@ -16,7 +16,6 @@
 package com.lympid.core.behaviorstatemachines.builder;
 
 import com.lympid.core.behaviorstatemachines.FinalState;
-import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.impl.MutableFinalState;
 import java.util.Collections;
 import java.util.Set;
@@ -24,7 +23,7 @@ import java.util.Set;
 /**
  *
  * @see FinalState
- * 
+ *
  * @author Fabien Renaud
  */
 final class FinalStateBuilder<C> extends VertexBuilder<FinalStateBuilder<C>, MutableFinalState, C> {
@@ -32,7 +31,7 @@ final class FinalStateBuilder<C> extends VertexBuilder<FinalStateBuilder<C>, Mut
   FinalStateBuilder(final String name) {
     super(name);
   }
-  
+
   FinalStateBuilder() {
     super();
   }

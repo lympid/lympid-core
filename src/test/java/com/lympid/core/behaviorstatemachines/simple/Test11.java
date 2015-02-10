@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Entering a simple state executes its activity.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test11 extends AbstractStateMachineTest {
   

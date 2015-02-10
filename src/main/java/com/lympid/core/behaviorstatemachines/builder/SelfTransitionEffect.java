@@ -51,4 +51,3 @@ public interface SelfTransitionEffect<V extends StateBuilder, C, E extends Event
   SelfTransitionTarget<V> effect(BiTransitionBehavior<E, C> effect);
 
 }
-

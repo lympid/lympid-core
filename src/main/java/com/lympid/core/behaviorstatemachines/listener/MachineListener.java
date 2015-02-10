@@ -20,5 +20,5 @@ package com.lympid.core.behaviorstatemachines.listener;
  * @author Fabien Renaud
  */
 public interface MachineListener {
-  
+
 }

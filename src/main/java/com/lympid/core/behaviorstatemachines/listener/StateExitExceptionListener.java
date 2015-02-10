@@ -24,6 +24,6 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
  * @author Fabien Renaud
  */
 public interface StateExitExceptionListener<C> extends MachineListener {
-  
+
   void onStateExitException(StateMachineExecutor executor, StateMachine machine, C context, State state, Exception exception);
 }

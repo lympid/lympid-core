@@ -59,7 +59,7 @@ public final class MutablePseudoState extends MutableVertex implements PseudoSta
   public State state() {
     return state;
   }
-  
+
   public void setState(State state) {
     this.state = state;
   }

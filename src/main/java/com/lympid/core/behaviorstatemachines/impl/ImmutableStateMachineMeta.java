@@ -29,7 +29,7 @@ public class ImmutableStateMachineMeta implements StateMachineMeta {
   private final int historyNodes;
   private final int treeDepth;
   private final int countOfLeaves;
-  
+
   public ImmutableStateMachineMeta(final StateMachineMeta meta) {
     this.completionEvents = meta.hasCompletionEvents();
     this.timeEvents = meta.hasTimeEvents();

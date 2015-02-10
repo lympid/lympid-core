@@ -32,7 +32,7 @@ import com.lympid.core.behaviorstatemachines.StateBehavior;
  * @param <C> Type of the state machine context.
  *
  * @see StateTransitionSource
- * 
+ *
  * @author Fabien Renaud
  */
 public interface StateActivity<V extends StateBuilder<?, C>, C> extends StateTransitionSource<V, TransitionTrigger<V, C, CompletionEvent>, C> {

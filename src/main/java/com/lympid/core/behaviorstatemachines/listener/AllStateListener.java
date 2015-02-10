@@ -20,7 +20,7 @@ package com.lympid.core.behaviorstatemachines.listener;
  * @author Fabien Renaud
  */
 public interface AllStateListener<C> extends
-  StateActivityBeforeExecutionListener<C>, StateActivityAfterExecutionListener<C>, StateActivityExceptionListener<C>,
-  StateEnterBeforeExecutionListener<C>, StateEnterAfterExecutionListener<C>, StateEnterExceptionListener<C>,
-  StateExitBeforeExecutionListener<C>, StateExitAfterExecutionListener<C>, StateExitExceptionListener<C> {
+        StateActivityBeforeExecutionListener<C>, StateActivityAfterExecutionListener<C>, StateActivityExceptionListener<C>,
+        StateEnterBeforeExecutionListener<C>, StateEnterAfterExecutionListener<C>, StateEnterExceptionListener<C>,
+        StateExitBeforeExecutionListener<C>, StateExitAfterExecutionListener<C>, StateExitExceptionListener<C> {
 }

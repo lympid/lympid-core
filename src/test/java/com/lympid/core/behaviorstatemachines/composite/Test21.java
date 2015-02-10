@@ -42,7 +42,7 @@ import org.junit.Test;
 /**
  * Tests an internal transition on a composite state.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test21 extends AbstractStateMachineTest {
   

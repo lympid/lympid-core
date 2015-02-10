@@ -107,7 +107,7 @@ public final class MutableTransition implements Transition {
   public Region container() {
     return container;
   }
-  
+
   public void setContainer(final Region container) {
     this.container = container;
   }
@@ -117,7 +117,7 @@ public final class MutableTransition implements Transition {
     visitor.visitOnEntry(this);
     visitor.visitOnExit(this);
   }
-  
+
   @Override
   public String toString() {
     return VertexUtils.nameOrId(this);

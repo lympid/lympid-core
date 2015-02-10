@@ -38,7 +38,7 @@ import java.util.LinkedList;
  * @see ForkBuilder
  * @see JoinBuilder
  * @see TerminateBuilder
- * 
+ *
  * @author Fabien Renaud
  */
 abstract class PseudoStateBuilder<B extends PseudoStateBuilder<?, C>, C> extends VertexBuilder<B, MutablePseudoState, C> {

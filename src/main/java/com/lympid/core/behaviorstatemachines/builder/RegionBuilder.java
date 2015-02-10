@@ -306,8 +306,8 @@ public class RegionBuilder<C> implements Visitable {
    * Gets a choice pseudo state builder by name.
    *
    * @param name The name of the choice pseudo state.
-   * @return The singleton instance of the named choice pseudo state builder
-   * for that region.
+   * @return The singleton instance of the named choice pseudo state builder for
+   * that region.
    *
    * @see PseudoStateKind#CHOICE
    */
@@ -595,9 +595,9 @@ public class RegionBuilder<C> implements Visitable {
    */
   void connect(final VertexSet vertices) {
     /*
-     * verticesById only contains the vertices the region owns.
-     * It does NOT contain connection points (entry/exit points). Those are
-     * handled in the overriden connect method in the composite state builder.
+     * verticesById only contains the vertices the region owns. It does NOT
+     * contain connection points (entry/exit points). Those are handled in the
+     * overriden connect method in the composite state builder.
      */
     for (VertexBuilder b : orderedRegistry) {
       b.connect(vertices);

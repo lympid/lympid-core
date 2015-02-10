@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  * Tests two internal transitions on a simple state.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test21 extends AbstractStateMachineTest {
   

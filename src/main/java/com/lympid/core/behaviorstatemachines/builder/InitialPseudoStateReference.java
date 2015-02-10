@@ -22,7 +22,7 @@ import com.lympid.core.behaviorstatemachines.PseudoStateKind;
  *
  * @see PseudoState
  * @see PseudoStateKind#INITIAL
- * 
+ *
  * @author Fabien Renaud
  */
 public abstract class InitialPseudoStateReference<B extends PseudoStateBuilder<?, C>, C> extends PseudoStateBuilder<B, C> {

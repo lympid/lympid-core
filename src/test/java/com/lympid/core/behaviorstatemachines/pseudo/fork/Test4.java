@@ -32,7 +32,7 @@ import org.junit.Test;
  * Tests a fork vertex belonging to one of the regions of the orthogonal state.
  * Tests the other region of Test 3.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

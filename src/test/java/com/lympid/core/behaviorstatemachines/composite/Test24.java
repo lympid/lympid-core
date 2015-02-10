@@ -31,7 +31,7 @@ import org.junit.Test;
 /**
  * Tests the default entry rule of an empty composite state.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test24 extends AbstractStateMachineTest {
   

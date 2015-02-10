@@ -22,11 +22,10 @@ import java.util.Collection;
 
 /**
  * A vertex is an abstraction of a node in a state machine graph. In general, it
- * can be the source or destination of any number
- * of transitions.
+ * can be the source or destination of any number of transitions.
  *
  * @author Fabien Renaud
- * 
+ *
  * @see State
  * @see PseudoState
  */

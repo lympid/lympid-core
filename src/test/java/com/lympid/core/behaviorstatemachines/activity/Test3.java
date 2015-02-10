@@ -30,7 +30,7 @@ import org.junit.Test;
  * Tests the state activity is being executed and that its completion triggers
  * the completion transition.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test3 extends AbstractStateMachineTest {
   

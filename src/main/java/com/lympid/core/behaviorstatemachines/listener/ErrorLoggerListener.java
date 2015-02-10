@@ -34,8 +34,8 @@ import org.slf4j.Logger;
  * @author Fabien Renaud
  */
 public class ErrorLoggerListener extends LoggerListener implements
-  StateEnterExceptionListener, StateExitExceptionListener, StateActivityExceptionListener,
-  TransitionGuardExceptionListener, TransitionEffectExceptionListener {
+        StateEnterExceptionListener, StateExitExceptionListener, StateActivityExceptionListener,
+        TransitionGuardExceptionListener, TransitionEffectExceptionListener {
 
   public ErrorLoggerListener(Logger log) {
     super(log);

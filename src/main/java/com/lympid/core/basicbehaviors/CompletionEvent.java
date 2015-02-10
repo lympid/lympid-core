@@ -18,6 +18,7 @@ package com.lympid.core.basicbehaviors;
 /**
  * Provides a unique class and instance of an event labeled as the completion
  * event as defined in the UML superstructure version 2.4.1.
+ *
  * @author Fabien Renaud
  */
 public final class CompletionEvent implements Event {
@@ -35,7 +36,7 @@ public final class CompletionEvent implements Event {
 
   /**
    * Gets a printable representation of the event.
-   * 
+   *
    * @return {@code "CompletionEvent"}
    */
   @Override

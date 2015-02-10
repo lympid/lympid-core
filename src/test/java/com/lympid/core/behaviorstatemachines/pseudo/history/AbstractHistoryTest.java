@@ -26,7 +26,7 @@ import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 abstract class AbstractHistoryTest<C> extends AbstractStateMachineTest {
 

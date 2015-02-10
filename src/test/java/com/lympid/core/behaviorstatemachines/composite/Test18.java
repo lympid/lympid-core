@@ -44,7 +44,7 @@ import org.junit.Test;
  * Tests a local transition which has the same composite state as a source
  * and target.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test18 extends AbstractStateMachineTest {
   

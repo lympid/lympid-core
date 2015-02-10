@@ -20,6 +20,6 @@ package com.lympid.core.behaviorstatemachines.builder;
  * @author Fabien Renaud
  */
 public interface IdProvider {
-  
+
   String nextId();
 }

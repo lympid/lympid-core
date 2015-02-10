@@ -35,7 +35,7 @@ import org.junit.Test;
  * Tests also exceptions in transition guards and effects. A guard throwing
  * an exception is considered as false.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test20 extends AbstractStateMachineTest {
   

@@ -31,7 +31,7 @@ import org.slf4j.Marker;
  * purposes.
  * This class does not implement Marker methods and is not memory-efficient.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class StringBuilderLogger implements Logger {
 

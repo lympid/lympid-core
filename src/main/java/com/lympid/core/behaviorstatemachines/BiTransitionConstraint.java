@@ -21,16 +21,15 @@ import java.util.function.BiPredicate;
 
 /**
  * Represents a transition constraint (guard) that accepts an event and a
- * context argument.
- * This operation must NOT operate via side-effects.
- * 
- * In a behavioral state machine, a {@code BiTransitionConstraint} can be used as
- * a guard for any transitions outgoing a state.
- * For transition guards outgoing pseudo states, see {@link TransitionConstraint}.
+ * context argument. This operation must NOT operate via side-effects.
+ *
+ * In a behavioral state machine, a {@code BiTransitionConstraint} can be used
+ * as a guard for any transitions outgoing a state. For transition guards
+ * outgoing pseudo states, see {@link TransitionConstraint}.
  *
  * @param <E> the event
  * @param <C> the state machine context
- * 
+ *
  * @see java.util.function.BiPredicate
  * @author Fabien Renaud
  */

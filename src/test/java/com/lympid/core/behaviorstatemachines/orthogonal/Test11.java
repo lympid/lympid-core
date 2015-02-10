@@ -25,7 +25,7 @@ import org.junit.Test;
  * Local transitions outgoing an orthogonal state and targeting the same
  * orthogonal state are not supported yet.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test11 {
 

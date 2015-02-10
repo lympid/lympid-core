@@ -24,10 +24,10 @@ import java.util.Collection;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see State
  * @see StateMachine
- * 
+ *
  * @author Fabien Renaud
  */
 public class SubStateMachineBuilder<C> extends StateMachineBuilder<C> {
@@ -53,10 +53,10 @@ public class SubStateMachineBuilder<C> extends StateMachineBuilder<C> {
       cp.setStateMachine(machine);
       machine.connectionPoint().add(cp);
     }
-    
+
     connectionPointBuilder.connect(vertices);
   }
-  
+
   @Override
   public void accept(final Visitor visitor) {
     connectionPointBuilder.accept(visitor);

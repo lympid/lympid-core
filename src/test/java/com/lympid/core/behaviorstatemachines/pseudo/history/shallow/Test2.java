@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest2;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test2 extends HistoryTest2 {
   

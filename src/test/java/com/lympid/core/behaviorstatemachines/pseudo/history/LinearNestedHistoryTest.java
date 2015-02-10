@@ -28,7 +28,7 @@ import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
  * The terminate pseudo state parent state is always an ancestor of the simple
  * state.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class LinearNestedHistoryTest extends AbstractHistoryTest {
 

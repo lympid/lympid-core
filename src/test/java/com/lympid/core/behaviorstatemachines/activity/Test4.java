@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  * Tests activities in an orthogonal state.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

@@ -20,7 +20,7 @@ import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class TransitionEffectInjector implements Visitor {
 

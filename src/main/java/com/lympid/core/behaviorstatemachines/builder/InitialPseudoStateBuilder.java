@@ -22,10 +22,10 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#INITIAL
- * 
+ *
  * @author Fabien Renaud
  */
 public final class InitialPseudoStateBuilder<C> extends InitialPseudoStateReference<InitialPseudoStateBuilder<C>, C> implements PseudoStateTransitionSource<PseudoTransitionEffect<InitialPseudoStateReference<?, C>, C>> {

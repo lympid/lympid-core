@@ -23,9 +23,9 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see State
- * 
+ *
  * @author Fabien Renaud
  */
 public final class SimpleStateBuilder<C> extends StateBuilder<SimpleStateBuilder<C>, C> implements StateEntry<SimpleStateBuilder<C>, C> {

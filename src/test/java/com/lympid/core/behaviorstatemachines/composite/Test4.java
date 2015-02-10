@@ -42,7 +42,7 @@ import org.junit.Test;
  * Tests an external transition ending on the edge of a composite state triggers
  * the initial transition of the composite state.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

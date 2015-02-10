@@ -16,8 +16,9 @@
 package com.lympid.core.behaviorstatemachines;
 
 /**
- * TransitionKind is an enumeration of the following literal values: external, internal,
- * local.
+ * TransitionKind is an enumeration of the following literal values: external,
+ * internal, local.
+ *
  * @author Fabien Renaud
  */
 public enum TransitionKind {

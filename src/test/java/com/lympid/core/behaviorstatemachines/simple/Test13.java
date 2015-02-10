@@ -27,7 +27,7 @@ import org.junit.Test;
 
 /**
  * Entering a simple state executes its exit action.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test13 extends AbstractStateMachineTest {
   

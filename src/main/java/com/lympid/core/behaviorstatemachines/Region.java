@@ -21,6 +21,7 @@ import java.util.Collection;
 /**
  * A region is an orthogonal part of either a composite state or a state
  * machine. It contains states and transitions.
+ *
  * @author Fabien Renaud
  */
 public interface Region extends UmlElement, Visitable {

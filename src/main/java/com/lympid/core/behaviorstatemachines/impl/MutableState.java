@@ -15,7 +15,6 @@
  */
 package com.lympid.core.behaviorstatemachines.impl;
 
-import com.lympid.core.basicbehaviors.Constraint;
 import com.lympid.core.behaviorstatemachines.ConnectionPointReference;
 import com.lympid.core.behaviorstatemachines.PseudoState;
 import com.lympid.core.behaviorstatemachines.Region;

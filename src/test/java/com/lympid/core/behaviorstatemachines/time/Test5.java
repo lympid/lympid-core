@@ -33,7 +33,7 @@ import org.junit.Test;
  * Tests a time transition is canceled and recreated when an external transition
  * targeting its source state is fired.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
 

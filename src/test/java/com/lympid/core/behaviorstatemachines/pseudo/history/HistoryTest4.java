@@ -40,7 +40,7 @@ import org.junit.Test;
 /**
  * Tests a shallow/deep history pseudo state with an outgoing transition.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class HistoryTest4 extends AbstractHistoryTest {
   

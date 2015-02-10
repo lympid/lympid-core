@@ -42,7 +42,7 @@ import org.junit.Test;
  * Tests a local transition which source is the composite state and target is a
  * substate of the composite state.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test17 extends AbstractStateMachineTest {
 

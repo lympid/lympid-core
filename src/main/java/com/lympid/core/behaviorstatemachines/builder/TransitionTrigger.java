@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @param <E> {@code Event} type which lead to this step in the transition.
  *
  * @see TransitionGuard
- * 
+ *
  * @author Fabien Renaud
  */
 public interface TransitionTrigger<V extends VertexBuilder<?, ?, C>, C, E extends Event> extends TransitionGuard<V, C, E> {

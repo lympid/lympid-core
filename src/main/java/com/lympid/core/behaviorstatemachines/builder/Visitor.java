@@ -17,6 +17,7 @@ package com.lympid.core.behaviorstatemachines.builder;
 
 /**
  * Interface implementing the visitor pattern paradigm.
+ *
  * @author Fabien Renaud
  */
 public interface Visitor {

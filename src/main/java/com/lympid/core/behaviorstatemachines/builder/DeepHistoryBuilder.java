@@ -22,10 +22,10 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#DEEP_HISTORY
- * 
+ *
  * @author Fabien Renaud
  */
 public final class DeepHistoryBuilder<C> extends DeepHistoryReference<DeepHistoryBuilder<C>, C> implements PseudoStateTransitionSource<PseudoTransitionGuard<DeepHistoryReference<?, C>, C>> {

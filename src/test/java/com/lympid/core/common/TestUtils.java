@@ -27,7 +27,7 @@ import org.junit.Assert;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class TestUtils {
   

@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public final class StateMachineProcessorTester {
 

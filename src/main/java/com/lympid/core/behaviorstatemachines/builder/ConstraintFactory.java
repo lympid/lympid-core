@@ -24,6 +24,7 @@ import java.util.Map;
 
 /**
  * Provides factory functionality for any {@link Constraint}.
+ *
  * @author Fabien Renaud
  */
 public final class ConstraintFactory {
@@ -46,8 +47,8 @@ public final class ConstraintFactory {
   }
 
   /**
-   * Gets the singleton instance for the given {@code Constraint} class.
-   * When such instance does not exist, it is created and registered.
+   * Gets the singleton instance for the given {@code Constraint} class. When
+   * such instance does not exist, it is created and registered.
    *
    * The method safely returns null when the {@code constraintClass} argument is
    * null.
@@ -67,8 +68,8 @@ public final class ConstraintFactory {
 
   /**
    * Gets the singleton instance for the {@code OppositeConstraint} matching the
-   * given {@code Constraint} class.
-   * When such instance does not exist, it is created and registered.
+   * given {@code Constraint} class. When such instance does not exist, it is
+   * created and registered.
    *
    * The method safely returns null when the {@code constraintClass} argument is
    * null.
@@ -100,8 +101,8 @@ public final class ConstraintFactory {
   }
 
   /**
-   * Gets the singleton instance for the given {@code Constraint} class.
-   * When such instance does not exist, it is created and registered.
+   * Gets the singleton instance for the given {@code Constraint} class. When
+   * such instance does not exist, it is created and registered.
    *
    * The method safely returns null when the {@code constraintClass} argument is
    * null.

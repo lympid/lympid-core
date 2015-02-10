@@ -20,8 +20,8 @@ package com.lympid.core.behaviorstatemachines.listener;
  * @author Fabien Renaud
  */
 public interface AllTransitionListener<C> extends
-  TransitionStartedListener<C>, TransitionEndedListener<C>,
-  TransitionEffectBeforeExecutionListener<C>, TransitionEffectAfterExecutionListener<C>, TransitionEffectExceptionListener<C>,
-  TransitionGuardBeforeExecutionListener<C>, TransitionGuardAfterExecutionListener<C>, TransitionGuardExceptionListener<C> {
+        TransitionStartedListener<C>, TransitionEndedListener<C>,
+        TransitionEffectBeforeExecutionListener<C>, TransitionEffectAfterExecutionListener<C>, TransitionEffectExceptionListener<C>,
+        TransitionGuardBeforeExecutionListener<C>, TransitionGuardAfterExecutionListener<C>, TransitionGuardExceptionListener<C> {
 
 }

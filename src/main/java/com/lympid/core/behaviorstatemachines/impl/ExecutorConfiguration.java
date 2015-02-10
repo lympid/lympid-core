@@ -19,6 +19,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * State machine processor configuration.
+ *
  * @author Fabien Renaud
  */
 public class ExecutorConfiguration {
@@ -111,9 +112,8 @@ public class ExecutorConfiguration {
   }
 
   /**
-   * Gets the default history failover rule to use when a history pseudostate
-   * is reached without any history to restore and no outgoing transition to
-   * fire.
+   * Gets the default history failover rule to use when a history pseudostate is
+   * reached without any history to restore and no outgoing transition to fire.
    *
    * Default is EXCEPTION.
    *
@@ -126,13 +126,11 @@ public class ExecutorConfiguration {
   /**
    * Sets the scheduled executor service for the state machine to use.
    *
-   * If set, this will be used for:
-   * - activities: activities will always be run in background
-   * - kick off timers for transactions which accept time events.
+   * If set, this will be used for: - activities: activities will always be run
+   * in background - kick off timers for transactions which accept time events.
    * - orthogonal states: orthogonal states will be executed concurrently with
    * the given scheduled executor service under the condition that the
-   * 'concurrentOrthogonal'
-   * property has been enabled.
+   * 'concurrentOrthogonal' property has been enabled.
    *
    * @param executor The scheduled executor service for the state machine.
    * @return Returns the current configuration instance.

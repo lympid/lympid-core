@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * Tests activities in sub machine states.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
   

@@ -216,9 +216,9 @@ public final class StandardValidator {
 
   public static void validate(final Region region) {
     /*
-     * [1] A region can have at most one initial vertex.
-     * [2] A region can have at most one deep history vertex.
-     * [3] A region can have at most one shallow history vertex.
+     * [1] A region can have at most one initial vertex. [2] A region can have
+     * at most one deep history vertex. [3] A region can have at most one
+     * shallow history vertex.
      */
     int countOfInitialVertex = 0;
     int countOfDeepHistoryVertex = 0;
@@ -290,8 +290,8 @@ public final class StandardValidator {
     }
 
     /*
-     * [3] A state is not allowed to have both a submachine and regions.
-     * This is verified in ImplementationValidator.
+     * [3] A state is not allowed to have both a submachine and regions. This is
+     * verified in ImplementationValidator.
      */
 
     /*
@@ -415,11 +415,11 @@ public final class StandardValidator {
 
       /*
        * [5] Transitions outgoing pseudostates may not have a trigger (except
-       * for those coming out of the initial pseudostate).
-       * [6] An initial transition at the topmost level (region of a
-       * statemachine) either has no trigger or it has a trigger with the
-       * stereotype “create.” Note: Stereotype "create" is not supported.
-       * Therefore, initial transitions have no trigger as well.
+       * for those coming out of the initial pseudostate). [6] An initial
+       * transition at the topmost level (region of a statemachine) either has
+       * no trigger or it has a trigger with the stereotype “create.” Note:
+       * Stereotype "create" is not supported. Therefore, initial transitions
+       * have no trigger as well.
        */
       if (!transition.triggers().isEmpty()) {
         throw new TransitionConstraintException(transition, "A transition outgoing a pseudo state must not have triggers.");

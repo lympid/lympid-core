@@ -25,6 +25,6 @@ import com.lympid.core.behaviorstatemachines.Transition;
  */
 @FunctionalInterface
 public interface TransitionGuardExceptionListener<C> {
-  
+
   void onTransitionGuardException(StateMachineExecutor executor, StateMachine machine, C context, Event event, Transition transition, Exception exception);
 }

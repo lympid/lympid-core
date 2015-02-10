@@ -17,7 +17,6 @@
 package com.lympid.core.behaviorstatemachines.orthogonal;
 
 import com.lympid.core.behaviorstatemachines.SequentialContext;
-import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
@@ -28,7 +27,7 @@ import org.junit.Test;
  * Local transitions outgoing an orthogonal state and targeting an exit point of
  * the same orthogonal state are not supported yet.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test10  {
   

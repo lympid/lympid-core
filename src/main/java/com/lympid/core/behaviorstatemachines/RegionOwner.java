@@ -19,14 +19,14 @@ import java.util.List;
 
 /**
  * Interface for elements that own regions.
- * 
+ *
  * @author Fabien Renaud
  */
 public interface RegionOwner {
 
   /**
    * Regions owned by the element.
-   * 
+   *
    * @return The list of regions the element owns.
    */
   List<? extends Region> region();

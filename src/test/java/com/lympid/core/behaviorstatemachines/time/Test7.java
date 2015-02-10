@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  * Tests an internal transition can be fired by a time event.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test7 extends AbstractStateMachineTest {
 

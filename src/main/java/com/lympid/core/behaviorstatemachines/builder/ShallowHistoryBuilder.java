@@ -22,10 +22,10 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#SHALLOW_HISTORY
- * 
+ *
  * @author Fabien Renaud
  */
 public final class ShallowHistoryBuilder<C> extends ShallowHistoryReference<ShallowHistoryBuilder<C>, C> implements PseudoStateTransitionSource<PseudoTransitionGuard<ShallowHistoryReference<?, C>, C>> {

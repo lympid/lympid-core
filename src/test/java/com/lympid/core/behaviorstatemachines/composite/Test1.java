@@ -42,7 +42,7 @@ import org.junit.Test;
  * Tests an external transition can have its source and target states in different
  * regions.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test1 extends AbstractStateMachineTest {
   

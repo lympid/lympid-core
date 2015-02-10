@@ -44,7 +44,7 @@ import java.util.List;
  * @see Vertex
  * @see StateBuilder
  * @see PseudoStateBuilder
- * 
+ *
  * @author Fabien Renaud
  */
 public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVertex, C> implements VertexBuilderReference<C>, Visitable {
@@ -184,11 +184,11 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
   /**
    * Determines the region the transition described by the {@code source},
    * {@code  target} and {@code kind} parameters belongs to.
-   * 
+   *
    * <p>
    * TODO: explains what this do because it's not trivial
    * </p>
-   * 
+   *
    * <p>
    * The specification - UML superstructure 2.4.1 - only provides the following
    * guidelines: "The owner of a transition is not explicitly constrained,
@@ -218,10 +218,9 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
           if (composite == null) {
             /*
              * Case when the exit point is one of a state machine. The source of
-             * the transition can not be the state machine itself and the
-             * state machine is always the ancestor of the source.
-             * There, the transition belongs to the first region of the state
-             * machine.
+             * the transition can not be the state machine itself and the state
+             * machine is always the ancestor of the source. There, the
+             * transition belongs to the first region of the state machine.
              */
             return pseudoTarget.stateMachine().region().get(0);
           }
@@ -235,11 +234,11 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
         }
 
         Vertex nSource = VertexUtils.exitPoint(source)
-          ? ((PseudoState) source).state()
-          : source;
+                ? ((PseudoState) source).state()
+                : source;
         Vertex nTarget = VertexUtils.connectionPoint(target)
-          ? ((PseudoState) target).state()
-          : target;
+                ? ((PseudoState) target).state()
+                : target;
         return vertices.leastCommonAncestor(nSource, nTarget);
       case INTERNAL:
         return source.container();
@@ -259,9 +258,8 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
 
         /*
          * The transition always belongs to the region of the source composite
-         * state.
-         * When multiple regions, the transition belongs to the region of the
-         * target vertex.
+         * state. When multiple regions, the transition belongs to the region of
+         * the target vertex.
          */
         if (sourceRegions.size() == 1) {
           return sourceRegions.get(0);
@@ -271,8 +269,8 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
          * Orthogonal state case
          */
         final State targetState = target instanceof State
-          ? (State) target
-          : (State) ((PseudoState) target).state();
+                ? (State) target
+                : (State) ((PseudoState) target).state();
         if (sourceRegionOwner == targetState) {
           throw new UnsupportedOperationException("Local transitions which source and target are the same orthogonal state are not supported yet.");
           // TODO: Should the transition belong to the orthogonal state itself (and not one of its regions)?

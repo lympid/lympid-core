@@ -43,7 +43,7 @@ import org.junit.Test;
  * final state. Because the history pseudo state has no outgoing transition,
  * this is expected to fail.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class HistoryTest5 extends AbstractHistoryTest {
   

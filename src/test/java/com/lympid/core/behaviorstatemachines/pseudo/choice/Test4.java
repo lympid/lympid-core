@@ -32,7 +32,7 @@ import org.junit.Test;
  * This means that the effect fired on the incoming transition of the pseudo
  * state impacts which outgoing transition will be selected.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
 

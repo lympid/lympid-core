@@ -17,23 +17,24 @@ package com.lympid.core.common;
 
 /**
  * Interface of a UML element.
+ *
  * @author Fabien Renaud
  */
 public interface UmlElement {
-  
+
   /**
-   * Gets the unique identifier of the {@code UmlElement}.
-   * This identifier must be distinct from any other identifier this element may
-   * interact and be in relation with.
-   * 
+   * Gets the unique identifier of the {@code UmlElement}. This identifier must
+   * be distinct from any other identifier this element may interact and be in
+   * relation with.
+   *
    * @return The non-null unique identifier of the {@code UmlElement}.
    */
   String getId();
 
   /**
-   * Gets the name of the {@code UmlElement}.
-   * The name is not guaranteed to be unique.
-   * 
+   * Gets the name of the {@code UmlElement}. The name is not guaranteed to be
+   * unique.
+   *
    * @return The name of the {@code UmlElement} or null.
    */
   String getName();

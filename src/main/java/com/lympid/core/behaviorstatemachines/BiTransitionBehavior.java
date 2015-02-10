@@ -25,8 +25,8 @@ import java.util.function.BiConsumer;
  * via side-effects.
  *
  * In a behavioral state machine, a {@code BiTransitionBehavior} can be used as
- * an effect for any transitions outgoing a state.
- * For transition effects outgoing pseudo states, see {@link TransitionBehavior}.
+ * an effect for any transitions outgoing a state. For transition effects
+ * outgoing pseudo states, see {@link TransitionBehavior}.
  *
  * @param <E> the event
  * @param <C> the state machine context

@@ -95,7 +95,7 @@ import java.util.List;
  * configuration.
  *
  * @author Fabien Renaud
- * 
+ *
  * @see FinalState
  */
 public interface State extends Vertex, RegionOwner {
@@ -211,8 +211,7 @@ public interface State extends Vertex, RegionOwner {
    * state.
    *
    * @return The state machine that is to be inserted in place of the
-   * (submachine)
-   * state.
+   * (submachine) state.
    */
   StateMachine subStateMachine();
 
@@ -223,8 +222,7 @@ public interface State extends Vertex, RegionOwner {
    * postcondition of the incoming transitions.
    *
    * @return Specifies conditions that are always true when this state is the
-   * current
-   * state.
+   * current state.
    */
 //  Constraint stateInvariant();
 }

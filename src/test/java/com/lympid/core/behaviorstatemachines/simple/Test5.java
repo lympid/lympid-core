@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Tests the guard of an external transition with no trigger and no effect.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
     

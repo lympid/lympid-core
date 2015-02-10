@@ -36,9 +36,8 @@ public final class VertexUtils {
   }
 
   /**
-   * Checks whether s1 is an ancestor of v2.
-   * Reference: UML superstructure 2.4.1, chapter 15.3.12 StateMachine, section
-   * Additional Operations
+   * Checks whether s1 is an ancestor of v2. Reference: UML superstructure
+   * 2.4.1, chapter 15.3.12 StateMachine, section Additional Operations
    *
    * Note: A vertex is an ancestor of himself such as ancestor(s1, s1) is true.
    *
@@ -60,8 +59,8 @@ public final class VertexUtils {
   }
 
   /**
-   * Checks all the given regions belong to the same orthogonal state and are
-   * at the same level.
+   * Checks all the given regions belong to the same orthogonal state and are at
+   * the same level.
    *
    * @param regions A collection of regions.
    * @return true when all regions belongs to the same orthogonal state.

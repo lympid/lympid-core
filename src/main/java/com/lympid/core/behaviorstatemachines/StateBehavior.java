@@ -21,16 +21,16 @@ import java.util.function.Consumer;
 /**
  * Represents a state behavior that takes a context as argument and returns no
  * result. This {@code StateBehavior} is expected to operate via side-effects.
- * 
+ *
  * In a behavorial state machine, a {@code StateBehavior} can be used as:
  * <ul>
- *   <li>an entry behavior</li>
- *   <li>an exit behavior</li>
- *   <li>an activity behavior</li>
+ * <li>an entry behavior</li>
+ * <li>an exit behavior</li>
+ * <li>an activity behavior</li>
  * </ul>
  *
  * @param <C> Type of the state machine context
- * 
+ *
  * @see Consumer
  * @author Fabien Renaud
  */

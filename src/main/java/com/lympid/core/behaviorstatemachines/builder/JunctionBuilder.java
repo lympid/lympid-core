@@ -22,10 +22,10 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 /**
  *
  * @param <C> Type of the state machine context.
- * 
+ *
  * @see PseudoState
  * @see PseudoStateKind#JUNCTION
- * 
+ *
  * @author Fabien Renaud
  */
 public final class JunctionBuilder<C> extends PseudoStateBuilder<JunctionBuilder<C>, C> implements PseudoStateTransitionSource<PseudoTransitionGuard<JunctionBuilder<C>, C>> {

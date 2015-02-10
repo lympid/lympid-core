@@ -169,9 +169,9 @@ final class VertexSet {
    * <p>
    * For instance, let a vertex V belong to a region R1, which is defined as the
    * region of the composite state S, which belongs to a region R0, which is the
-   * region of the top level state machine.
-   * Then, the stack of regions this method returns for V is [R0, R1], with R0
-   * being the region at the top of the stack.
+   * region of the top level state machine. Then, the stack of regions this
+   * method returns for V is [R0, R1], with R0 being the region at the top of
+   * the stack.
    * </p>
    *
    * @param vertex The vertex for which to find its region path from the top

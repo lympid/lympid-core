@@ -23,6 +23,6 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
  * @author Fabien Renaud
  */
 public interface MachineTerminatedListener<C> extends MachineListener {
-  
+
   void onMachineTerminated(StateMachineExecutor executor, StateMachine machine, C context);
 }

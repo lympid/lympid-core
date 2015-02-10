@@ -25,6 +25,7 @@ import java.util.Map;
 
 /**
  * Provides factory functionality for any {@link Behavior}.
+ *
  * @author Fabien Renaud
  */
 public final class BehaviorFactory {
@@ -88,8 +89,8 @@ public final class BehaviorFactory {
   }
 
   /**
-   * Gets the singleton instance for the given {@code Behavior} class.
-   * When such instance does not exist, it is created and registered.
+   * Gets the singleton instance for the given {@code Behavior} class. When such
+   * instance does not exist, it is created and registered.
    *
    * The method safely returns null when the {@code behaviorClass} argument is
    * null.

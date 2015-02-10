@@ -17,6 +17,7 @@ package com.lympid.core.behaviorstatemachines.builder;
 
 /**
  * Interface accepting a visitor.
+ *
  * @author Fabien Renaud
  */
 public interface Visitable {

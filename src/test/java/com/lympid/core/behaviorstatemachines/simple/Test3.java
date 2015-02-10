@@ -27,7 +27,7 @@ import org.junit.Test;
 
 /**
  * Tests an external transition with no trigger can be executed.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test3 extends AbstractStateMachineTest {
   

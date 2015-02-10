@@ -42,7 +42,7 @@ import org.junit.Test;
 /**
  * Tests a local transition going from an entry point to an exit point.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test10 extends AbstractStateMachineTest {
   

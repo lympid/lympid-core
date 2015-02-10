@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public final class StringBufferLoggerTester {
   

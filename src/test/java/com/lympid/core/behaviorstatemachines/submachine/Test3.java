@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests chaining the same sub state machine with no entry/exit points.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test3 extends AbstractStateMachineTest {
   

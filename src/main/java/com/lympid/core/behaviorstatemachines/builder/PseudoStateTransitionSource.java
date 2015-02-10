@@ -16,7 +16,7 @@
 package com.lympid.core.behaviorstatemachines.builder;
 
 /**
- * 
+ *
  * @author Fabien Renaud
  */
 public interface PseudoStateTransitionSource<T extends TransitionStep<?>> extends OneKindTransitionSource<T> {

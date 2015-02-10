@@ -31,7 +31,7 @@ import org.junit.Test;
  * Tests a fork vertex.
  * The orthogonal state is entered by a transition targeting its edge.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test1 extends AbstractStateMachineTest {
     

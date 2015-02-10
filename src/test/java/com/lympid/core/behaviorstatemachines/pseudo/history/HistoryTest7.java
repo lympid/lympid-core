@@ -26,7 +26,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class HistoryTest7 extends LinearNestedHistoryTest {
 

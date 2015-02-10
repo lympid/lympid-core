@@ -24,5 +24,5 @@ package com.lympid.core.behaviorstatemachines;
  * @author Fabien Renaud
  */
 public interface FinalState extends State {
-  
+
 }

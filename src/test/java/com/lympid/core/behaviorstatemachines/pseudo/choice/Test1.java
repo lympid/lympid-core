@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Tests a choice pseudo state outgoing an initial transition.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test1 extends AbstractStateMachineTest {
     

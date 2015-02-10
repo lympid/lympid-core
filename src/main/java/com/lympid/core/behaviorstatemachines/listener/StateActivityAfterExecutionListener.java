@@ -24,6 +24,6 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
  * @author Fabien Renaud
  */
 public interface StateActivityAfterExecutionListener<C> extends MachineListener {
-  
+
   void onStateActivityAfterExecution(StateMachineExecutor executor, StateMachine machine, C context, State state);
 }

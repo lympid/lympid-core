@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Tests multiple outgoing guarded transitions can be executed from a simple state.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test18 extends AbstractStateMachineTest {
   

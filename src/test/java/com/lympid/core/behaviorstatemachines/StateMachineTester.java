@@ -17,13 +17,11 @@ package com.lympid.core.behaviorstatemachines;
 
 import com.lympid.core.behaviorstatemachines.impl.TextVisitor;
 import com.lympid.core.common.UmlElement;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -33,7 +31,7 @@ import static org.junit.Assert.fail;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public final class StateMachineTester {
   

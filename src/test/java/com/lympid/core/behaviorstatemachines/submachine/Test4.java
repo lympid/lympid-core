@@ -27,7 +27,7 @@ import com.lympid.core.behaviorstatemachines.builder.SubStateMachineBuilder;
 /**
  * Tests chaining the same sub state machine with entry/exit points.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test4 extends AbstractStateMachineTest {
   

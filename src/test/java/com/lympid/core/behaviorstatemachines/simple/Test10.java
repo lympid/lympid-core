@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Tests an external transition with 5 triggers can be executed with any of the fives.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test10 extends AbstractStateMachineTest {
   

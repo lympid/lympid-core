@@ -31,7 +31,7 @@ import java.util.Set;
  * @see PseudoState
  * @see PseudoStateKind#ENTRY_POINT
  * @see PseudoStateKind#EXIT_POINT
- * 
+ *
  * @author Fabien Renaud
  */
 public class ConnectionPointBuilder<C> implements EntryPoint<C>, Visitable {

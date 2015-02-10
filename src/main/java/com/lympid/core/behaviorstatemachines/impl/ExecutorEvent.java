@@ -78,13 +78,13 @@ public enum ExecutorEvent {
   STATE_ACTIVITY_BEFORE_EXECUTION(StateActivityBeforeExecutionListener.class),
   STATE_ACTIVITY_AFTER_EXECUTION(StateActivityAfterExecutionListener.class),
   STATE_ACTIVITY_EXCEPTION(StateActivityExceptionListener.class);
-  
+
   private final Class listenerClass;
 
   private ExecutorEvent(Class listenerClass) {
     this.listenerClass = listenerClass;
   }
-  
+
   public Class getListenerClass() {
     return listenerClass;
   }

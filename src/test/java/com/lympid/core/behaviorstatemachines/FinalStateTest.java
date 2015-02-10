@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 /**
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class FinalStateTest extends VertexTest {
 

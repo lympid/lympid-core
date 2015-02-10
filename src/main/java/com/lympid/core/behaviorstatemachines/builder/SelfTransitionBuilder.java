@@ -31,9 +31,9 @@ import java.util.concurrent.TimeUnit;
  * @param <V> {@code StateBuilder} type which is the source of the transition.
  * @param <C> Type of the state machine context.
  * @param <E> {@code Event} type which lead to this step in the transition.
- * 
+ *
  * @see Transition
- * 
+ *
  * @author Fabien Renaud
  */
 public final class SelfTransitionBuilder<V extends StateBuilder, C, E extends Event> extends AbstractTransitionBuilder<V, C> implements SelfTransitionTrigger<V, C, E> {

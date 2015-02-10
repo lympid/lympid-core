@@ -31,7 +31,7 @@ import org.junit.Test;
 
 /**
  * Tests an initial transition with no effect targeting a terminate pseudo state.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test1 extends AbstractStateMachineTest {
   

@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 
 /**
  * State entries, activity and state exists are performed in the right order.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test16 extends AbstractStateMachineTest {
   

@@ -46,7 +46,7 @@ import org.junit.Test;
 /**
  * Tests the default history entry of shallow and deep history vertices.
  *
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public abstract class HistoryTest8 extends AbstractHistoryTest {
   

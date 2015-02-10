@@ -41,7 +41,7 @@ import org.junit.Test;
 
 /**
  * Tests the same event fires the innermost transition.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test6 extends AbstractStateMachineTest {
   

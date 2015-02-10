@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * Tests a time transition gets canceled.
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test2 extends AbstractStateMachineTest {
 

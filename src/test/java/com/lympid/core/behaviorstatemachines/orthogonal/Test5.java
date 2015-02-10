@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * Tests an entry point can be connect to a sub entry point
  * 
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test5 extends AbstractStateMachineTest {
   

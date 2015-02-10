@@ -30,7 +30,7 @@ import org.junit.Test;
  * Tests multiple outgoing  transitions with different triggers can be executed
  * from a simple state.
  * The state machine auto starts.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test17 extends AbstractStateMachineTest {
   

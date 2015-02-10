@@ -40,7 +40,7 @@ import org.junit.Test;
 
 /**
  * Tests exiting a composite state early.
- * @author Fabien Renaud
+ * @author Fabien Renaud 
  */
 public class Test2 extends AbstractStateMachineTest {
   

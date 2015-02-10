@@ -32,7 +32,7 @@ import org.slf4j.Logger;
  * @author Fabien Renaud
  */
 public class DebugLoggerListener extends InfoLoggerListener implements
-  TransitionStartedListener, TransitionEndedListener, EventDeniedListener, EventDeferredListener {
+        TransitionStartedListener, TransitionEndedListener, EventDeniedListener, EventDeferredListener {
 
   public DebugLoggerListener(Logger log) {
     super(log);
