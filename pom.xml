@@ -4,16 +4,17 @@
     <parent>
         <groupId>com.lympid</groupId>
         <artifactId>lympid-parent</artifactId>
-        <version>0.9.0</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>lympid-core</artifactId>
+    <version>0.9.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     
     <name>lympid-core</name>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txst</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
