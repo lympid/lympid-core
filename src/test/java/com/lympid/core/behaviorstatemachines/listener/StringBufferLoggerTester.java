@@ -53,6 +53,6 @@ public final class StringBufferLoggerTester {
   }
   
   private static String stripFromActivityStatements(final String text) {
-    return text.replaceAll("\\[.+STATE_ACTIVITY.+\n?", "");
+    return text.replaceAll("\\[.+STATE_ACTIVITY.+([^\\[]\n?)", "");
   }
 }
