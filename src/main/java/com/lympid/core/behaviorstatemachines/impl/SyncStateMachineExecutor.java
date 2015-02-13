@@ -35,8 +35,8 @@ public class SyncStateMachineExecutor extends AbstractStateMachineExecutor {
   }
 
   @Override
-  protected StateMachineState<TreeNode<State>> createMachineState(final StateMachine machine) {
-    return TreeStateMachineState.synchronizedMachineState(super.createMachineState(machine));
+  protected StateMachineState createMachineState(final StateMachine machine) {
+    return AbstractStateMachineState.synchronizedMachineState(super.createMachineState(machine));
   }
 
   @Override

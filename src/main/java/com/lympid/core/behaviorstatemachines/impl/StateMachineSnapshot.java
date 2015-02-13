@@ -15,28 +15,25 @@
  */
 package com.lympid.core.behaviorstatemachines.impl;
 
-import com.lympid.core.behaviorstatemachines.State;
-import com.lympid.core.common.TreeNode;
-
 /**
  *
  * @author Fabien Renaud
  */
 public final class StateMachineSnapshot<C> {
 
-  private final TreeNode<State> activateStates;
+  private final StateConfiguration activateStates;
   private final boolean started;
   private final boolean terminated;
   private final C context;
 
-  StateMachineSnapshot(final StateMachineState<TreeNode<State>> state, final C context) {
+  StateMachineSnapshot(final StateMachineState state, final C context) {
     this.activateStates = state.activeStates().copy();
     this.started = state.hasStarted();
     this.terminated = state.isTerminated();
     this.context = context; // TODO: clone
   }
 
-  public TreeNode<State> activateStates() {
+  public StateConfiguration activateStates() {
     return activateStates;
   }
 

@@ -26,13 +26,13 @@ import java.util.concurrent.Future;
  *
  * @author Fabien Renaud
  */
-public interface StateMachineState<T> {
+public interface StateMachineState {
 
   void activate(final State state);
 
-  T activeStates();
+  StateConfiguration<?> activeStates();
 
-  T activeStates(final Region region);
+  StateConfiguration<?> activeStates(final Region region);
 
   boolean activityCompleted(final State state);
 
@@ -56,7 +56,7 @@ public interface StateMachineState<T> {
 
   boolean isTerminated();
 
-  T restore(final Region r);
+  StateConfiguration<?> restore(final Region r);
 
   void saveDeepHistory(final Region r);
 

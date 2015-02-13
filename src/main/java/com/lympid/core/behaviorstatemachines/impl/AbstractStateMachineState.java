@@ -21,7 +21,6 @@ import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineMeta;
 import com.lympid.core.behaviorstatemachines.Transition;
-import com.lympid.core.common.TreeNode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,19 +32,19 @@ import java.util.concurrent.Future;
  *
  * @author Fabien Renaud
  */
-public class TreeStateMachineState implements StateMachineState<TreeNode<State>> {
+abstract class AbstractStateMachineState implements StateMachineState {
 
-  private final TreeNode<State> activeStates;
-  private final Map<Region, TreeNode<State>> nodesByRegion;
-  private final Map<Region, TreeNode<State>> histories;
+  private final MutableStateConfiguration activeStates;
+  private final Map<Region, MutableStateConfiguration> nodesByRegion;
+  private final Map<Region, MutableStateConfiguration> histories;
   private final Map<State, StateStatus> activeStateStatutes;
   private final Set<State> completedStates;
   private final Map<PseudoState, Set<Transition>> joins;
   private boolean started;
   private boolean terminated;
 
-  public TreeStateMachineState(final StateMachineMeta metadata) {
-    this.activeStates = new TreeNode<>();
+  protected AbstractStateMachineState(final MutableStateConfiguration activeStates, final StateMachineMeta metadata) {
+    this.activeStates = activeStates;
     this.nodesByRegion = new HashMap<>();
     this.histories = new HashMap<>(metadata.countOfHistoryNodes());
     this.activeStateStatutes = new HashMap<>();
@@ -53,46 +52,45 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
     this.joins = new HashMap<>();
   }
 
-  public static StateMachineState<TreeNode<State>> synchronizedMachineState(StateMachineState<TreeNode<State>> inst) {
+  public static StateMachineState synchronizedMachineState(StateMachineState inst) {
     return new SynchronizedStateMachineState(inst);
   }
 
   @Override
-  public TreeNode<State> activeStates() {
+  public StateConfiguration<?> activeStates() {
     return activeStates;
   }
 
   @Override
-  public TreeNode<State> activeStates(final Region region) {
+  public StateConfiguration<?> activeStates(final Region region) {
     return nodesByRegion.get(region);
   }
 
   @Override
   public boolean isActive(final State state) {
     assert state != null;
-    TreeNode<State> node = nodesByRegion.get(state.container());
-    if (node == null) {
+    StateConfiguration stateConfig = nodesByRegion.get(state.container());
+    if (stateConfig == null) {
       return false;
     }
-    return state == node.content();
+    return state == stateConfig.state();
   }
 
   @Override
   public void activate(final State state) {
-    TreeNode<State> node = nodesByRegion.get(state.container());
-    assert node == null || node.content() != state;
+    MutableStateConfiguration stateConfig = nodesByRegion.get(state.container());
+    assert stateConfig == null || stateConfig.state() != state;
 
     if (state.container().state() == null) { // top level state machine case
-      activeStates.setContent(state);
+      activeStates.setState(state);
       nodesByRegion.put(state.container(), activeStates);
     } else {
       Region stateRegion = state.container();
-      node = nodesByRegion.get(stateRegion.state().container()); // get the parent node
-      assert node != null;
+      stateConfig = nodesByRegion.get(stateRegion.state().container()); // get the parent node
+      assert stateConfig != null;
 
-      TreeNode<State> tn = new TreeNode<>(state);
-      node.add(tn);
-      nodesByRegion.put(stateRegion, tn);
+      MutableStateConfiguration newCollection = stateConfig.addChild(state);
+      nodesByRegion.put(stateRegion, newCollection);
     }
 
     activeStateStatutes.put(state, new StateStatus(state));
@@ -103,19 +101,19 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
 
   @Override
   public void deactivate(final State state) {
-    TreeNode<State> node = nodesByRegion.get(state.container());
-    assert node != null && node.content() == state;
+    MutableStateConfiguration stateConfig = nodesByRegion.get(state.container());
+    assert stateConfig != null && stateConfig.state() == state;
 
     /*
      * Can only deactivate leaf.
      */
-    assert node.isLeaf();
+    assert stateConfig.isEmpty();
 
     if (state.container().state() == null) { // top level state machine case
-      activeStates.setContent(null);
+      activeStates.clear();
       nodesByRegion.clear();
     } else {
-      node.parent().remove(node);
+      stateConfig.parent().removeChild(stateConfig);
       nodesByRegion.remove(state.container());
     }
 
@@ -200,8 +198,8 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
     State state = status.getState();
     if (!state.region().isEmpty()) {
       for (Region r : state.region()) {
-        TreeNode<State> node = nodesByRegion.get(r);
-        if (node != null && !(node.content() instanceof FinalState)) {
+        StateConfiguration stateConfig = nodesByRegion.get(r);
+        if (stateConfig != null && !(stateConfig.state() instanceof FinalState)) {
           return false;
         }
       }
@@ -229,27 +227,27 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
   }
 
   @Override
-  public TreeNode<State> restore(final Region r) {
+  public StateConfiguration<?> restore(final Region r) {
     return histories.get(r);
   }
 
   @Override
   public void saveDeepHistory(final Region r) {
-    TreeNode<State> node = nodesByRegion.get(r);
-    if (node == null || node.content() instanceof FinalState) {
+    MutableStateConfiguration stateConfig = nodesByRegion.get(r);
+    if (stateConfig == null || stateConfig.state() instanceof FinalState) {
       histories.put(r, null);
     } else {
-      histories.put(r, node.copy());
+      histories.put(r, (MutableStateConfiguration) stateConfig.copy());
     }
   }
 
   @Override
   public void saveShallowHistory(final Region r) {
-    TreeNode<State> node = nodesByRegion.get(r);
-    if (node == null || node.content() instanceof FinalState) {
+    StateConfiguration stateConfig = nodesByRegion.get(r);
+    if (stateConfig == null || stateConfig.state() instanceof FinalState) {
       histories.put(r, null);
     } else {
-      histories.put(r, new TreeNode<>(node.content()));
+      histories.put(r, new SimpleStateConfiguration(stateConfig.state()));
     }
   }
 
@@ -278,12 +276,12 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
     }
   }
 
-  public static final class SynchronizedStateMachineState implements StateMachineState<TreeNode<State>> {
+  public static final class SynchronizedStateMachineState implements StateMachineState {
 
-    private final StateMachineState<TreeNode<State>> inst;
+    private final StateMachineState inst;
     private final Object mutex = new Object();
 
-    private SynchronizedStateMachineState(final StateMachineState<TreeNode<State>> inst) {
+    private SynchronizedStateMachineState(final StateMachineState inst) {
       this.inst = inst;
     }
 
@@ -295,8 +293,8 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
     }
 
     @Override
-    public TreeNode<State> activeStates() {
-      TreeNode<State> out;
+    public StateConfiguration activeStates() {
+      StateConfiguration out;
       synchronized (mutex) {
         out = inst.activeStates();
       }
@@ -304,8 +302,8 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
     }
 
     @Override
-    public TreeNode<State> activeStates(Region region) {
-      TreeNode<State> out;
+    public StateConfiguration activeStates(Region region) {
+      StateConfiguration out;
       synchronized (mutex) {
         out = inst.activeStates(region);
       }
@@ -406,8 +404,8 @@ public class TreeStateMachineState implements StateMachineState<TreeNode<State>>
     }
 
     @Override
-    public TreeNode<State> restore(Region r) {
-      TreeNode<State> out;
+    public StateConfiguration restore(Region r) {
+      StateConfiguration out;
       synchronized (mutex) {
         out = inst.restore(r);
       }

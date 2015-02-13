@@ -62,7 +62,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
   private final int id;
   private StateMachine machine;
-  private StateMachineState<TreeNode<State>> machineState;
+  private StateMachineState machineState;
   private Object context;
   private ExecutorConfiguration configuration = ExecutorConfiguration.DEFAULT;
   private ExecutorListener listeners = ExecutorListener.DEFAULT;
@@ -86,8 +86,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     this.machineState = createMachineState(machine);
   }
 
-  protected StateMachineState<TreeNode<State>> createMachineState(final StateMachine machine) {
-    return new TreeStateMachineState(machine.metadata());
+  protected StateMachineState createMachineState(final StateMachine machine) {
+    return new OrthogonalStateMachineState(machine.metadata());
   }
 
   @Override
@@ -231,16 +231,10 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     }
   }
 
-  private void scheduleTimeEvents(final TreeNode<State> node) {
-    assert node.content() != null;
-
-    if (node.hasChildren()) {
-      for (TreeNode<State> child : node) {
-        scheduleTimeEvents(child);
-      }
-    }
-
-    scheduleTimeEvents(node.content());
+  private void scheduleTimeEvents(final StateConfiguration<?> stateConfig) {
+    assert stateConfig.state() != null;
+    stateConfig.forEach(this::scheduleTimeEvents);
+    scheduleTimeEvents(stateConfig.state());
   }
 
   private void scheduleTimeEvents(final State state) {
@@ -383,26 +377,22 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   }
 
   private void leave(final Region region) {
-    final TreeNode<State> node = machineState.activeStates(region);
-    if (node != null) {
-      leaveNode(node);
+    final StateConfiguration stateConfig = machineState.activeStates(region);
+    if (stateConfig != null) {
+      leaveNode(stateConfig);
     }
   }
 
-  private void leaveNode(final TreeNode<State> node) {
-    final Region region = node.content().container();
+  private void leaveNode(final StateConfiguration<?> stateConfig) {
+    final Region region = stateConfig.state().container();
     if (region.deepHistory() != null) {
       machineState.saveDeepHistory(region);
     } else if (region.shallowHistory() != null) {
       machineState.saveShallowHistory(region);
     }
 
-    if (node.hasChildren()) {
-      for (TreeNode<State> child : node) {
-        leaveNode(child);
-      }
-    }
-    leaveState(node.content());
+    stateConfig.forEach(this::leaveNode);
+    leaveState(stateConfig.state());
   }
 
   private void leaveState(final State state) {
@@ -446,18 +436,17 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     }
   }
 
-  private void enterHistory(final TreeNode<State> tree) {
-    assert tree.content() != null;
-    if (tree.content() instanceof FinalState) {
+  private void enterHistory(final StateConfiguration<?> stateConfig) {
+    assert stateConfig.state() != null;
+    if (stateConfig.state() instanceof FinalState) {
       throw new RuntimeException(); // TODO: custom exception
     }
-    entry(tree.content());
-    if (tree.hasChildren()) {
-      for (TreeNode<State> child : tree) {
-        enterHistory(child);
-      }
+    
+    entry(stateConfig.state());
+    if (stateConfig.isEmpty()) {
+      enterState(stateConfig.state());
     } else {
-      enterState(tree.content());
+      stateConfig.forEach(this::enterHistory);
     }
   }
 
@@ -621,11 +610,11 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
         break;
       case SHALLOW_HISTORY:
       case DEEP_HISTORY:
-        TreeNode<State> tree = machineState.restore(pseudoState.container());
-        if (tree == null) {
+        StateConfiguration stateConfig = machineState.restore(pseudoState.container());
+        if (stateConfig == null) {
           fire(CompletionEvent.INSTANCE, paths.get(0));
         } else {
-          enterHistory(tree);
+          enterHistory(stateConfig);
         }
         break;
       case TERMINATE:
@@ -650,45 +639,40 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     return path;
   }
 
-  private Collection<TreeNode<Transition>> transitionPaths(final Event event, final TreeNode<State> node) {
+  private Collection<TreeNode<Transition>> transitionPaths(final Event event, final StateConfiguration stateConfig) {
     final Collection<TreeNode<Transition>> allPaths = new LinkedList<>();
-    transitionPaths(event, node, allPaths);
+    transitionPaths(event, stateConfig, allPaths);
     return allPaths;
   }
 
-  private boolean transitionPaths(final Event event, final TreeNode<State> node, final Collection<TreeNode<Transition>> allPaths) {
-    boolean found = false;
-    if (node.hasChildren()) {
-      for (TreeNode<State> child : node) {
-        found |= transitionPaths(event, child, allPaths);
-      }
+  private void transitionPaths(final Event event, final StateConfiguration<?> stateConfig, final Collection<TreeNode<Transition>> allPaths) {
+    if (stateConfig.isEmpty()) {
+       transitionPath(event, stateConfig.state(), allPaths);
+       return;
     }
-    if (!found) {
-      found = transitionPath(event, node.content(), allPaths);
+    
+    int sizeBefore = allPaths.size();
+    stateConfig.forEach((s) -> transitionPaths(event, s, allPaths));
+    int sizeAfter = allPaths.size();
+    
+    if (sizeAfter == sizeBefore) {
+       transitionPath(event, stateConfig.state(), allPaths);
     }
-    return found;
   }
 
   private Collection<TreeNode<Transition>> transitionPaths(final Event event, final Collection<State> states) {
     final Collection<TreeNode<Transition>> allPaths = new LinkedList<>();
-    transitionPaths(event, states, allPaths);
-    return allPaths;
-  }
-
-  private boolean transitionPaths(final Event event, final Collection<State> states, final Collection<TreeNode<Transition>> allPaths) {
     for (State s : states) {
       transitionPath(event, s, allPaths);
     }
-    return !allPaths.isEmpty();
+    return allPaths;
   }
 
-  private boolean transitionPath(final Event event, final Vertex vertex, final Collection<TreeNode<Transition>> allPaths) {
+  private void transitionPath(final Event event, final Vertex vertex, final Collection<TreeNode<Transition>> allPaths) {
     TreeNode<Transition> path = transitionPath(event, vertex);
     if (path.hasChildren()) {
       allPaths.add(path);
-      return true;
     }
-    return false;
   }
 
   private TreeNode<Transition> transitionPath(final Event event, final Vertex vertex) {
@@ -731,8 +715,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
              */
             case SHALLOW_HISTORY:
             case DEEP_HISTORY:
-              TreeNode<State> tree = machineState.restore(ps.container());
-              if (tree == null) {
+              StateConfiguration stateConfig = machineState.restore(ps.container());
+              if (stateConfig == null) {
                 if (transitionPath(CompletionEvent.INSTANCE, t.target(), tn)) {
                   found = paths.add(tn);
                 } else {

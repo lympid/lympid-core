@@ -15,6 +15,7 @@
  */
 package com.lympid.core.behaviorstatemachines;
 
+import com.lympid.core.behaviorstatemachines.impl.StateConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 import com.lympid.core.common.TreeNode;
 import java.util.Comparator;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  *
- * @author Fabien Renaud 
+ * @author Fabien Renaud
  */
 public final class StateMachineProcessorTester {
 
@@ -40,11 +41,11 @@ public final class StateMachineProcessorTester {
   public static void assertStateConfiguration(final StateMachineExecutor fsm, final TreeNode<ActiveState> expected) {
     assertStateConfiguration(fsm.snapshot(), expected);
   }
-  
+
   public static void assertStateConfiguration(final StateMachineSnapshot snapshot, final TreeNode<ActiveState> expected) {
     assertNotNull(snapshot);
     assertNotNull(snapshot.activateStates());
-    assertTreeNodeEquals(expected, snapshot.activateStates());
+    assertStateConfigurationEquals(expected, snapshot.activateStates());
 
     if (expected.content() == null) {
       assertNotStartedOrTerminated(snapshot);
@@ -53,26 +54,26 @@ public final class StateMachineProcessorTester {
     }
   }
 
-  private static void assertTreeNodeEquals(final TreeNode<ActiveState> expected, final TreeNode<State> actual) {
-    assertTrue("Expected: " + expected.content() + "; got: " + actual.content(), ACTIVE_STATE_PREDICATE.test(expected.content(), actual.content()));
-    assertEquals(expected.size(), actual.size());
+  private static void assertStateConfigurationEquals(final TreeNode<ActiveState> expected, final StateConfiguration<?> actual) {
+    assertTrue("Expected: " + expected.content() + "; got: " + actual.state(), ACTIVE_STATE_PREDICATE.test(expected.content(), actual.state()));
     expected.children().sort(ACTIVATE_STATE_COMPARATOR);
     actual.children().sort(STATE_COMPARATOR);
+    assertEquals(expected.children().size(), actual.children().size());
     for (int i = 0; i < expected.size(); i++) {
-      assertTreeNodeEquals(expected.children().get(i), actual.children().get(i));
+      assertStateConfigurationEquals(expected.children().get(i), actual.children().get(i));
     }
   }
 
   private static void assertNotStartedOrTerminated(final StateMachineSnapshot snapshot) {
-    assert snapshot.activateStates().content() == null; // reminder, precondition
-    assertEquals(0, snapshot.activateStates().size());
+    assert snapshot.activateStates().state() == null; // reminder, precondition
+    assertEquals(0, snapshot.activateStates().children().size());
     assertTrue(!snapshot.isStarted() || snapshot.isTerminated());
   }
 
   private static void assertFinalIsTerminated(final StateMachineSnapshot snapshot) {
-    assert snapshot.activateStates().content() != null; // reminder, precondition
-    assertEquals(0, snapshot.activateStates().size());
-    if (snapshot.activateStates().content() instanceof FinalState) {
+    assert snapshot.activateStates().state() != null; // reminder, precondition
+    assertEquals(0, snapshot.activateStates().children().size());
+    if (snapshot.activateStates().state() instanceof FinalState) {
       /*
        * The final state of the top level state machine has been reached. Make
        * sure it has been terminated.
@@ -81,21 +82,21 @@ public final class StateMachineProcessorTester {
     }
   }
 
-  private static final Comparator<TreeNode<State>> STATE_COMPARATOR = new Comparator<TreeNode<State>>() {
+  private static final Comparator<StateConfiguration> STATE_COMPARATOR = new Comparator<StateConfiguration>() {
 
     @Override
-    public int compare(TreeNode<State> o1, TreeNode<State> o2) {
+    public int compare(StateConfiguration o1, StateConfiguration o2) {
       if (o1 == o2) {
         return 0;
       }
-      if (o1 == null || o1.content() == null) {
+      if (o1 == null || o1.state() == null) {
         return -1;
       }
-      if (o2 == null || o2.content() == null) {
+      if (o2 == null || o2.state() == null) {
         return 1;
       }
-      State c1 = o1.content();
-      State c2 = o2.content();
+      State c1 = o1.state();
+      State c2 = o2.state();
       if (c1.equals(c2)) {
         return 0;
       }
@@ -135,7 +136,7 @@ public final class StateMachineProcessorTester {
     }
 
   };
-  
+
   private static final BiPredicate<ActiveState, State> ACTIVE_STATE_PREDICATE = new BiPredicate<ActiveState, State>() {
 
     @Override
@@ -152,5 +153,5 @@ public final class StateMachineProcessorTester {
       return Integer.toString(expected.getId()).equals(actual.getId());
     }
   };
-    
+
 }
