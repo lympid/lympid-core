@@ -21,9 +21,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorListener;
-import com.lympid.core.behaviorstatemachines.listener.InfoLoggerListener;
-import static com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerTester.assertLogEquals;
-import com.lympid.core.behaviorstatemachines.listener.StringBuilderLogger;
+import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
@@ -41,9 +39,9 @@ public class Test7 extends AbstractStateMachineTest {
 
   @Test
   public void run() throws InterruptedException {
-    final StringBuilderLogger bufferLogger = new StringBuilderLogger(StringBuilderLogger.LogLevel.INFO);
+    final StringLoggerListener log = new StringLoggerListener();
     ExecutorListener listener = new ExecutorListener();
-    listener.add(new InfoLoggerListener(bufferLogger));
+    listener.add(log);
     
     Context ctx = new Context();
     StateMachineExecutor fsm = fsm(ctx);
@@ -57,7 +55,8 @@ public class Test7 extends AbstractStateMachineTest {
     assertEquals(1, ctx.local);
     assertStateConfiguration(fsm, new ActiveStateTree("end"));
     
-    assertLogEquals(INFO_LOG, bufferLogger);
+    assertEquals(MAIN_LOG, log.mainBuffer());
+    assertEquals(ACTIVITY_LOG, log.activityBuffer());
   }
 
   @Override
@@ -104,12 +103,29 @@ public class Test7 extends AbstractStateMachineTest {
     }
   }
   
-  private static final String INFO_LOG = "[INFO] machine=\"" + Test7.class.getSimpleName() + "\" tag=\"MACHINE_STARTED\" context=\"null\"\n" +
-"[INFO] machine=\"" + Test7.class.getSimpleName() + "\" tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"null\"\n" +
-"[INFO] machine=\"" + Test7.class.getSimpleName() + "\" tag=\"EVENT_ACCEPTED\" event=\"" + SHORT_DELAY + " ms\" context=\"null\"\n" +
-"[INFO] machine=\"" + Test7.class.getSimpleName() + "\" tag=\"EVENT_ACCEPTED\" event=\"" + LONG_DELAY + " ms\" context=\"null\"\n" +
-"[INFO] machine=\"" + Test7.class.getSimpleName() + "\" tag=\"MACHINE_TERMINATED\" context=\"null\"";
-
+  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"null\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"null\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
+"tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"null\"\n" +
+"tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"10 ms\" context=\"null\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"50 ms\" context=\"null\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"null\"\n" +
+"tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"MACHINE_TERMINATED\" context=\"null\"\n";
+  private static final String ACTIVITY_LOG = "";
+  
   private static final String STDOUT = "StateMachine: \"" + Test7.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    PseudoState: #3 kind: INITIAL\n" +

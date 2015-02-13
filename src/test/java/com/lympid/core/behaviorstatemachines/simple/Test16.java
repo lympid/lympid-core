@@ -23,11 +23,9 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import static com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerTester.assertLogEquals;
-import com.lympid.core.behaviorstatemachines.listener.StringBuilderLogger;
-import com.lympid.core.behaviorstatemachines.listener.TraceLoggerListener;
+import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import org.slf4j.Logger;
 
 /**
  * State entries, activity and state exists are performed in the right order.
@@ -37,7 +35,7 @@ public class Test16 extends AbstractStateMachineTest {
   
   @Test
   public void run() throws InterruptedException {
-    final StringBuilderLogger bufferLogger = new StringBuilderLogger(StringBuilderLogger.LogLevel.TRACE);
+    final StringLoggerListener log = new StringLoggerListener();
     
     SequentialContext expected = new SequentialContext();
     expected
@@ -51,7 +49,7 @@ public class Test16 extends AbstractStateMachineTest {
     
     SequentialContext ctx = new SequentialContext();
     StateMachineExecutor fsm = fsm(ctx);
-    addLogger(fsm, bufferLogger);
+    addLogger(fsm, log);
     fsm.go();
     
     Thread.sleep(2);
@@ -59,7 +57,8 @@ public class Test16 extends AbstractStateMachineTest {
     assertStateConfiguration(fsm, new ActiveStateTree("end"));
     assertSequentialContextEquals(expected, ctx);
     
-    assertLogEquals(TRACE_LOG, bufferLogger);
+    assertEquals(MAIN_LOG, log.mainBuffer());
+    assertEquals(ACTIVITY_LOG, log.activityBuffer());
   }
 
   @Override
@@ -97,59 +96,57 @@ public class Test16 extends AbstractStateMachineTest {
     return false;
   }
   
-  private void addLogger(StateMachineExecutor fsm, Logger log) {
-    TraceLoggerListener l = new TraceLoggerListener(log);
-    
-    fsm.listeners().addEventAcceptedListener(l);
-    fsm.listeners().addEventDeferredListener(l);
-    fsm.listeners().addEventDeniedListener(l);
-    fsm.listeners().addMachineStartedListener(l);
-    fsm.listeners().addMachineTerminatedListener(l);
-    fsm.listeners().addStateActivityAfterExecution(l);
-    fsm.listeners().addStateActivityBeforeExecution(l);
-    fsm.listeners().addStateActivityException(l);
-    fsm.listeners().addStateEnterAfterExecution(l);
-    fsm.listeners().addStateEnterBeforeExecution(l);
-    fsm.listeners().addStateEnterException(l);
-    fsm.listeners().addStateExitAfterExecution(l);
-    fsm.listeners().addStateExitBeforeExecution(l);
-    fsm.listeners().addStateExitException(l);
-    fsm.listeners().addTransitionEffectAfterExecutionListener(l);
-    fsm.listeners().addTransitionEffectBeforeExecutionListener(l);
-    fsm.listeners().addTransitionEffectExceptionListener(l);
-    fsm.listeners().addTransitionEndedListener(l);
-    fsm.listeners().addTransitionGuardAfterExecutionListener(l);
-    fsm.listeners().addTransitionGuardBeforeExecutionListener(l);
-    fsm.listeners().addTransitionGuardExceptionListener(l);
-    fsm.listeners().addTransitionStartedListener(l);
+  private void addLogger(StateMachineExecutor fsm, StringLoggerListener log) {    
+    fsm.listeners().addEventAcceptedListener(log);
+    fsm.listeners().addEventDeferredListener(log);
+    fsm.listeners().addEventDeniedListener(log);
+    fsm.listeners().addMachineStartedListener(log);
+    fsm.listeners().addMachineTerminatedListener(log);
+    fsm.listeners().addStateActivityAfterExecution(log);
+    fsm.listeners().addStateActivityBeforeExecution(log);
+    fsm.listeners().addStateActivityException(log);
+    fsm.listeners().addStateEnterAfterExecution(log);
+    fsm.listeners().addStateEnterBeforeExecution(log);
+    fsm.listeners().addStateEnterException(log);
+    fsm.listeners().addStateExitAfterExecution(log);
+    fsm.listeners().addStateExitBeforeExecution(log);
+    fsm.listeners().addStateExitException(log);
+    fsm.listeners().addTransitionEffectAfterExecutionListener(log);
+    fsm.listeners().addTransitionEffectBeforeExecutionListener(log);
+    fsm.listeners().addTransitionEffectExceptionListener(log);
+    fsm.listeners().addTransitionEndedListener(log);
+    fsm.listeners().addTransitionGuardAfterExecutionListener(log);
+    fsm.listeners().addTransitionGuardBeforeExecutionListener(log);
+    fsm.listeners().addTransitionGuardExceptionListener(log);
+    fsm.listeners().addTransitionStartedListener(log);
     fsm.listeners().addTransitionStartedListener(null);
     
     
-    fsm.listeners().removeEventAcceptedListener(l);
-    fsm.listeners().removeEventDeferredListener(l);
-    fsm.listeners().removeEventDeniedListener(l);
-    fsm.listeners().removeMachineStartedListener(l);
-    fsm.listeners().removeMachineTerminatedListener(l);
-    fsm.listeners().removeStateActivityAfterExecution(l);
-    fsm.listeners().removeStateActivityBeforeExecution(l);
-    fsm.listeners().removeStateActivityException(l);
-    fsm.listeners().removeStateEnterAfterExecution(l);
-    fsm.listeners().removeStateEnterBeforeExecution(l);
-    fsm.listeners().removeStateEnterException(l);
-    fsm.listeners().removeStateExitAfterExecution(l);
-    fsm.listeners().removeStateExitBeforeExecution(l);
-    fsm.listeners().removeStateExitException(l);
-    fsm.listeners().removeTransitionEffectAfterExecutionListener(l);
-    fsm.listeners().removeTransitionEffectBeforeExecutionListener(l);
-    fsm.listeners().removeTransitionEffectExceptionListener(l);
-    fsm.listeners().removeTransitionEndedListener(l);
-    fsm.listeners().removeTransitionGuardAfterExecutionListener(l);
-    fsm.listeners().removeTransitionGuardBeforeExecutionListener(l);
-    fsm.listeners().removeTransitionGuardExceptionListener(l);
-    fsm.listeners().removeTransitionStartedListener(l);
+    fsm.listeners().removeEventAcceptedListener(log);
+    fsm.listeners().removeEventDeferredListener(log);
+    fsm.listeners().removeEventDeniedListener(log);
+    fsm.listeners().removeMachineStartedListener(log);
+    fsm.listeners().removeMachineTerminatedListener(log);
+    fsm.listeners().removeStateActivityAfterExecution(log);
+    fsm.listeners().removeStateActivityBeforeExecution(log);
+    fsm.listeners().removeStateActivityException(log);
+    fsm.listeners().removeStateEnterAfterExecution(log);
+    fsm.listeners().removeStateEnterBeforeExecution(log);
+    fsm.listeners().removeStateEnterException(log);
+    fsm.listeners().removeStateExitAfterExecution(log);
+    fsm.listeners().removeStateExitBeforeExecution(log);
+    fsm.listeners().removeStateExitException(log);
+    fsm.listeners().removeTransitionEffectAfterExecutionListener(log);
+    fsm.listeners().removeTransitionEffectBeforeExecutionListener(log);
+    fsm.listeners().removeTransitionEffectExceptionListener(log);
+    fsm.listeners().removeTransitionEndedListener(log);
+    fsm.listeners().removeTransitionGuardAfterExecutionListener(log);
+    fsm.listeners().removeTransitionGuardBeforeExecutionListener(log);
+    fsm.listeners().removeTransitionGuardExceptionListener(log);
+    fsm.listeners().removeTransitionStartedListener(log);
     fsm.listeners().removeTransitionStartedListener(null);
     
-    fsm.listeners().add(l);
+    fsm.listeners().add(log);
   }
 
   @Override
@@ -157,20 +154,20 @@ public class Test16 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final String TRACE_LOG = "[INFO] executor=\"1\" machine=\"Test16\" tag=\"MACHINE_STARTED\" context=\"\"\n" +
-"[INFO] executor=\"1\" machine=\"Test16\" tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"\"\n" +
-"[DEBUG] executor=\"1\" machine=\"Test16\" tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"\"\n" +
-"[TRACE] executor=\"1\" machine=\"Test16\" tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"\"\n" +
-"[TRACE] executor=\"1\" machine=\"Test16\" tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"[DEBUG] executor=\"1\" machine=\"Test16\" tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"[TRACE] executor=\"1\" machine=\"Test16\" tag=\"STATE_ACTIVITY_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"[TRACE] executor=\"1\" machine=\"Test16\" tag=\"STATE_ACTIVITY_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"[INFO] executor=\"1\" machine=\"Test16\" tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"[DEBUG] executor=\"1\" machine=\"Test16\" tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"[TRACE] executor=\"1\" machine=\"Test16\" tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"[TRACE] executor=\"1\" machine=\"Test16\" tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
-"[DEBUG] executor=\"1\" machine=\"Test16\" tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
-"[INFO] executor=\"1\" machine=\"Test16\" tag=\"MACHINE_TERMINATED\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"";
+  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"MACHINE_TERMINATED\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n";
+  private static final String ACTIVITY_LOG = "tag=\"STATE_ACTIVITY_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"STATE_ACTIVITY_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n";
   
   private static final String STDOUT = "StateMachine: \"" + Test16.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
