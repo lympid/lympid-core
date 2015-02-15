@@ -37,11 +37,11 @@ public class OrthogonalStateConfiguration implements MutableStateConfiguration<O
     this.children = new LinkedList<>();
   }
 
-  private OrthogonalStateConfiguration(final OrthogonalStateConfiguration coll) {
-    this.parent = coll.parent;
-    this.state = coll.state;
-    this.children = new ArrayList<>(coll.children.size());
-    for (OrthogonalStateConfiguration stateConfig : coll.children) {
+  private OrthogonalStateConfiguration(final OrthogonalStateConfiguration config) {
+    this.parent = config.parent;
+    this.state = config.state;
+    this.children = new ArrayList<>(config.children.size());
+    for (OrthogonalStateConfiguration stateConfig : config.children) {
       this.children.add(new OrthogonalStateConfiguration(stateConfig));
     }
   }
@@ -70,11 +70,11 @@ public class OrthogonalStateConfiguration implements MutableStateConfiguration<O
 
   @Override
   public OrthogonalStateConfiguration addChild(final State state) {
-    OrthogonalStateConfiguration stateColl = new OrthogonalStateConfiguration();
-    stateColl.parent = this;
-    stateColl.state = state;
-    children.add(stateColl);
-    return stateColl;
+    OrthogonalStateConfiguration config = new OrthogonalStateConfiguration();
+    config.parent = this;
+    config.state = state;
+    children.add(config);
+    return config;
   }
 
   @Override
@@ -107,11 +107,12 @@ public class OrthogonalStateConfiguration implements MutableStateConfiguration<O
   public void forEach(final Consumer<OrthogonalStateConfiguration> consumer) {
     if (!children.isEmpty()) {
       iterator = children.iterator();
-      while (iterator.hasNext())
+      while (iterator.hasNext()) {
         consumer.accept(iterator.next());
       }
       iterator = null;
     }
+  }
 
   @Override
   public StateConfiguration copy() {

@@ -15,7 +15,9 @@
  */
 package com.lympid.core.behaviorstatemachines.impl;
 
+import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.StateMachineMeta;
+import java.util.Map;
 
 /**
  *
@@ -23,20 +25,48 @@ import com.lympid.core.behaviorstatemachines.StateMachineMeta;
  */
 public class ImmutableStateMachineMeta implements StateMachineMeta {
 
+  private final boolean simpleStates;
+  private final boolean compositeStates;
+  private final boolean orthogonalStates;
+  private final boolean submachineStates;
   private final boolean completionEvents;
   private final boolean timeEvents;
   private final boolean activities;
-  private final int historyNodes;
+  private final Map<PseudoStateKind, Integer> pseudoStateCounts;
   private final int treeDepth;
   private final int countOfLeaves;
 
-  public ImmutableStateMachineMeta(final StateMachineMeta meta) {
+  public ImmutableStateMachineMeta(final MutableStateMachineMeta meta) {
+    this.simpleStates = meta.hasSimpleStates();
+    this.compositeStates = meta.hasCompositeStates();
+    this.orthogonalStates = meta.hasOrthogonalStates();
+    this.submachineStates = meta.hasSubmachineStates();
     this.completionEvents = meta.hasCompletionEvents();
     this.timeEvents = meta.hasTimeEvents();
     this.activities = meta.hasActivities();
-    this.historyNodes = meta.countOfHistoryNodes();
+    this.pseudoStateCounts = meta.pseudoStateCounts();
     this.treeDepth = meta.treeDepth();
     this.countOfLeaves = meta.countOfLeaves();
+  }
+
+  @Override
+  public boolean hasSimpleStates() {
+    return simpleStates;
+  }
+
+  @Override
+  public boolean hasCompositeStates() {
+    return compositeStates;
+  }
+
+  @Override
+  public boolean hasOrthogonalStates() {
+    return orthogonalStates;
+  }
+
+  @Override
+  public boolean hasSubmachineStates() {
+    return submachineStates;
   }
 
   @Override
@@ -55,8 +85,8 @@ public class ImmutableStateMachineMeta implements StateMachineMeta {
   }
 
   @Override
-  public int countOfHistoryNodes() {
-    return historyNodes;
+  public int countOf(final PseudoStateKind kind) {
+    return pseudoStateCounts.get(kind);
   }
 
   @Override

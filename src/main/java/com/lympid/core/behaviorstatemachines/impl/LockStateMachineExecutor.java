@@ -18,7 +18,6 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachine;
-import com.lympid.core.common.TreeNode;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -40,7 +39,7 @@ public class LockStateMachineExecutor extends AbstractStateMachineExecutor {
 
   @Override
   protected StateMachineState createMachineState(final StateMachine machine) {
-    return AbstractStateMachineState.synchronizedMachineState(super.createMachineState(machine));
+    return StateMachineState.synchronizedMachineState(super.createMachineState(machine));
   }
 
   @Override

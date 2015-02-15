@@ -87,7 +87,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   }
 
   protected StateMachineState createMachineState(final StateMachine machine) {
-    return new OrthogonalStateMachineState(machine.metadata());
+    return StateMachineStateFactory.get(machine.metadata());
   }
 
   @Override

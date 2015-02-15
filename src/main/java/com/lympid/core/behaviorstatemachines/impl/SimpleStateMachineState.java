@@ -1,0 +1,188 @@
+/*
+ * Copyright 2015 Lympid.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.lympid.core.behaviorstatemachines.impl;
+
+import com.lympid.core.behaviorstatemachines.PseudoState;
+import com.lympid.core.behaviorstatemachines.Region;
+import com.lympid.core.behaviorstatemachines.State;
+import com.lympid.core.behaviorstatemachines.StateMachineMeta;
+import com.lympid.core.behaviorstatemachines.Transition;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Future;
+
+/**
+ *
+ * @author Fabien Renaud
+ */
+public class SimpleStateMachineState implements StateMachineState {
+
+  private final SimpleStateConfiguration activeStates;
+  private final Set<State> completed = new HashSet<>(1);
+  private StateStatus status;
+  private boolean started;
+  private boolean terminated;
+
+  public SimpleStateMachineState(final StateMachineMeta metadata) {
+    this.activeStates = new SimpleStateConfiguration();
+  }
+
+  @Override
+  public StateConfiguration<?> activeStates() {
+    return activeStates;
+  }
+
+  @Override
+  public StateConfiguration<?> activeStates(final Region region) {
+    return activeStates.state() == null ? null : activeStates;
+  }
+
+  @Override
+  public boolean isActive(final State state) {
+    return activeStates.state() == state;
+  }
+
+  @Override
+  public void activate(final State state) {
+    activeStates.setState(state);
+
+    status = new StateStatus(state);
+    if (state.doActivity() == null) {
+      completed.add(state);
+    }
+  }
+
+  @Override
+  public void deactivate(final State state) {
+    assert activeStates.state() == state;
+
+    activeStates.clear();
+    completed.clear();
+    clearActivity();
+    clearEventTimers();
+    status = null;
+  }
+
+  @Override
+  public StateStatus status(final State state) {
+    return status;
+  }
+
+  @Override
+  public void start() {
+    this.started = true;
+  }
+
+  @Override
+  public boolean hasStarted() {
+    return started;
+  }
+
+  @Override
+  public void terminate() {
+    this.terminated = true;
+  }
+
+  @Override
+  public boolean isTerminated() {
+    return terminated;
+  }
+
+  @Override
+  public void setActivity(final State state, final Future<?> future) {
+    assert status.getActivity() == null;
+    status.setActivity(future);
+  }
+
+  @Override
+  public boolean activityCompleted(final State state) {
+    assert status.getActivity() != null;
+    assert completed.isEmpty();
+    status.setActivity(null);
+    completed.add(state);
+    return true;
+  }
+
+  @Override
+  public boolean hasCompletedStates() {
+    return status.getActivity() == null;
+  }
+
+  @Override
+  public Set<State> completedStates() {
+    return completed;
+  }
+
+  @Override
+  public void removeCompletedState(final State state) {
+    completed.remove(state);
+  }
+
+  @Override
+  public boolean completedOne(final State state) {
+    throw new IllegalStateException("Partial completion of a state is impossible in a simple state machine. Only an activity, if it exists, can complete a state.");
+  }
+
+  @Override
+  public boolean joinReached(final PseudoState joinVertex, final Transition transition) {
+    throw new IllegalStateException("Simple state machines can not have join vertices.");
+  }
+
+  @Override
+  public void clearJoin(final PseudoState joinVertex) {
+    throw new IllegalStateException("Simple state machines can not have join vertices.");
+  }
+
+  @Override
+  public StateConfiguration<?> restore(final Region r) {
+    throw new IllegalStateException("Simple state machines have no history.");
+  }
+
+  @Override
+  public void saveDeepHistory(final Region r) {
+    throw new IllegalStateException("Simple state machines can not have a deep history.");
+  }
+
+  @Override
+  public void saveShallowHistory(final Region r) {
+    throw new IllegalStateException("Simple state machines can not have a shallow history.");
+  }
+
+  private void clearActivity() {
+    Future f = status.getActivity();
+    if (f != null && !f.isDone()) {
+      if (f.cancel(true)) {
+        // TODO
+      } else {
+        // TODO
+      }
+    }
+  }
+
+  private void clearEventTimers() {
+    if (status.hasEventTimers()) {
+      for (Future f : status.getEventTimers()) {
+        if (!f.isDone()) {
+          if (f.cancel(false)) {
+            // TODO
+          } else {
+            // TODO
+          }
+        }
+      }
+    }
+  }
+}

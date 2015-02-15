@@ -15,6 +15,7 @@
  */
 package com.lympid.core.behaviorstatemachines.impl;
 
+import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.StateMachineMeta;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -42,12 +43,14 @@ public class StateMachineMetaVisitorTest {
     StateMachineMeta meta = visitor.getMeta();
 
     assertNotNull(meta);
-    assertEquals(0, meta.countOfHistoryNodes());
     assertEquals(0, meta.countOfLeaves());
     assertEquals(0, meta.treeDepth());
     assertFalse(meta.hasActivities());
     assertFalse(meta.hasCompletionEvents());
     assertFalse(meta.hasTimeEvents());
+    for (PseudoStateKind kind : PseudoStateKind.values()) {
+      assertEquals(0, meta.countOf(kind));
+    }
   }
 
 }

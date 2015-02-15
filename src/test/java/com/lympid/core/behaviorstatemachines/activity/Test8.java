@@ -21,6 +21,7 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
@@ -28,11 +29,12 @@ import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 /**
- * Tests the state activity is canceled when an outgoing transition is fired.
+ * Tests an inner state activity is canceled when an outgoing transition of some
+ * parent state is fired.
  * 
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test8 extends AbstractStateMachineTest {
   
   private static final long WAIT_TIME = 1000;
   private static final int EXPECTED_C = 10;
@@ -43,7 +45,7 @@ public class Test2 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    assertStateConfiguration(fsm, new ActiveStateTree("A", "B"));
 
     ctx.latchStarted.await();
     
@@ -64,20 +66,31 @@ public class Test2 extends AbstractStateMachineTest {
       .region()
         .initial()
           .transition("t0")
-            .target("A");
+            .target("B");
 
     builder
       .region()
-        .state("A")
-          .activity(Activity.class)
-            .transition("t1")
-              .on("end")
-              .target("end");
+        .state(composite("A"))
+          .transition("t1")
+            .on("end")
+            .target("end");
 
     builder
       .region()
         .finalState("end");
 
+    return builder;
+  }
+  
+  private CompositeStateBuilder composite(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder(name);
+    
+    builder
+      .region()
+        .state("B")
+          .activity(Activity.class);
+            
+    
     return builder;
   }
 
@@ -107,11 +120,13 @@ public class Test2 extends AbstractStateMachineTest {
     
   }
 
-  private static final String STDOUT = "StateMachine: \"" + Test2.class.getSimpleName() + "\"\n" +
+  private static final String STDOUT = "StateMachine: \"" + Test8.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    PseudoState: #3 kind: INITIAL\n" +
 "    State: \"A\"\n" +
+"      Region: #7\n" +
+"        State: \"B\"\n" +
 "    FinalState: \"end\"\n" +
-"    Transition: \"t0\" --- #3 -> \"A\"\n" +
+"    Transition: \"t0\" --- #3 -> \"B\"\n" +
 "    Transition: \"t1\" --- \"A\" -> \"end\"";
 }

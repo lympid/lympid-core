@@ -32,45 +32,41 @@ import com.lympid.core.common.Trigger;
  * @author Fabien Renaud
  */
 public class StateMachineMetaVisitor extends SimpleVisitor {
-
+  
   private final MutableStateMachineMeta meta = new MutableStateMachineMeta();
-
+  
   public StateMachineMeta getMeta() {
     return new ImmutableStateMachineMeta(meta);
   }
-
+  
   @Override
   public void visit(final ConnectionPointReference v) {
   }
-
+  
   @Override
   public void visit(final State v) {
     meta.register(v);
   }
-
+  
   @Override
   public void visit(final PseudoState v) {
-    switch (v.kind()) {
-      case SHALLOW_HISTORY:
-      case DEEP_HISTORY:
-        meta.incHistoryNodes();
-        break;
-    }
+    meta.register(v);
   }
-
+  
   @Override
   public void visit(final FinalState v) {
+    meta.register(v);
   }
-
+  
   @Override
   public void visit(final Region v) {
     meta.register(v);
   }
-
+  
   @Override
   public void visit(final StateMachine v) {
   }
-
+  
   @Override
   public void visit(final Transition v) {
     if (v.triggers().isEmpty()) {
@@ -79,7 +75,7 @@ public class StateMachineMetaVisitor extends SimpleVisitor {
       meta.incTimeEvents();
     }
   }
-
+  
   private boolean hasTimeEvents(final Transition v) {
     for (Trigger tr : v.triggers()) {
       if (tr.event() instanceof TimeEvent) {

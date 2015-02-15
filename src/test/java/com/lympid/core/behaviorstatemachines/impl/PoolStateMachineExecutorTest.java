@@ -24,6 +24,7 @@ import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import static com.lympid.core.common.TestUtils.assertSequentialContextEquals;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -33,22 +34,36 @@ import org.junit.Test;
 public class PoolStateMachineExecutorTest {
   
   private static final long DELAY = 10;
+  private StateMachineShardPoolExecutor pool;
+  private int step;
+  
+  @Before
+  public void setUp() {
+    pool = new StateMachineShardPoolExecutor(1);
+  }
 
   @Test
   public void run1() throws InterruptedException {
-    StateMachineShardPoolExecutor pool = new StateMachineShardPoolExecutor(1);
     PoolStateMachineExecutor fsm = new PoolStateMachineExecutor(pool);
     run(fsm);
   }
 
   @Test
   public void run2() throws InterruptedException {
-    StateMachineShardPoolExecutor pool = new StateMachineShardPoolExecutor(1);
     PoolStateMachineExecutor fsm = new PoolStateMachineExecutor(pool, 12);
     run(fsm);
   }
+
+  public void runInterrupt_step1() throws InterruptedException {
+    PoolStateMachineExecutor fsm = new PoolStateMachineExecutor(pool);
+    run(fsm, 1);
+  }
   
   private void run(final StateMachineExecutor fsm) throws InterruptedException {
+    run(fsm, -1);
+  }
+  
+  private void run(final StateMachineExecutor fsm, int interruptStep) throws InterruptedException {
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
     
@@ -57,28 +72,47 @@ public class PoolStateMachineExecutorTest {
     fsm.setContext(ctx);
     fsm.go();
     
+    step(interruptStep);
+    
     ctx.latch01.await();
     expected.effect("t0");
     assertSequentialContextEquals(expected, ctx);
     ctx.latch02.countDown();
+    
+    step(interruptStep);
     
     ctx.latch11.await();
     expected.enter("A").exit("A").effect("t1");
     assertSequentialContextEquals(expected, ctx);
     ctx.latch12.countDown();
     
+    step(interruptStep);
     
     ctx.latch21.await();
     expected.enter("B").exit("B").effect("t2");
     assertSequentialContextEquals(expected, ctx);
     ctx.latch22.countDown();
     
+    step(interruptStep);
     
     fsm.take(new StringEvent("go"));
+    
+    step(interruptStep);
+    
     ctx.latch31.await();
     expected.enter("C").exit("C").effect("t3");
     assertSequentialContextEquals(expected, ctx);
     ctx.latch32.countDown();
+    
+    step(interruptStep);
+  }
+  
+  private void step(final int interruptStep) {
+    ++step;
+    if (step == interruptStep) {
+      // TODO: shutdown, shutdownNow, awaitTermination in StateMachineShardPoolExecutor
+      // pool.shutdownNow();
+    }
   }
   
   private StateMachineBuilder topLevelStateMachine() {

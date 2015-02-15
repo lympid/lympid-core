@@ -28,6 +28,9 @@ import java.util.function.Consumer;
 public class SimpleStateConfiguration implements MutableStateConfiguration<SimpleStateConfiguration> {
 
   private State state;
+  
+  public SimpleStateConfiguration() {
+  }
 
   public SimpleStateConfiguration(final State state) {
     assert state != null;
@@ -86,7 +89,9 @@ public class SimpleStateConfiguration implements MutableStateConfiguration<Simpl
 
   @Override
   public StateConfiguration copy() {
-    return new SimpleStateConfiguration(state);
+    SimpleStateConfiguration config = new SimpleStateConfiguration();
+    config.state = state;
+    return config;
   }
 
   @Override

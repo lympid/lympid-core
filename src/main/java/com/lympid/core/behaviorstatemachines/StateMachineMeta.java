@@ -24,6 +24,41 @@ package com.lympid.core.behaviorstatemachines;
 public interface StateMachineMeta {
 
   /**
+   * Gets whether the state machine or any of its sub machines has simple
+   * states.
+   *
+   * <p>
+   * This may actually return false for very specific, and questionable, state
+   * machines.</p>
+   *
+   * @return true when the state machine has simple states.
+   */
+  boolean hasSimpleStates();
+
+  /**
+   * Gets whether the state machine or any its sub machines has non-orthogonal
+   * composite states.
+   *
+   * @return true when the state machine has non-orthogonal composite states.
+   */
+  boolean hasCompositeStates();
+
+  /**
+   * Gets whether the state machine or any of its sub machines has orthogonal
+   * states.
+   *
+   * @return true when the state machine has orthogonal states.
+   */
+  boolean hasOrthogonalStates();
+
+  /**
+   * Gets whether the state machine has sub machine states.
+   *
+   * @return true when the state machine has sub machine states.
+   */
+  boolean hasSubmachineStates();
+
+  /**
    * Gets whether the state machine has transitions with no triggers.
    *
    * @return true when the state machine has transitions with no triggers.
@@ -45,13 +80,13 @@ public interface StateMachineMeta {
   boolean hasActivities();
 
   /**
-   * Gets the number of shallow and deep history pseudo states the state machine
-   * posses.
+   * Gets the number of the specified pseudo state kind the state machine or any
+   * of its sub machines has.
    *
-   * @return The number of shallow and deep history vertices in the state
-   * machine.
+   * @param kind The pseudo state kind for which to get the count
+   * @return The number pseudo states of the given kind the state machine has.
    */
-  int countOfHistoryNodes();
+  int countOf(PseudoStateKind kind);
 
   /**
    * Get the maximum number of nodes it takes to go from the root element to the

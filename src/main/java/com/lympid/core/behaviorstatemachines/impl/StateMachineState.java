@@ -28,6 +28,10 @@ import java.util.concurrent.Future;
  */
 public interface StateMachineState {
 
+  public static StateMachineState synchronizedMachineState(StateMachineState inst) {
+    return new SynchronizedStateMachineState(inst);
+  }
+
   void activate(final State state);
 
   StateConfiguration<?> activeStates();
@@ -69,5 +73,187 @@ public interface StateMachineState {
   StateStatus status(final State state);
 
   void terminate();
+
+  public static final class SynchronizedStateMachineState implements StateMachineState {
+
+    private final StateMachineState inst;
+    private final Object mutex = new Object();
+
+    private SynchronizedStateMachineState(final StateMachineState inst) {
+      this.inst = inst;
+    }
+
+    @Override
+    public void activate(State state) {
+      synchronized (mutex) {
+        inst.activate(state);
+      }
+    }
+
+    @Override
+    public StateConfiguration activeStates() {
+      StateConfiguration out;
+      synchronized (mutex) {
+        out = inst.activeStates();
+      }
+      return out;
+    }
+
+    @Override
+    public StateConfiguration activeStates(Region region) {
+      StateConfiguration out;
+      synchronized (mutex) {
+        out = inst.activeStates(region);
+      }
+      return out;
+    }
+
+    @Override
+    public boolean activityCompleted(State state) {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.activityCompleted(state);
+      }
+      return out;
+    }
+
+    @Override
+    public boolean completedOne(State state) {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.completedOne(state);
+      }
+      return out;
+    }
+
+    @Override
+    public Set<State> completedStates() {
+      Set<State> out;
+      synchronized (mutex) {
+        out = inst.completedStates();
+      }
+      return out;
+    }
+
+    @Override
+    public void removeCompletedState(final State state) {
+      synchronized (mutex) {
+        inst.removeCompletedState(state);
+      }
+    }
+
+    @Override
+    public void deactivate(State state) {
+      synchronized (mutex) {
+        inst.deactivate(state);
+      }
+    }
+
+    @Override
+    public boolean hasCompletedStates() {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.hasCompletedStates();
+      }
+      return out;
+    }
+
+    @Override
+    public boolean hasStarted() {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.hasStarted();
+      }
+      return out;
+    }
+
+    @Override
+    public boolean isActive(State s) {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.isActive(s);
+      }
+      return out;
+    }
+
+    @Override
+    public boolean isTerminated() {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.isTerminated();
+      }
+      return out;
+    }
+
+    @Override
+    public boolean joinReached(final PseudoState joinVertex, final Transition transition) {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.joinReached(joinVertex, transition);
+      }
+      return out;
+    }
+
+    @Override
+    public void clearJoin(final PseudoState joinVertex) {
+      synchronized (mutex) {
+        inst.clearJoin(joinVertex);
+      }
+    }
+
+    @Override
+    public StateConfiguration restore(Region r) {
+      StateConfiguration out;
+      synchronized (mutex) {
+        out = inst.restore(r);
+      }
+      return out;
+    }
+
+    @Override
+    public void saveDeepHistory(Region r) {
+      synchronized (mutex) {
+        inst.saveDeepHistory(r);
+      }
+    }
+
+    @Override
+    public void saveShallowHistory(Region r) {
+      synchronized (mutex) {
+        inst.saveShallowHistory(r);
+      }
+    }
+
+    @Override
+    public void setActivity(State state, Future<?> future) {
+      synchronized (mutex) {
+        inst.setActivity(state, future);
+      }
+    }
+
+    @Override
+    public void start() {
+      synchronized (mutex) {
+        inst.start();
+      }
+    }
+
+    @Override
+    public StateStatus status(State state) {
+      StateStatus out;
+      synchronized (mutex) {
+        out = inst.status(state);
+      }
+      return out;
+    }
+
+    @Override
+    public void terminate() {
+      synchronized (mutex) {
+        inst.terminate();
+      }
+    }
+
+  }
 
 }
