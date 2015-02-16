@@ -43,6 +43,8 @@ public class MutableStateMachineMeta implements StateMachineMeta {
   private TreeNode<Region> tree;
   private final Map<Region, TreeNode<Region>> nodesByRegion = new HashMap<>();
   private final Map<StateMachine, State> ownedStateMachines = new HashMap<>();
+  private final Map<String, State> stateById = new HashMap<>();
+  private final Map<String, Region> regionById = new HashMap<>();
 
   public MutableStateMachineMeta() {
     for (PseudoStateKind kind : PseudoStateKind.values()) {
@@ -104,7 +106,7 @@ public class MutableStateMachineMeta implements StateMachineMeta {
   }
 
   Map<PseudoStateKind, Integer> pseudoStateCounts() {
-    return pseudoStateCounts;
+    return new HashMap<>(pseudoStateCounts);
   }
 
   void register(final State state) {
@@ -126,6 +128,8 @@ public class MutableStateMachineMeta implements StateMachineMeta {
     if (state.isSubMachineState()) {
       ownedStateMachines.put(state.subStateMachine(), state);
     }
+    
+    stateById.put(state.getId(), state);
   }
 
   void register(final Region region) {
@@ -142,6 +146,8 @@ public class MutableStateMachineMeta implements StateMachineMeta {
       node.add(child);
       nodesByRegion.put(region, child);
     }
+    
+    regionById.put(region.getId(), region);
   }
 
   @Override
@@ -177,6 +183,24 @@ public class MutableStateMachineMeta implements StateMachineMeta {
       }
     }
     return leaves;
+  }
+
+  @Override
+  public State state(final String id) {
+    return stateById.get(id);
+  }
+  
+  Map<String, State> stateById() {
+    return new HashMap<>(stateById);
+  }
+
+  @Override
+  public Region region(final String id) {
+    return regionById.get(id);
+  }
+  
+  Map<String, Region> regionById() {
+    return new HashMap<>(regionById);
   }
 
 }

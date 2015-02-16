@@ -18,9 +18,15 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *
@@ -64,6 +70,22 @@ public class StateMachineShardPoolExecutor {
     return pool[shard].queue;
   }
 
+  void resume(final PoolStateMachineExecutor executor, final StateMachineSnapshot snapshot) {
+    queue(executor).add(new StateMachineResumeRunnable(executor, snapshot));
+  }
+
+  Future<StateMachineSnapshot> pause(final PoolStateMachineExecutor executor) {
+    StateMachinePauseRunnable runnable = new StateMachinePauseRunnable(executor);
+    queue(executor).addFirst(runnable);
+    return runnable;
+  }
+
+  Future<StateMachineSnapshot> snapshot(final PoolStateMachineExecutor executor) {
+    StateMachineSnapshotRunnable runnable = new StateMachineSnapshotRunnable(executor);
+    queue(executor).addFirst(runnable);
+    return runnable;
+  }
+
   private static final class Worker extends Thread {
 
     private final LinkedBlockingDeque<Runnable> queue = new LinkedBlockingDeque<>();
@@ -89,7 +111,7 @@ public class StateMachineShardPoolExecutor {
 
     private final PoolStateMachineExecutor executor;
 
-    public StateMachineStart(PoolStateMachineExecutor executor) {
+    public StateMachineStart(final PoolStateMachineExecutor executor) {
       this.executor = executor;
     }
 
@@ -105,7 +127,7 @@ public class StateMachineShardPoolExecutor {
     private final PoolStateMachineExecutor executor;
     private final Event event;
 
-    public StateMachineEvent(PoolStateMachineExecutor executor, Event event) {
+    public StateMachineEvent(final PoolStateMachineExecutor executor, final Event event) {
       this.executor = executor;
       this.event = event;
     }
@@ -123,7 +145,7 @@ public class StateMachineShardPoolExecutor {
     private final Event event;
     private final State state;
 
-    public StateMachineStateEvent(PoolStateMachineExecutor executor, Event event, State state) {
+    public StateMachineStateEvent(final PoolStateMachineExecutor executor, final Event event, final State state) {
       this.executor = executor;
       this.event = event;
       this.state = state;
@@ -140,13 +162,109 @@ public class StateMachineShardPoolExecutor {
 
     private final PoolStateMachineExecutor executor;
 
-    public StateMachineCompletionEvent(PoolStateMachineExecutor executor) {
+    public StateMachineCompletionEvent(final PoolStateMachineExecutor executor) {
       this.executor = executor;
     }
 
     @Override
     public void run() {
       executor.doTakeCompletionEvent();
+    }
+
+  }
+
+  private static final class StateMachineResumeRunnable implements Runnable {
+
+    private final PoolStateMachineExecutor executor;
+    private final StateMachineSnapshot snapshot;
+
+    public StateMachineResumeRunnable(final PoolStateMachineExecutor executor, final StateMachineSnapshot snapshot) {
+      this.executor = executor;
+      this.snapshot = snapshot;
+    }
+
+    @Override
+    public void run() {
+      executor.doResume(snapshot);
+    }
+
+  }
+  
+  private static abstract class StateMachineSnapshotFuture implements Future<StateMachineSnapshot>, Runnable {
+
+    private final CountDownLatch latch = new CountDownLatch(1);
+    private final AtomicInteger status = new AtomicInteger();
+    private StateMachineSnapshot snapshot;
+    
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+      return status.compareAndSet(0, -1);
+    }
+
+    @Override
+    public boolean isCancelled() {
+      return status.get() == -1;
+    }
+
+    @Override
+    public boolean isDone() {
+      return status.get() == 1;
+    }
+
+    @Override
+    public StateMachineSnapshot get() throws InterruptedException, ExecutionException {
+      latch.await();
+      return snapshot;
+    }
+
+    @Override
+    public StateMachineSnapshot get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+      latch.await(timeout, unit);
+      return snapshot;
+    }
+
+    @Override
+    public void run() {
+      if (isCancelled()) {
+        latch.countDown();
+        return;
+      }
+      
+      snapshot = snapshot();
+      latch.countDown();
+      status.set(1);
+    }
+    
+    abstract StateMachineSnapshot snapshot();
+    
+  }
+
+  private static final class StateMachinePauseRunnable extends StateMachineSnapshotFuture {
+
+    private final PoolStateMachineExecutor executor;
+
+    public StateMachinePauseRunnable(final PoolStateMachineExecutor executor) {
+      this.executor = executor;
+    }
+
+    @Override
+    StateMachineSnapshot snapshot() {
+      return executor.doPause();
+    }
+
+  }
+
+  private static final class StateMachineSnapshotRunnable extends StateMachineSnapshotFuture implements Runnable {
+
+    private final PoolStateMachineExecutor executor;
+
+    public StateMachineSnapshotRunnable(final PoolStateMachineExecutor executor) {
+      this.executor = executor;
+    }
+
+    @Override
+    StateMachineSnapshot snapshot() {
+      return executor.doSnapshot();
     }
 
   }

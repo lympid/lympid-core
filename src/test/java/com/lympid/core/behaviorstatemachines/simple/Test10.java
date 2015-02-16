@@ -36,35 +36,35 @@ public class Test10 extends AbstractStateMachineTest {
   public void run_go() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_a() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("a"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_finish() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("finish"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_end() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_foo() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("foo"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   private StateMachineExecutor commonTest() {
@@ -74,13 +74,13 @@ public class Test10 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
         
     /*
      * A string event other than "go" has no effect.
      */
     fsm.take(new StringEvent("pass"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
     
     return fsm;
   }

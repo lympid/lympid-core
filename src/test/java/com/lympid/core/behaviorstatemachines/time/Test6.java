@@ -47,10 +47,10 @@ public class Test6 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
+    begin(fsm, expected);
     
     expected.exit("C").exit("A");
-    fireEnd(fsm, expected, ctx);
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -61,11 +61,11 @@ public class Test6 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
+    begin(fsm, expected);
     waitTimer1(fsm, expected, ctx, "C");
     
     expected.exit("C");
-    fireEnd(fsm, expected, ctx);
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -76,40 +76,40 @@ public class Test6 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
+    begin(fsm, expected);
     waitTimer1(fsm, expected, ctx, "C");
     waitTimer2(fsm, expected, ctx, "end1");
-    fireEnd(fsm, expected, ctx);
+    fireEnd(fsm, expected);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected, Context ctx) {
+  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho")
       .effect("t4").enter("C")
       .effect("t1").enter("A");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
   private void waitTimer1(StateMachineExecutor fsm, SequentialContext expected, Context ctx, String otherRegionState) throws InterruptedException {
     ctx.latch1.await(DELAY_REGION_2, TimeUnit.MILLISECONDS);
     expected.exit("A").effect("t2").enter("B").exit("B").effect("t3");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState).get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState));
+    assertSequentialContextEquals(expected, fsm);
   }
 
   private void waitTimer2(StateMachineExecutor fsm, SequentialContext expected, Context ctx, String otherRegionState) throws InterruptedException {
     ctx.latch2.await(DELAY_REGION_2, TimeUnit.MILLISECONDS);
     expected.exit("C").effect("t5").enter("D").exit("D").effect("t6");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  private void fireEnd(StateMachineExecutor fsm, SequentialContext expected) {
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t7");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override

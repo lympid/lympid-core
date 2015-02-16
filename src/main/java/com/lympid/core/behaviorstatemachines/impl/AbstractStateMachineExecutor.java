@@ -42,6 +42,7 @@ import static com.lympid.core.behaviorstatemachines.TransitionKind.INTERNAL;
 import static com.lympid.core.behaviorstatemachines.TransitionKind.LOCAL;
 import com.lympid.core.behaviorstatemachines.Vertex;
 import com.lympid.core.behaviorstatemachines.VertexUtils;
+import com.lympid.core.common.Copyable;
 import com.lympid.core.common.TreeNode;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,9 +84,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   @Override
   public void setStateMachine(final StateMachine machine) {
     this.machine = machine;
-    this.machineState = createMachineState(machine);
   }
-  
+
   @Override
   public StateMachine stateMachine() {
     return machine;
@@ -127,6 +127,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
       throw new RuntimeException(); // TODO: custom exception
     }
 
+    machineState = createMachineState(machine);
     if (configuration.autoStart()) {
       start();
     }
@@ -135,6 +136,26 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   @Override
   public StateMachineSnapshot snapshot() {
     return new StateMachineSnapshot(machine, machineState, context);
+  }
+
+  @Override
+  public StateMachineSnapshot pause() {
+    machineState.pause();
+    StateMachineSnapshot snapshot = new StateMachineSnapshot(machine, machineState, context);
+    machineState.start();
+    machineState.terminate();
+    return snapshot;
+  }
+
+  @Override
+  public void resume(final StateMachineSnapshot snapshot) {
+    this.context = snapshot.context() instanceof Copyable
+            ? ((Copyable) snapshot.context()).copy()
+            : snapshot.context();
+    this.machineState = createMachineState(machine);
+    this.machineState.resume(snapshot);
+    doAllActivities();
+    scheduleAllTimeEvents();
   }
 
   @Override
@@ -203,9 +224,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     /*
      * Schedules all time events at once
      */
-    if (!machineState.isTerminated() && machine.metadata().hasTimeEvents()) {
-      scheduleTimeEvents(machineState.activeStates());
-    }
+    scheduleAllTimeEvents();
   }
 
   private void internalTakeCompletionEvents() {
@@ -233,6 +252,12 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
       if ((stateHashBefore == stateHashAfter && contextHashBefore == contextHashAfter) || machineState.isTerminated()) { // possible infinite loop detected.
         break;
       }
+    }
+  }
+  
+  private void scheduleAllTimeEvents() {
+    if (!machineState.isTerminated() && machine.metadata().hasTimeEvents()) {
+      scheduleTimeEvents(machineState.activeStates());
     }
   }
 
@@ -297,6 +322,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
    *
    * @param event The event that triggered those transitions.
    * @param paths A collection of transitions that can be fired in parallel.
+   *
    * @return true when the event actually resulted in firing a transition.
    */
   private boolean fireMany(final Event event, final Collection<TreeNode<Transition>> paths) {
@@ -446,7 +472,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     if (stateConfig.state() instanceof FinalState) {
       throw new RuntimeException(); // TODO: custom exception
     }
-    
+
     entry(stateConfig.state());
     if (stateConfig.isEmpty()) {
       enterState(stateConfig.state());
@@ -505,7 +531,21 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
       }
     }
   }
-
+  
+  private void doAllActivities() {
+    if (!machineState.isTerminated() && machine.metadata().hasActivities()) {
+      doActivities(machineState.activeStates());
+    }
+  }
+  
+  private void doActivities(final StateConfiguration<?> config) {
+    assert config.state() != null;
+    if (config.state().doActivity() != null) {
+      doActivity(config.state());
+    }
+    config.forEach(this::doActivities);
+  }
+ 
   private void doActivity(final State state) {
     Future<?> f = configuration.executor().submit(new RunnableActivity(this, state));
     machineState.setActivity(state, f);
@@ -652,16 +692,16 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
 
   private void transitionPaths(final Event event, final StateConfiguration<?> stateConfig, final Collection<TreeNode<Transition>> allPaths) {
     if (stateConfig.isEmpty()) {
-       transitionPath(event, stateConfig.state(), allPaths);
-       return;
+      transitionPath(event, stateConfig.state(), allPaths);
+      return;
     }
-    
+
     int sizeBefore = allPaths.size();
     stateConfig.forEach((s) -> transitionPaths(event, s, allPaths));
     int sizeAfter = allPaths.size();
-    
+
     if (sizeAfter == sizeBefore) {
-       transitionPath(event, stateConfig.state(), allPaths);
+      transitionPath(event, stateConfig.state(), allPaths);
     }
   }
 
@@ -767,6 +807,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
    * known via the state() method.
    *
    * @param childVertex The vertex of which to find the parent state.
+   *
    * @return The parent containing state or null when such does not exist.
    */
   private State parentState(final Vertex childVertex) {

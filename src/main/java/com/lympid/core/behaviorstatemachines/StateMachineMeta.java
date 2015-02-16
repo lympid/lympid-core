@@ -102,5 +102,22 @@ public interface StateMachineMeta {
    * @return The maximum number of leaves in the state machine.
    */
   int countOfLeaves();
+  
+  /**
+   * Gets the {@code State} in the state machine that has the specified id.
+   * 
+   * @param id The UML unique identifier of the {@code State}.
+   * @return The state matching the given id or null.
+   */
+  State state(String id);
+  
+  
+  /**
+   * Gets the {@code Region} in the state machine that has the specified id.
+   * 
+   * @param id The UML unique identifier of the {@code Region}.
+   * @return The region matching the given id or null.
+   */
+  Region region(String id);
 
 }

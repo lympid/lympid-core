@@ -19,9 +19,7 @@ import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot.StringTree;
 import com.lympid.core.common.TreeNode;
 import java.util.Comparator;
-import java.util.List;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +37,7 @@ public final class StateMachineProcessorTester {
     
     final String regionId = region.charAt(0) == '#'
       ? region.substring(1)
-      : null; // not supported
+      : region; // note: names are not supported
     assertSnapshotHistoryEquals(snapshot, regionId, expected.tree());
   }
   
@@ -48,7 +46,7 @@ public final class StateMachineProcessorTester {
     
     assertNotNull(snapshot);
     assertNotNull(snapshot.history());
-    List<StringTree> history = snapshot.history().get(regionId);
+    StringTree history = snapshot.history().get(regionId);
     assertNotNull(history);
     
     assertStateConfigurationEquals(expected, history);
@@ -66,7 +64,6 @@ public final class StateMachineProcessorTester {
 
   private static void assertSnapshotEquals(final StateMachineSnapshot<?> snapshot, final TreeNode<String> expected) {
     assertNotNull(snapshot);
-    assertNotNull(snapshot.stateConfiguration());
     assertStateConfigurationEquals(expected, snapshot.stateConfiguration());
 
     if (expected.content() == null) {
@@ -76,11 +73,11 @@ public final class StateMachineProcessorTester {
     }
   }
   
-  private static void assertStateConfigurationEquals(final TreeNode<String> expected, final List<StringTree> actual) {
-    if (actual.isEmpty()) {
+  private static void assertStateConfigurationEquals(final TreeNode<String> expected, final StringTree actual) {
+    if (actual == null) {
       assertNull(expected.content());
     } else {
-      assertSnapshotEquals(expected, actual.get(0));
+      assertSnapshotEquals(expected, actual);
     }
   }
 
@@ -107,16 +104,15 @@ public final class StateMachineProcessorTester {
   }
 
   private static void assertNotStartedOrTerminated(final StateMachineSnapshot snapshot) {
-    assertTrue(snapshot.stateConfiguration().isEmpty());
+    assertNull(snapshot.stateConfiguration());
     assertTrue(!snapshot.isStarted() || snapshot.isTerminated());
   }
 
   private static void assertFinalIsTerminated(final StateMachineSnapshot<?> snapshot) {
-    assertFalse(snapshot.stateConfiguration().isEmpty());
+    assertNotNull(snapshot.stateConfiguration());
     
-    StringTree tree = snapshot.stateConfiguration().get(0);
-    assertNotNull(tree);
-    assertNull(tree.children());
+    assertNotNull(snapshot.stateConfiguration());
+    assertNull(snapshot.stateConfiguration().children());
 //    if (tree.state() instanceof FinalState) {
       /*
        * The final state of the top level state machine has been reached. Make

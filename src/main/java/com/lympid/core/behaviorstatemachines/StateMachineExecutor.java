@@ -45,4 +45,8 @@ public interface StateMachineExecutor<C> {
   void take(final Event event);
 
   StateMachineSnapshot<C> snapshot();
+  
+  StateMachineSnapshot pause();
+  
+  void resume(StateMachineSnapshot snapshot);
 }

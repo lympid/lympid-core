@@ -33,21 +33,21 @@ public interface StateMachineState {
     return new SynchronizedStateMachineState(inst);
   }
 
-  void activate(final State state);
+  void activate(State state);
 
   StateConfiguration<?> activeStates();
 
-  StateConfiguration<?> activeStates(final Region region);
+  StateConfiguration<?> activeStates(Region region);
 
-  boolean activityCompleted(final State state);
+  boolean activityCompleted(State state);
 
-  boolean completedOne(final State state);
+  boolean completedOne(State state);
 
   Set<State> completedStates();
 
-  void removeCompletedState(final State state);
+  void removeCompletedState(State state);
 
-  void deactivate(final State state);
+  void deactivate(State state);
 
   boolean hasCompletedStates();
 
@@ -57,32 +57,36 @@ public interface StateMachineState {
 
   void clearJoin(PseudoState joinVertex);
 
-  boolean isActive(final State s);
+  boolean isActive(State s);
 
   boolean isTerminated();
 
-  StateConfiguration<?> restore(final Region r);
+  StateConfiguration<?> restore(Region r);
 
   Map<Region, StateConfiguration<?>> history();
 
-  void saveDeepHistory(final Region r);
+  void saveDeepHistory(Region r);
 
-  void saveShallowHistory(final Region r);
+  void saveShallowHistory(Region r);
 
-  void setActivity(final State state, final Future<?> future);
+  void setActivity(State state, Future<?> future);
 
   void start();
 
-  StateStatus status(final State state);
+  StateStatus status(State state);
 
   void terminate();
+  
+  void pause();
+  
+  void resume(StateMachineSnapshot<?> snapshot);
 
-  public static final class SynchronizedStateMachineState implements StateMachineState {
+  public static class SynchronizedStateMachineState implements StateMachineState {
 
     private final StateMachineState inst;
     private final Object mutex = new Object();
 
-    private SynchronizedStateMachineState(final StateMachineState inst) {
+    private SynchronizedStateMachineState(StateMachineState inst) {
       this.inst = inst;
     }
 
@@ -139,7 +143,7 @@ public interface StateMachineState {
     }
 
     @Override
-    public void removeCompletedState(final State state) {
+    public void removeCompletedState(State state) {
       synchronized (mutex) {
         inst.removeCompletedState(state);
       }
@@ -189,7 +193,7 @@ public interface StateMachineState {
     }
 
     @Override
-    public boolean joinReached(final PseudoState joinVertex, final Transition transition) {
+    public boolean joinReached(PseudoState joinVertex, Transition transition) {
       boolean out;
       synchronized (mutex) {
         out = inst.joinReached(joinVertex, transition);
@@ -198,7 +202,7 @@ public interface StateMachineState {
     }
 
     @Override
-    public void clearJoin(final PseudoState joinVertex) {
+    public void clearJoin(PseudoState joinVertex) {
       synchronized (mutex) {
         inst.clearJoin(joinVertex);
       }
@@ -263,6 +267,20 @@ public interface StateMachineState {
     public void terminate() {
       synchronized (mutex) {
         inst.terminate();
+      }
+    }
+
+    @Override
+    public void pause() {
+      synchronized (mutex) {
+        inst.pause();
+      }
+    }
+
+    @Override
+    public void resume(StateMachineSnapshot<?> snapshot) {
+      synchronized (mutex) {
+        inst.resume(snapshot);
       }
     }
 

@@ -16,6 +16,8 @@
 package com.lympid.core.behaviorstatemachines.impl;
 
 import com.lympid.core.behaviorstatemachines.PseudoStateKind;
+import com.lympid.core.behaviorstatemachines.Region;
+import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineMeta;
 import java.util.Map;
 
@@ -33,6 +35,8 @@ public class ImmutableStateMachineMeta implements StateMachineMeta {
   private final boolean timeEvents;
   private final boolean activities;
   private final Map<PseudoStateKind, Integer> pseudoStateCounts;
+  private final Map<String, State> stateById;
+  private final Map<String, Region> regionById;
   private final int treeDepth;
   private final int countOfLeaves;
 
@@ -45,6 +49,8 @@ public class ImmutableStateMachineMeta implements StateMachineMeta {
     this.timeEvents = meta.hasTimeEvents();
     this.activities = meta.hasActivities();
     this.pseudoStateCounts = meta.pseudoStateCounts();
+    this.stateById = meta.stateById();
+    this.regionById = meta.regionById();
     this.treeDepth = meta.treeDepth();
     this.countOfLeaves = meta.countOfLeaves();
   }
@@ -97,6 +103,16 @@ public class ImmutableStateMachineMeta implements StateMachineMeta {
   @Override
   public int countOfLeaves() {
     return countOfLeaves;
+  }
+
+  @Override
+  public State state(final String id) {
+    return stateById.get(id);
+  }
+
+  @Override
+  public Region region(final String id) {
+    return regionById.get(id);
   }
 
 }

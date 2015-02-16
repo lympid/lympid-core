@@ -30,10 +30,10 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
- * 
+ *
  * @author Fabien Renaud
  */
-abstract class AbstractStateMachineState implements StateMachineState {
+abstract class AbstractStateMachineState extends ResumableStateMachineState {
 
   private final MutableStateConfiguration activeStates;
   private final Map<Region, MutableStateConfiguration> nodesByRegion;
@@ -41,10 +41,9 @@ abstract class AbstractStateMachineState implements StateMachineState {
   private final Map<State, StateStatus> activeStateStatutes;
   private final Set<State> completedStates;
   private final Map<PseudoState, Set<Transition>> joins;
-  private boolean started;
-  private boolean terminated;
 
   protected AbstractStateMachineState(final MutableStateConfiguration activeStates, final StateMachineMeta metadata) {
+    super(metadata);
     this.activeStates = activeStates;
     this.nodesByRegion = new HashMap<>();
     this.histories = hashMap(metadata.countOf(PseudoStateKind.SHALLOW_HISTORY) + metadata.countOf(PseudoStateKind.DEEP_HISTORY));
@@ -131,26 +130,6 @@ abstract class AbstractStateMachineState implements StateMachineState {
   }
 
   @Override
-  public void start() {
-    this.started = true;
-  }
-
-  @Override
-  public boolean hasStarted() {
-    return started;
-  }
-
-  @Override
-  public void terminate() {
-    this.terminated = true;
-  }
-
-  @Override
-  public boolean isTerminated() {
-    return terminated;
-  }
-
-  @Override
   public void setActivity(final State state, final Future<?> future) {
     StateStatus status = activeStateStatutes.get(state);
     assert status != null : "Status is null for state: " + state;
@@ -227,8 +206,8 @@ abstract class AbstractStateMachineState implements StateMachineState {
   }
 
   @Override
-  public StateConfiguration<?> restore(final Region r) {
-    return histories.get(r);
+  public StateConfiguration<?> restore(final Region region) {
+    return histories.get(region);
   }
 
   @Override
@@ -237,23 +216,28 @@ abstract class AbstractStateMachineState implements StateMachineState {
   }
 
   @Override
-  public void saveDeepHistory(final Region r) {
-    MutableStateConfiguration stateConfig = nodesByRegion.get(r);
+  public void saveDeepHistory(final Region region) {
+    MutableStateConfiguration stateConfig = nodesByRegion.get(region);
     if (stateConfig == null || stateConfig.state() instanceof FinalState) {
-      histories.remove(r);
+      histories.remove(region);
     } else {
-      histories.put(r, stateConfig.copy());
+      saveHistory(region, stateConfig.copy());
     }
   }
 
   @Override
-  public void saveShallowHistory(final Region r) {
-    StateConfiguration stateConfig = nodesByRegion.get(r);
+  public void saveShallowHistory(final Region region) {
+    StateConfiguration stateConfig = nodesByRegion.get(region);
     if (stateConfig == null || stateConfig.state() instanceof FinalState) {
-      histories.remove(r);
+      histories.remove(region);
     } else {
-      histories.put(r, new SimpleStateConfiguration(stateConfig.state()));
+      saveHistory(region, new SimpleStateConfiguration(stateConfig.state()));
     }
+  }
+  
+  @Override
+  void saveHistory(final Region region, final MutableStateConfiguration history) {
+    histories.put(region, history);
   }
 
   private void clearActivity(final StateStatus status) {
@@ -278,6 +262,14 @@ abstract class AbstractStateMachineState implements StateMachineState {
           }
         }
       }
+    }
+  }
+
+  @Override
+  public void pause() {
+    for (StateStatus status : activeStateStatutes.values()) {
+      clearActivity(status);
+      clearEventTimers(status);
     }
   }
 }

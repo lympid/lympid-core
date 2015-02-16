@@ -47,17 +47,17 @@ public class Test2 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
 
     Thread.sleep(2);
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
     
     ctx.latch.await(10 * DELAY, TimeUnit.MILLISECONDS);
 
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
     assertFalse(ctx.fired);
   }
 

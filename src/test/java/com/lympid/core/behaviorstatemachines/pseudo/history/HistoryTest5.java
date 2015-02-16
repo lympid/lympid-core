@@ -106,21 +106,21 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
     
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
@@ -138,27 +138,27 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
     fsm.take(new StringEvent("resume"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
     
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
@@ -176,27 +176,27 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
     fsm.take(new StringEvent("resume"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
     
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
@@ -214,27 +214,27 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
     fsm.take(new StringEvent("resume"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
     
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test(expected = RuntimeException.class)
@@ -243,19 +243,19 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
     
     fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
     fsm.take(new StringEvent("resume"));
   }

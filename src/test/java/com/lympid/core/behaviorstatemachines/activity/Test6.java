@@ -24,7 +24,6 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultEntryRule;
-import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
 
@@ -45,16 +44,12 @@ public class Test6 extends AbstractStateMachineTest {
     fsm.go();
     
     expected.effect("t0").enter("compo");
-    StateMachineSnapshot<Context> snapshot = fsm.snapshot();
-    assertSequentialContextEquals(expected, snapshot.context());
-    assertSnapshotEquals(snapshot, new ActiveStateTree(this).branch("compo").get());
     
     ctx.latch.await();
     
     expected.activity("someactivity").exit("compo").effect("t1");
-    snapshot = fsm.snapshot();
-    assertSequentialContextEquals(expected, snapshot.context());
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
   @Override

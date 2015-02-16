@@ -45,9 +45,9 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);    
-    fireGo(fsm, expected, ctx);    
-    fireEnd(fsm, expected, ctx);
+    begin(fsm, expected);    
+    fireGo(fsm, expected);    
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -59,10 +59,10 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    pauseAndResumeA(fsm, expected, ctx);
-    fireGo(fsm, expected, ctx);
-    fireEnd(fsm, expected, ctx);
+    begin(fsm, expected);
+    pauseAndResumeA(fsm, expected);
+    fireGo(fsm, expected);
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -74,58 +74,58 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);    
-    fireGo(fsm, expected, ctx);    
-    pauseAndResumeB(fsm, expected, ctx);    
-    fireEnd(fsm, expected, ctx);
+    begin(fsm, expected);    
+    fireGo(fsm, expected);    
+    pauseAndResumeB(fsm, expected);    
+    fireEnd(fsm, expected);
   }
 
-  protected final void fireEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void fireEnd(StateMachineExecutor fsm, SequentialContext expected) {
     fsm.take(new StringEvent("end"));
     expected.exit("Aaaab").exit("Aaaa").exit("Aaa").exit("Aa").exit("A").effect("t2");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void fireGo(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void fireGo(StateMachineExecutor fsm, SequentialContext expected) {
     fsm.take(new StringEvent("go"));
     expected.exit("Aaaaa").effect("t1").enter("Aaaab");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaab").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaab"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void begin(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void begin(StateMachineExecutor fsm, SequentialContext expected) {
     expected.enter("A").enter("Aa").enter("Aaa").enter("Aaaa").enter("Aaaaa");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaaa").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaaa"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
-  protected final void pauseAndResumeA(final StateMachineExecutor fsm, final SequentialContext expected, final SequentialContext ctx) {
+  protected final void pauseAndResumeA(final StateMachineExecutor fsm, final SequentialContext expected) {
     fsm.take(new StringEvent("pause"));
     expected.exit("Aaaaa").exit("Aaaa").exit("Aaa").exit("Aa").exit("A").effect("t3").enter("P");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("resume"));
     expected.exit("P").effect("t4");
-    resumeA(fsm, expected, ctx);
+    resumeA(fsm, expected);
   }
   
-  protected final void pauseAndResumeB(final StateMachineExecutor fsm, final SequentialContext expected, final SequentialContext ctx) {
+  protected final void pauseAndResumeB(final StateMachineExecutor fsm, final SequentialContext expected) {
     fsm.take(new StringEvent("pause"));
     expected.exit("Aaaab").exit("Aaaa").exit("Aaa").exit("Aa").exit("A").effect("t3").enter("P");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("resume"));
     expected.exit("P").effect("t4");
-    resumeB(fsm, expected, ctx);
+    resumeB(fsm, expected);
   }
   
-  protected abstract void resumeA(final StateMachineExecutor fsm, final SequentialContext expected, final SequentialContext ctx);
+  protected abstract void resumeA(final StateMachineExecutor fsm, final SequentialContext expected);
   
-  protected abstract void resumeB(final StateMachineExecutor fsm, final SequentialContext expected, final SequentialContext ctx);
-    
+  protected abstract void resumeB(final StateMachineExecutor fsm, final SequentialContext expected);
+  
   @Override
   public String stdOut() {
     return stdout;

@@ -60,4 +60,9 @@ public class SimpleStateMachineStateTest {
   public void testSaveShallowHistory() {
     machineState.saveShallowHistory(null);
   }
+
+  @Test(expected = IllegalStateException.class)
+  public void testSaveHistory() {
+    machineState.saveHistory(null, null);
+  }
 }

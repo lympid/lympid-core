@@ -131,13 +131,13 @@ public class Test22 extends AbstractStateMachineTest {
     if (ctx.c >= 0) {
       ActiveStateTree tree = new ActiveStateTree(this).branch("A");
       assertSnapshotEquals(fsm, tree);
-      assertSequentialContextEquals(expected, ctx);
+      assertSequentialContextEquals(expected, fsm);
 
       while (ctx.c > 0) {
         fsm.take(new StringEvent("dec"));
         expected.exit("A").effect("t7").enter("A");
         assertSnapshotEquals(fsm, tree);
-        assertSequentialContextEquals(expected, ctx);
+        assertSequentialContextEquals(expected, fsm);
       }
 
       fsm.take(new StringEvent("dec"));
@@ -147,35 +147,35 @@ public class Test22 extends AbstractStateMachineTest {
     expected.exit("A").effect("t1").enter("B").effect("t2").enter("Ba");
     ActiveStateTree tree = new ActiveStateTree(this).branch("#9", "Ba");
     assertSnapshotEquals(fsm, tree);
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
     
     while (ctx.c <= 0) {
       fsm.take(new StringEvent("go")); // has no effect
       assertSnapshotEquals(fsm, tree);
-      assertSequentialContextEquals(expected, ctx);
+      assertSequentialContextEquals(expected, fsm);
       
       fsm.take(new StringEvent("inc"));
       expected.exit("Ba").effect("t6").enter("Ba");
       assertSnapshotEquals(fsm, tree);
-      assertSequentialContextEquals(expected, ctx);
+      assertSequentialContextEquals(expected, fsm);
       
       fsm.take(new StringEvent("dec"));
       expected.effect("t7");
       assertSnapshotEquals(fsm, tree);
-      assertSequentialContextEquals(expected, ctx);
+      assertSequentialContextEquals(expected, fsm);
       
       fsm.take(new StringEvent("inc"));
       expected.exit("Ba").effect("t6").enter("Ba");
       assertSnapshotEquals(fsm, tree);
-      assertSequentialContextEquals(expected, ctx);
+      assertSequentialContextEquals(expected, fsm);
     }
     
     fsm.take(new StringEvent("go"));
     expected
       .exit("Ba").effect("t3").exit("B").effect("t4").enter("C")
       .exit("C").effect("t5");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override

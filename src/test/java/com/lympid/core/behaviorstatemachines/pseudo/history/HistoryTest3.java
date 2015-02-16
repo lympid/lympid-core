@@ -24,6 +24,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 import org.junit.Test;
 
 /**
@@ -33,6 +34,7 @@ import org.junit.Test;
 public abstract class HistoryTest3 extends AbstractHistoryTest {
   
   private String stdout;
+  private boolean pause;
   
   protected HistoryTest3(final PseudoStateKind historyKind) {
     super(historyKind);
@@ -40,281 +42,386 @@ public abstract class HistoryTest3 extends AbstractHistoryTest {
   }
     
   @Test
-  public void run_unpaused() {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-    
-    toA(fsm, expected, ctx);
-    
-    toBCEnd(fsm, expected, ctx);
+  public void run_noP() {
+    run_noP(false);
   }
     
   @Test
-  public void run_pause_Aa() {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-    
-    toAa(fsm, expected, ctx);
-    
-    pauseAndResume(fsm, expected, ctx, "Aa", "A", "compo");
-    resumeAa(fsm, expected, ctx);
-    
-    toAb(fsm, expected, ctx);
-    toAend(fsm, expected, ctx);
-    toBCEnd(fsm, expected, ctx);
-  }
-    
-  @Test
-  public void run_pause_Ab() {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-    
-    toAa(fsm, expected, ctx);
-    toAb(fsm, expected, ctx);
-    
-    pauseAndResume(fsm, expected, ctx, "Ab", "A", "compo");
-    resumeAb(fsm, expected, ctx);
-    
-    toAend(fsm, expected, ctx);
-    toBCEnd(fsm, expected, ctx);
-  }
-    
-  @Test
-  public void run_pause_Ba() {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-        
-    toA(fsm, expected, ctx);
-    
-    fsm.take(new StringEvent("toB"));
-    expected.exit("A").effect("t1");
-    toBa(fsm, expected, ctx);
-    
-    pauseAndResume(fsm, expected, ctx, "Ba", "B", "compo");
-    resumeBa(fsm, expected, ctx);
-    
-    toBb(fsm, expected, ctx);
-    toBend(fsm, expected, ctx);
-    toCEnd(fsm, expected, ctx);
-  }
-    
-  @Test
-  public void run_pause_Bb() {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-        
-    toA(fsm, expected, ctx);
-    
-    fsm.take(new StringEvent("toB"));
-    expected.exit("A").effect("t1");
-    toBa(fsm, expected, ctx);
-    toBb(fsm, expected, ctx);
-    
-    pauseAndResume(fsm, expected, ctx, "Bb", "B", "compo");
-    resumeBb(fsm, expected, ctx);
-    
-    toBend(fsm, expected, ctx);
-    toCEnd(fsm, expected, ctx);
-  }
-    
-  @Test
-  public void run_pause_Ca() {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-        
-    toAB(fsm, expected, ctx);
-    
-    fsm.take(new StringEvent("toC"));
-    expected.exit("B").effect("t2");
-    toCa(fsm, expected, ctx);
-    
-    pauseAndResume(fsm, expected, ctx, "Ca", "C", "compo");
-    resumeCa(fsm, expected, ctx);
-    
-    toCb(fsm, expected, ctx);
-    toCend(fsm, expected, ctx);
-    toEnd(fsm, expected, ctx);
-  }
-    
-  @Test
-  public void run_pause_Cb() {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-        
-    toAB(fsm, expected, ctx);
-    
-    fsm.take(new StringEvent("toC"));
-    expected.exit("B").effect("t2");
-    toCa(fsm, expected, ctx);
-    toCb(fsm, expected, ctx);
-    
-    pauseAndResume(fsm, expected, ctx, "Cb", "C", "compo");    
-    resumeCb(fsm, expected, ctx);
-    
-    toCend(fsm, expected, ctx);
-    toEnd(fsm, expected, ctx);
+  public void run_noP_pause() {
+    run_noP(true);
   }
   
-  protected abstract void resumeAa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx);
-
-  protected abstract void resumeAb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx);
-
-  protected abstract void resumeBa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx);
-
-  protected abstract void resumeBb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx);
-
-  protected abstract void resumeCa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx);
-
-  protected abstract void resumeCb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx);
-
-  protected final void toAB(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toA(fsm, expected, ctx);
+  private void run_noP(final boolean pause) {
+    this.pause = pause;
+    SequentialContext expected = new SequentialContext()
+      .effect("t0").enter("compo");
     
-    fsm.take(new StringEvent("toB"));
-    expected.exit("A").effect("t1");
-    toB(fsm, expected, ctx);
-  }
-
-  protected final void toBCEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    fsm.take(new StringEvent("toB"));
-    expected.exit("A").effect("t1");
-    toB(fsm, expected, ctx);
+    SequentialContext ctx = new SequentialContext();
+    StateMachineExecutor fsm = fsm(ctx);
+    fsm.go();
     
-    toCEnd(fsm, expected, ctx);
+    toA(fsm, expected);
+    
+    toBCEnd(fsm, expected);
   }
   
-  protected final void toCEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  @Test
+  public void run_P_Aa() {
+    run_P_Aa(false);
+  }
+  
+  @Test
+  public void run_P_Aa_pause() {
+    run_P_Aa(true);
+  }
+  
+  private void run_P_Aa(final boolean pause) {
+    this.pause = pause;
+    SequentialContext expected = new SequentialContext()
+      .effect("t0").enter("compo");
+    
+    SequentialContext ctx = new SequentialContext();
+    StateMachineExecutor fsm = fsm(ctx);
+    fsm.go();
+    
+    toAa(fsm, expected);
+    
+    toP(fsm, expected, "Aa", "A", "compo");
+    resumeAa(fsm, expected);
+    
+    toAb(fsm, expected);
+    toAend(fsm, expected);
+    toBCEnd(fsm, expected);
+  }
+    
+  @Test
+  public void run_P_Ab() {
+    run_P_Ab(false);
+  }
+  
+  @Test
+  public void run_P_Ab_pause() {
+    run_P_Ab(true);
+  }
+  
+  private void run_P_Ab(final boolean pause) {
+    this.pause = pause;
+    SequentialContext expected = new SequentialContext()
+      .effect("t0").enter("compo");
+    
+    SequentialContext ctx = new SequentialContext();
+    StateMachineExecutor fsm = fsm(ctx);
+    fsm.go();
+    
+    toAa(fsm, expected);
+    toAb(fsm, expected);
+    
+    toP(fsm, expected, "Ab", "A", "compo");
+    resumeAb(fsm, expected);
+    
+    toAend(fsm, expected);
+    toBCEnd(fsm, expected);
+  }
+    
+  @Test
+  public void run_P_Ba() {
+    run_P_Ba(false);
+  }
+    
+  @Test
+  public void run_P_Ba_pause() {
+    run_P_Ba(true);
+  }
+  
+  private void run_P_Ba(final boolean pause) {
+    this.pause = pause;
+    SequentialContext expected = new SequentialContext()
+      .effect("t0").enter("compo");
+    
+    SequentialContext ctx = new SequentialContext();
+    StateMachineExecutor fsm = fsm(ctx);
+    fsm.go();
+        
+    toA(fsm, expected);
+    
+    
+    pauseAndResume(fsm);
+    fsm.take(new StringEvent("toB"));
+    expected.exit("A").effect("t1");
+    toBa(fsm, expected);
+    
+    toP(fsm, expected, "Ba", "B", "compo");
+    resumeBa(fsm, expected);
+    
+    toBb(fsm, expected);
+    toBend(fsm, expected);
+    toCEnd(fsm, expected);
+  }
+    
+  @Test
+  public void run_P_Bb() {
+    run_P_Bb(false);
+  }
+    
+  @Test
+  public void run_P_Bb_pause() {
+    run_P_Bb(true);
+  }
+  
+  private void run_P_Bb(final boolean pause) {
+    this.pause = pause;
+    SequentialContext expected = new SequentialContext()
+      .effect("t0").enter("compo");
+    
+    SequentialContext ctx = new SequentialContext();
+    StateMachineExecutor fsm = fsm(ctx);
+    fsm.go();
+        
+    toA(fsm, expected);
+    
+    pauseAndResume(fsm);
+    fsm.take(new StringEvent("toB"));
+    expected.exit("A").effect("t1");
+    toBa(fsm, expected);
+    toBb(fsm, expected);
+    
+    toP(fsm, expected, "Bb", "B", "compo");
+    resumeBb(fsm, expected);
+    
+    toBend(fsm, expected);
+    toCEnd(fsm, expected);
+  }
+    
+  @Test
+  public void run_P_Ca() {
+    run_P_Ca(false);
+  }
+    
+  @Test
+  public void run_P_Ca_pause() {
+    run_P_Ca(true);
+  }
+  
+  private void run_P_Ca(final boolean pause) {
+    this.pause = pause;
+    SequentialContext expected = new SequentialContext()
+      .effect("t0").enter("compo");
+    
+    SequentialContext ctx = new SequentialContext();
+    StateMachineExecutor fsm = fsm(ctx);
+    fsm.go();
+        
+    toAB(fsm, expected);
+    
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toC"));
     expected.exit("B").effect("t2");
-    toC(fsm, expected, ctx);
+    toCa(fsm, expected);
     
-    toEnd(fsm, expected, ctx);
+    toP(fsm, expected, "Ca", "C", "compo");
+    resumeCa(fsm, expected);
+    
+    toCb(fsm, expected);
+    toCend(fsm, expected);
+    toEnd(fsm, expected);
+  }
+    
+  @Test
+  public void run_P_Cb() {
+    run_P_Cb(false);
+  }
+    
+  @Test
+  public void run_P_Cb_pause() {
+    run_P_Cb(true);
+  }
+  
+  private void run_P_Cb(final boolean pause) {
+    this.pause = pause;
+    SequentialContext expected = new SequentialContext()
+      .effect("t0").enter("compo");
+    
+    SequentialContext ctx = new SequentialContext();
+    StateMachineExecutor fsm = fsm(ctx);
+    fsm.go();
+        
+    toAB(fsm, expected);
+    
+    pauseAndResume(fsm);
+    fsm.take(new StringEvent("toC"));
+    expected.exit("B").effect("t2");
+    toCa(fsm, expected);
+    toCb(fsm, expected);
+    
+    toP(fsm, expected, "Cb", "C", "compo");    
+    resumeCb(fsm, expected);
+    
+    toCend(fsm, expected);
+    toEnd(fsm, expected);
+  }
+  
+  protected abstract void resumeAa(StateMachineExecutor fsm, SequentialContext expected);
+
+  protected abstract void resumeAb(StateMachineExecutor fsm, SequentialContext expected);
+
+  protected abstract void resumeBa(StateMachineExecutor fsm, SequentialContext expected);
+
+  protected abstract void resumeBb(StateMachineExecutor fsm, SequentialContext expected);
+
+  protected abstract void resumeCa(StateMachineExecutor fsm, SequentialContext expected);
+
+  protected abstract void resumeCb(StateMachineExecutor fsm, SequentialContext expected);
+
+  protected final void toAB(StateMachineExecutor fsm, SequentialContext expected) {
+    toA(fsm, expected);
+    
+    pauseAndResume(fsm);
+    fsm.take(new StringEvent("toB"));
+    expected.exit("A").effect("t1");
+    toB(fsm, expected);
   }
 
-  protected final void toC(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toCa(fsm, expected, ctx);
-    toCb(fsm, expected, ctx);
-    toCend(fsm, expected, ctx);
+  protected final void toBCEnd(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
+    fsm.take(new StringEvent("toB"));
+    expected.exit("A").effect("t1");
+    toB(fsm, expected);
+    
+    toCEnd(fsm, expected);
+  }
+  
+  protected final void toCEnd(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
+    fsm.take(new StringEvent("toC"));
+    expected.exit("B").effect("t2");
+    toC(fsm, expected);
+    
+    toEnd(fsm, expected);
   }
 
-  protected final void toB(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toBa(fsm, expected, ctx);
-    toBb(fsm, expected, ctx);
-    toBend(fsm, expected, ctx);
+  protected final void toC(StateMachineExecutor fsm, SequentialContext expected) {
+    toCa(fsm, expected);
+    toCb(fsm, expected);
+    toCend(fsm, expected);
   }
 
-  protected final void toA(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toAa(fsm, expected, ctx);
-    toAb(fsm, expected, ctx);
-    toAend(fsm, expected, ctx);
+  protected final void toB(StateMachineExecutor fsm, SequentialContext expected) {
+    toBa(fsm, expected);
+    toBb(fsm, expected);
+    toBend(fsm, expected);
   }
 
-  protected final void toEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toA(StateMachineExecutor fsm, SequentialContext expected) {
+    toAa(fsm, expected);
+    toAb(fsm, expected);
+    toAend(fsm, expected);
+  }
+
+  protected final void toEnd(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toEnd"));
     expected.exit("C").exit("compo").effect("t3");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toCend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toCend(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toCend"));
     expected.exit("Cb").effect("t2_C");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Cend").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Cend"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toCb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toCb(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toCb"));
     expected.exit("Ca").effect("t1_C").enter("Cb");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Cb").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Cb"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toCa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toCa(StateMachineExecutor fsm, SequentialContext expected) {
     expected.enter("C").effect("t0_C").enter("Ca");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Ca").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Ca"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toBend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toBend(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toBend"));
     expected.exit("Bb").effect("t2_B");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Bend").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Bend"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toBb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toBb(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toBb"));
     expected.exit("Ba").effect("t1_B").enter("Bb");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Bb").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Bb"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toBa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toBa(StateMachineExecutor fsm, SequentialContext expected) {
     expected.enter("B").effect("t0_B").enter("Ba");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Ba").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Ba"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toAend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toAend(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toAend"));
     expected.exit("Ab").effect("t2_A");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Aend").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Aend"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toAb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toAb(StateMachineExecutor fsm, SequentialContext expected) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("toAb"));
     expected.exit("Aa").effect("t1_A").enter("Ab");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Ab").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Ab"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void toAa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  protected final void toAa(StateMachineExecutor fsm, SequentialContext expected) {
     expected.enter("A").effect("t0_A").enter("Aa");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Aa").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Aa"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void pauseAndResume(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx, String... exits) {
+  protected final void toP(StateMachineExecutor fsm, SequentialContext expected, String... exits) {
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("pause"));
     for (String e : exits) {
       expected.exit(e);
     }
     expected.effect("t4").enter("P");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    assertSequentialContextEquals(expected, fsm);
     
+    pauseAndResume(fsm);
     fsm.take(new StringEvent("resume"));
     expected.exit("P").effect("t5").enter("compo");
+  }
+  
+  private void pauseAndResume(StateMachineExecutor fsm) {
+    if (pause) {
+      StateMachineSnapshot snapshot = fsm.pause();
+      fsm.take(new StringEvent("toAb"));
+      fsm.take(new StringEvent("toAend"));
+      fsm.take(new StringEvent("toB"));
+      fsm.take(new StringEvent("toBb"));
+      fsm.take(new StringEvent("toBend"));
+      fsm.take(new StringEvent("toC"));
+      fsm.take(new StringEvent("toCb"));
+      fsm.take(new StringEvent("toCend"));
+      fsm.take(new StringEvent("toEnd"));
+      fsm.take(new StringEvent("pause"));
+      fsm.take(new StringEvent("resume"));
+      fsm.resume(snapshot);
+    }
   }
   
   @Override

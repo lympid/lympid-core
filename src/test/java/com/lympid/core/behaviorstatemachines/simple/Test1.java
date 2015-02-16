@@ -37,7 +37,7 @@ public class Test1 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
@@ -49,7 +49,7 @@ public class Test1 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, new ActiveStateTree(this));
     
     fsm.take(new Event() {});
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Override

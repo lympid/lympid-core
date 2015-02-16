@@ -40,7 +40,7 @@ public class Test13 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     assertEquals(ctx.hashCode(), ctx.hash);
   }
 

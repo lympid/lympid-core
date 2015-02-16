@@ -134,8 +134,8 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
     
     SequentialContext expected = new SequentialContext();
     expected.effect("t0").enter("compo").enter("T");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "T").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "T"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("tog"));    
     run(fsm, ctx, expected);
@@ -143,33 +143,33 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
   
   private void run(StateMachineExecutor fsm, Context ctx, SequentialContext expected) {   
     expected.exit("T").effect("t1").enter("A");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("toB"));
     expected.exit("A").effect("t2").enter("B");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent(("pause")));
     expected.exit("B").exit("compo").effect("t5").enter("P");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("resume"));
     expected.exit("P").effect("t6").enter("compo").enter("B");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("toC"));
     expected.exit("B").effect("t3").enter("C");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("toEnd"));
     expected.exit("C").exit("compo").effect("t4");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override

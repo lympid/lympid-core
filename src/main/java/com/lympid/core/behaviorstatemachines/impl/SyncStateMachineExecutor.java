@@ -63,4 +63,14 @@ public class SyncStateMachineExecutor extends AbstractStateMachineExecutor {
     return super.snapshot();
   }
 
+  @Override
+  public synchronized StateMachineSnapshot pause() {
+    return super.pause();
+  }
+
+  @Override
+  public synchronized void resume(final StateMachineSnapshot snapshot) {
+    super.resume(snapshot);
+  }
+
 }

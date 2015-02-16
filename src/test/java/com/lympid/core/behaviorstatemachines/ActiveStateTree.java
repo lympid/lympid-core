@@ -39,10 +39,6 @@ public final class ActiveStateTree {
     return tree;
   }
 
-  public ActiveStateTree get() {
-    return this;
-  }
-
   public ActiveStateTree branch(final String... branch) {
     if (branch.length != 0) {
       BranchBuilder bb = branch(branch[0]);

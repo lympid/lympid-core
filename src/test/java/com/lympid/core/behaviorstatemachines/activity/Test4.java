@@ -44,7 +44,7 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
+    begin(fsm, expected);
     
     expected.exit("B").exit("A");
     fireEnd(fsm, expected, ctx);
@@ -57,8 +57,8 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGo1(fsm, expected, ctx, "B");
+    begin(fsm, expected);
+    fireGo1(fsm, expected, "B");
     
     expected.exit("B");
     fireEnd(fsm, expected, ctx);
@@ -71,9 +71,9 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGo1(fsm, expected, ctx, "B");
-    fireGo2(fsm, expected, ctx, "end1");
+    begin(fsm, expected);
+    fireGo1(fsm, expected, "B");
+    fireGo2(fsm, expected, "end1");
     fireEnd(fsm, expected, ctx);
   }
   
@@ -84,8 +84,8 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGo2(fsm, expected, ctx, "A");
+    begin(fsm, expected);
+    fireGo2(fsm, expected, "A");
     
     expected.exit("A");
     fireEnd(fsm, expected, ctx);
@@ -98,33 +98,33 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGo2(fsm, expected, ctx, "A");
-    fireGo1(fsm, expected, ctx, "end2");
+    begin(fsm, expected);
+    fireGo2(fsm, expected, "A");
+    fireGo1(fsm, expected, "end2");
     fireEnd(fsm, expected, ctx);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected, Context ctx) {
+  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho")
       .effect("t3").enter("B")
       .effect("t1").enter("A");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "B").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "B"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGo1(StateMachineExecutor fsm, SequentialContext expected, Context ctx, String otherRegionState) {
+  private void fireGo1(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState).get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGo2(StateMachineExecutor fsm, SequentialContext expected, Context ctx, String otherRegionState) {
+  private void fireGo2(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
     fsm.take(new StringEvent("go2"));
     expected.exit("B").effect("t4");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
   private void fireEnd(StateMachineExecutor fsm, SequentialContext expected, Context ctx) throws InterruptedException {
@@ -132,8 +132,8 @@ public class Test4 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t5");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
     assertEquals(1, ctx.c);
   }
   

@@ -21,6 +21,8 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
+import com.lympid.core.common.Copyable;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -33,6 +35,15 @@ public class Test1 extends AbstractStateMachineTest {
   
   @Test
   public void run() {
+    run(false);
+  }
+  
+  @Test
+  public void run_pause() {
+    run(true);
+  }
+
+  private void run(final boolean pause) {
     Context ctx = new Context();
     StateMachineExecutor fsm = fsm(ctx);
     
@@ -40,15 +51,26 @@ public class Test1 extends AbstractStateMachineTest {
     assertFalse(ctx.exitedSubMachine);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub", "A").get());
+    ActiveStateTree active = new ActiveStateTree(this).branch("sub", "A");
+    assertSnapshotEquals(fsm, active);
     assertTrue(ctx.enteredSubMachine);
     assertFalse(ctx.exitedSubMachine);
     
+    if (pause) {
+      StateMachineSnapshot snapshot = fsm.pause();
+      
+      fsm.take(new StringEvent("go"));
+      assertSnapshotEquals(fsm, active);
+      
+      fsm.resume(snapshot);
+    }
+    
     fsm.take(new StringEvent("go"));
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertTrue(ctx.enteredSubMachine);
-    assertTrue(ctx.exitedSubMachine);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    StateMachineSnapshot<Context> snapshot = fsm.snapshot();
+    assertTrue(snapshot.context().enteredSubMachine);
+    assertTrue(snapshot.context().exitedSubMachine);
   }
 
   @Override
@@ -104,9 +126,17 @@ public class Test1 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  private static final class Context implements Copyable<Context> {
     boolean enteredSubMachine;
     boolean exitedSubMachine;
+
+    @Override
+    public Context copy() {
+      Context copy = new Context();
+      copy.enteredSubMachine = enteredSubMachine;
+      copy.exitedSubMachine = exitedSubMachine;
+      return copy;
+    }
   }
   
   private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +

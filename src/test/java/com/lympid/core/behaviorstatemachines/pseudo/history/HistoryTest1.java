@@ -34,6 +34,7 @@ import com.lympid.core.behaviorstatemachines.Vertex;
 import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -92,6 +93,15 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
   
   @Test
   public void run_a_b_c_end() {
+    run_a_b_c_end(false);
+  }
+  
+  @Test
+  public void run_a_b_c_end_pause() {
+    run_a_b_c_end(true);
+  }
+  
+  private void run_a_b_c_end(final boolean pause) {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo").enter("A")
       .exit("A").effect("t1").enter("B")
@@ -102,22 +112,33 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toEnd"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
   public void run_a_P_a_b_c_end() {
+    run_a_P_a_b_c_end(false);
+  }
+  @Test
+  public void run_a_P_a_b_c_end_pause() {
+    run_a_P_a_b_c_end(true);
+  }
+  
+  private void run_a_P_a_b_c_end(final boolean pause) {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo").enter("A")
       .exit("A").exit("compo").effect("t4").enter("P")
@@ -130,28 +151,41 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("resume"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toEnd"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
   public void run_a_b_P_b_c_end() {
+    run_a_b_P_b_c_end(false);
+  }
+  
+  public void run_a_b_P_b_c_end_pause() {
+    run_a_b_P_b_c_end(true);
+  }
+  
+  private void run_a_b_P_b_c_end(final boolean pause) {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo").enter("A")
       .exit("A").effect("t1").enter("B")
@@ -164,28 +198,42 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("resume"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toEnd"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
   public void run_a_b_c_P_c_end() {
+    run_a_b_c_P_c_end(false);
+  }
+  
+  @Test
+  public void run_a_b_c_P_c_end_pause() {
+    run_a_b_c_P_c_end(true);
+  }
+  
+  private void run_a_b_c_P_c_end(final boolean pause) {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo").enter("A")
       .exit("A").effect("t1").enter("B")
@@ -198,24 +246,40 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("resume"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("toEnd"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
+  }
+  
+  private void pauseAndResume(final StateMachineExecutor fsm, final boolean pause) {
+    if (pause) {
+      StateMachineSnapshot snapshot = fsm.pause();
+      fsm.take(new StringEvent("toB"));
+      fsm.take(new StringEvent("toC"));
+      fsm.take(new StringEvent("pause"));
+      fsm.take(new StringEvent("resume"));
+      fsm.resume(snapshot);
+    }
   }
   
   @Override

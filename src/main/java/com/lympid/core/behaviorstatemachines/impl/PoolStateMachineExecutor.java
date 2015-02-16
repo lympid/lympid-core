@@ -17,6 +17,8 @@ package com.lympid.core.behaviorstatemachines.impl;
 
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Note: needs to synchronize for activities
@@ -72,4 +74,48 @@ public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
   void doTakeCompletionEvent() {
     super.takeCompletionEvent();
   }
+
+  @Override
+  public void resume(final StateMachineSnapshot snapshot) {
+    pool.resume(this, snapshot);
+  }
+
+  void doResume(final StateMachineSnapshot snapshot) {
+    super.resume(snapshot);
+  }
+
+  @Override
+  public StateMachineSnapshot pause() {
+    try {
+      return asyncPause().get();
+    } catch (InterruptedException | ExecutionException ex) {
+    }
+    return null;
+  }
+
+  public Future<StateMachineSnapshot> asyncPause() {
+    return pool.pause(this);
+  }
+
+  StateMachineSnapshot doPause() {
+    return super.pause();
+  }
+
+  @Override
+  public StateMachineSnapshot snapshot() {
+    try {
+      return asyncSnapshot().get();
+    } catch (InterruptedException | ExecutionException ex) {
+    }
+    return null;
+  }
+
+  public Future<StateMachineSnapshot> asyncSnapshot() {
+    return pool.snapshot(this);
+  }
+
+  StateMachineSnapshot doSnapshot() {
+    return super.snapshot();
+  }
+
 }

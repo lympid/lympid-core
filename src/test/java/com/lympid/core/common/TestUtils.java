@@ -17,6 +17,7 @@ package com.lympid.core.common;
 
 import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
+import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.impl.MutablePseudoState;
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -34,7 +35,8 @@ public final class TestUtils {
   private TestUtils() {  
   }
   
-  public static void assertSequentialContextEquals(final SequentialContext expected, final SequentialContext actual) {
+  public static void assertSequentialContextEquals(final SequentialContext expected, final StateMachineExecutor fsm) {
+    SequentialContext actual = (SequentialContext) fsm.snapshot().context();
     Assert.assertEquals(expected.toString(), actual.toString());
   }
   

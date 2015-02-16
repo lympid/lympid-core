@@ -92,4 +92,24 @@ public class LockStateMachineExecutor extends AbstractStateMachineExecutor {
     }
   }
 
+  @Override
+  public StateMachineSnapshot pause() {
+    lock.writeLock().lock();
+    try {
+      return super.pause();
+    } finally {
+      lock.writeLock().unlock();
+    }
+  }
+
+  @Override
+  public void resume(final StateMachineSnapshot snapshot) {
+    lock.writeLock().lock();
+    try {
+      super.resume(snapshot);
+    } finally {
+      lock.writeLock().unlock();
+    }
+  }
+
 }

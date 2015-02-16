@@ -16,11 +16,14 @@
 package com.lympid.core.behaviorstatemachines.impl;
 
 import com.lympid.core.behaviorstatemachines.PseudoStateKind;
+import com.lympid.core.behaviorstatemachines.Region;
+import com.lympid.core.behaviorstatemachines.State;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,16 +35,16 @@ import org.junit.Test;
 public class MutableStateMachineMetaTest {
 
   private MutableStateMachineMeta meta;
+  private Random rnd;
 
   @Before
   public void setUp() {
     this.meta = new MutableStateMachineMeta();
+    this.rnd = new Random();
   }
 
   @Test
   public void testCountOf() {
-    Random rnd = new Random();
-
     Map<PseudoStateKind, Integer> expected = new EnumMap<>(PseudoStateKind.class);
     for (PseudoStateKind kind : PseudoStateKind.values()) {
       int n = rnd.nextInt(10);
@@ -55,6 +58,74 @@ public class MutableStateMachineMetaTest {
     for (PseudoStateKind kind : PseudoStateKind.values()) {
       assertEquals((int) expected.get(kind), meta.countOf(kind));
     }
+  }
+  
+  @Test
+  public void testStateById() {
+    String id1 = Integer.toString(rnd.nextInt());
+    String id2 = Integer.toString(rnd.nextInt());
+    String id3 = Integer.toString(rnd.nextInt());
+    String id4 = Integer.toString(rnd.nextInt());
+    
+    State state1 = new MutableState(id1);
+    State state2 = new MutableState(id2);
+    State state3 = new MutableState(id3);
+    
+    assertNull(meta.state(id1));
+    assertNull(meta.state(id2));
+    assertNull(meta.state(id3));
+    assertNull(meta.state(id4));
+    assertNull(meta.region(id1));
+    assertNull(meta.region(id2));
+    assertNull(meta.region(id3));
+    assertNull(meta.region(id4));
+    
+    meta.register(state1);
+    meta.register(state2);
+    meta.register(state3);
+    
+    assertEquals(state1, meta.state(id1));
+    assertEquals(state2, meta.state(id2));
+    assertEquals(state3, meta.state(id3));
+    assertNull(meta.state(id4));
+    assertNull(meta.region(id1));
+    assertNull(meta.region(id2));
+    assertNull(meta.region(id3));
+    assertNull(meta.region(id4));
+  }
+  
+  @Test
+  public void testRegionById() {
+    String id1 = Integer.toString(rnd.nextInt());
+    String id2 = Integer.toString(rnd.nextInt());
+    String id3 = Integer.toString(rnd.nextInt());
+    String id4 = Integer.toString(rnd.nextInt());
+    
+    Region region1 = new MutableRegion(id1);
+    Region region2 = new MutableRegion(id2);
+    Region region3 = new MutableRegion(id3);
+    
+    assertNull(meta.state(id1));
+    assertNull(meta.state(id2));
+    assertNull(meta.state(id3));
+    assertNull(meta.state(id4));
+    assertNull(meta.region(id1));
+    assertNull(meta.region(id2));
+    assertNull(meta.region(id3));
+    assertNull(meta.region(id4));
+    
+    meta.register(region1);
+    meta.register(region2);
+    meta.register(region3);
+    
+    assertEquals(region1, meta.region(id1));
+    assertEquals(region2, meta.region(id2));
+    assertEquals(region3, meta.region(id3));
+    assertNull(meta.region(id4));
+    assertNull(meta.state(id1));
+    assertNull(meta.state(id2));
+    assertNull(meta.state(id3));
+    assertNull(meta.state(id4));
   }
 
   @Test

@@ -44,7 +44,7 @@ public class Test11 extends AbstractStateMachineTest {
     ctx.latch.await();
     Thread.sleep(2);
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     assertEquals(ctx.hashCode(), ctx.hash);
   }
 

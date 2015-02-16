@@ -45,10 +45,10 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
+    begin(fsm, expected);
     
     expected.exit("C").exit("A");
-    fireEnd(fsm, expected, ctx);
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -58,11 +58,11 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGoB(fsm, expected, ctx, "C");
+    begin(fsm, expected);
+    fireGoB(fsm, expected, "C");
     
     expected.exit("C");
-    fireEnd(fsm, expected, ctx);
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -72,10 +72,10 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGoB(fsm, expected, ctx, "C");
-    fireGoD(fsm, expected, ctx, "end1");
-    fireEnd(fsm, expected, ctx);
+    begin(fsm, expected);
+    fireGoB(fsm, expected, "C");
+    fireGoD(fsm, expected, "end1");
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -85,11 +85,11 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGoD(fsm, expected, ctx, "A");
+    begin(fsm, expected);
+    fireGoD(fsm, expected, "A");
     
     expected.exit("A");
-    fireEnd(fsm, expected, ctx);
+    fireEnd(fsm, expected);
   }
   
   @Test
@@ -99,64 +99,64 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
-    fireGoD(fsm, expected, ctx, "A");
-    fireGoB(fsm, expected, ctx, "end2");
-    fireEnd(fsm, expected, ctx);
+    begin(fsm, expected);
+    fireGoD(fsm, expected, "A");
+    fireGoB(fsm, expected, "end2");
+    fireEnd(fsm, expected);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho")
       .effect("t5").enter("C")
       .effect("t1").enter("A");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#6", "A").branch("#6", "C").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#6", "A").branch("#6", "C"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGoB(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx, String otherRegionState) {
-    ActiveStateTree active = new ActiveStateTree(this).branch("#6", "end1").branch("#6", otherRegionState).get();
+  private void fireGoB(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
+    ActiveStateTree active = new ActiveStateTree(this).branch("#6", "end1").branch("#6", otherRegionState);
     
     fsm.take(new StringEvent("goB"));
     expected.exit("A").effect("t3").enter("B").exit("B").effect("t4");
     assertSnapshotEquals(fsm, active);
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("internal1"));
     expected.effect("self1");
     assertSnapshotEquals(fsm, active);
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("internal2"));
     expected.effect("self2");
     assertSnapshotEquals(fsm, active);
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGoD(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx, String otherRegionState) {
-    ActiveStateTree active = new ActiveStateTree(this).branch("#6", otherRegionState).branch("#6", "end2").get();
+  private void fireGoD(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
+    ActiveStateTree active = new ActiveStateTree(this).branch("#6", otherRegionState).branch("#6", "end2");
     
     fsm.take(new StringEvent("goD"));
     expected.exit("C").effect("t7").enter("D").exit("D").effect("t8");
     assertSnapshotEquals(fsm, active);
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("internal1"));
     expected.effect("self1");
     assertSnapshotEquals(fsm, active);
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("internal2"));
     expected.effect("self2");
     assertSnapshotEquals(fsm, active);
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  private void fireEnd(StateMachineExecutor fsm, SequentialContext expected) {
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t9");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override

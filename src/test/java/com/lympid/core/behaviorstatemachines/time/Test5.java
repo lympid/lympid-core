@@ -71,7 +71,7 @@ public class Test5 extends AbstractStateMachineTest {
     
     StateMachineSnapshot snapshot = fsm.snapshot();
     if (ctx.latch.getCount() > 0) {
-        assertSnapshotEquals(snapshot, new ActiveStateTree(this).branch("A").get());
+        assertSnapshotEquals(snapshot, new ActiveStateTree(this).branch("A"));
     }
 
     int actualCount = 0;
@@ -92,11 +92,11 @@ public class Test5 extends AbstractStateMachineTest {
     
     ctx.latch.await();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
 
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
     assertEquals(actualCount, ctx.c);
   }
 

@@ -37,6 +37,7 @@ import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -87,6 +88,15 @@ public class Test20 extends AbstractStateMachineTest {
   
   @Test
   public void run_let() {
+    run_let(false);
+  }
+  
+  @Test
+  public void run_let_pauseAndResume() {
+    run_let(true);
+  }
+  
+  private void run_let(final boolean pause) {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("A")
       .effect("t1").enter("Aa")
@@ -94,15 +104,25 @@ public class Test20 extends AbstractStateMachineTest {
       .exit("A").effect("t4");
     
     SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<SequentialContext> fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
-        
-    fsm.take(new StringEvent("let"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    ActiveStateTree active = new ActiveStateTree(this).branch("A", "Aa");
+    assertSnapshotEquals(fsm, active);
     
-    assertSequentialContextEquals(expected, ctx);
+    if (pause) {
+      StateMachineSnapshot snapshot = fsm.pause();
+      
+      fsm.take(new StringEvent("let"));
+      assertSnapshotEquals(fsm, active);
+      
+      fsm.resume(snapshot);
+    }
+    
+    fsm.take(new StringEvent("let"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
@@ -117,15 +137,15 @@ public class Test20 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa"));
         
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "#10").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "#10"));
     
     fsm.take(new StringEvent("end"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
@@ -141,15 +161,15 @@ public class Test20 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa"));
         
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "#10").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "#10"));
     
     fsm.take(new StringEvent("let"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override

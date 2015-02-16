@@ -61,18 +61,18 @@ public class Test23 extends AbstractStateMachineTest {
     fsm.go();
     
     expected.effect("t0").enter("compo");
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
     
     fsm.take(new StringEvent("toA"));
     expected.effect("t1").enter("A");
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("end"));
     expected.exit("A").exit("compo").effect("t2");
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#3").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#3"));
   }
 
   @Override

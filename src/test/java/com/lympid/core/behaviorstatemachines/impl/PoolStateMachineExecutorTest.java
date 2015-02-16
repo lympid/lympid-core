@@ -35,7 +35,6 @@ public class PoolStateMachineExecutorTest {
   
   private static final long DELAY = 50;
   private StateMachineShardPoolExecutor pool;
-  private int step;
   
   @Before
   public void setUp() {
@@ -44,26 +43,20 @@ public class PoolStateMachineExecutorTest {
 
   @Test
   public void run1() throws InterruptedException {
-    PoolStateMachineExecutor fsm = new PoolStateMachineExecutor(pool);
-    run(fsm);
+    run(new PoolStateMachineExecutor(pool), false);
+  }
+
+  @Test
+  public void run1_pause() throws InterruptedException {
+    run(new PoolStateMachineExecutor(pool), true);
   }
 
   @Test
   public void run2() throws InterruptedException {
-    PoolStateMachineExecutor fsm = new PoolStateMachineExecutor(pool, 12);
-    run(fsm);
-  }
-
-  public void runInterrupt_step1() throws InterruptedException {
-    PoolStateMachineExecutor fsm = new PoolStateMachineExecutor(pool);
-    run(fsm, 1);
+    run(new PoolStateMachineExecutor(pool, 17), false);
   }
   
-  private void run(final StateMachineExecutor fsm) throws InterruptedException {
-    run(fsm, -1);
-  }
-  
-  private void run(final StateMachineExecutor fsm, int interruptStep) throws InterruptedException {
+  private void run(final StateMachineExecutor<Context> fsm, final boolean pause) throws InterruptedException {
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
     
@@ -72,46 +65,35 @@ public class PoolStateMachineExecutorTest {
     fsm.setContext(ctx);
     fsm.go();
     
-    step(interruptStep);
+    pauseAndResume(fsm, pause);
+    fsm.snapshot().context().latchA.await();
+    expected.effect("t0").enter("A");
+    assertSequentialContextEquals(expected, fsm);
     
-    ctx.latch01.await();
-    expected.effect("t0");
-    assertSequentialContextEquals(expected, ctx);
-    ctx.latch02.countDown();
+    pauseAndResume(fsm, pause);
+    fsm.snapshot().context().latchB.await();
+    expected.exit("A").effect("t1").enter("B");
+    assertSequentialContextEquals(expected, fsm);
     
-    step(interruptStep);
+    pauseAndResume(fsm, pause);
+    fsm.snapshot().context().latchC.await();
+    expected.activity("something").exit("B").effect("t2").enter("C");
+    assertSequentialContextEquals(expected, fsm);
     
-    ctx.latch11.await();
-    expected.enter("A").exit("A").effect("t1");
-    assertSequentialContextEquals(expected, ctx);
-    ctx.latch12.countDown();
-    
-    step(interruptStep);
-    
-    ctx.latch21.await();
-    expected.enter("B").exit("B").effect("t2");
-    assertSequentialContextEquals(expected, ctx);
-    ctx.latch22.countDown();
-    
-    step(interruptStep);
-    
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("go"));
-    
-    step(interruptStep);
-    
-    ctx.latch31.await();
-    expected.enter("C").exit("C").effect("t3");
-    assertSequentialContextEquals(expected, ctx);
-    ctx.latch32.countDown();
-    
-    step(interruptStep);
+    fsm.snapshot().context().latchEnd.await();
+    Thread.sleep(2);
+    expected.exit("C").effect("t3");
+    assertSequentialContextEquals(expected, fsm);
   }
   
-  private void step(final int interruptStep) {
-    ++step;
-    if (step == interruptStep) {
-      // TODO: shutdown, shutdownNow, awaitTermination in StateMachineShardPoolExecutor
-      // pool.shutdownNow();
+  private void pauseAndResume(final StateMachineExecutor<Context> fsm, final boolean pause) throws InterruptedException {
+    if (pause) {
+      StateMachineSnapshot snapshot = fsm.pause();
+      fsm.take(new StringEvent("go"));
+      fsm.resume(snapshot);
+      Thread.sleep(10); // time for the queue to resume the execution of the state machine
     }
   }
   
@@ -122,31 +104,38 @@ public class PoolStateMachineExecutorTest {
       .region()
         .initial()
           .transition("t0")
-            .effect((c) -> c.latch0())
             .target("A");
     
     builder
       .region()
         .state("A")
+          .entry((c) -> c.latchA.countDown())
           .transition("t1")
             .after(DELAY, TimeUnit.MILLISECONDS)
-            .effect((e, c) -> c.latch1())
             .target("B");
     
     builder
       .region()
         .state("B")
-          .activity((c) -> {})
+          .entry((c) -> c.latchB.countDown())
+          .activity((c) -> {
+            try {
+              Thread.sleep(DELAY);
+              c.activity("something");
+            } catch (Exception ex) {
+              throw new RuntimeException(ex);
+            }
+          })
           .transition("t2")
-            .effect((e, c) -> c.latch2())
             .target("C");
     
     builder
       .region()
         .state("C")
+          .entry((c) -> c.latchC.countDown())
           .transition("t3")
             .on("go")
-            .effect((e, c) -> c.latch3())
+            .effect((e, c) -> c.latchEnd.countDown())
             .target("end");
     
     builder
@@ -160,39 +149,29 @@ public class PoolStateMachineExecutorTest {
   
   protected static final class Context extends SequentialContext {
     
-    CountDownLatch latch01 = new CountDownLatch(1);
-    CountDownLatch latch02 = new CountDownLatch(1);
-    CountDownLatch latch11 = new CountDownLatch(1);
-    CountDownLatch latch12 = new CountDownLatch(1);
-    CountDownLatch latch21 = new CountDownLatch(1);
-    CountDownLatch latch22 = new CountDownLatch(1);
-    CountDownLatch latch31 = new CountDownLatch(1);
-    CountDownLatch latch32 = new CountDownLatch(1);
+    private final CountDownLatch latchA;
+    private final CountDownLatch latchB;
+    private final CountDownLatch latchC;
+    private final CountDownLatch latchEnd;
     
-    void latch0() {
-      latch(latch01, latch02);
+    public Context() {
+      this.latchA = new CountDownLatch(1);
+      this.latchB = new CountDownLatch(1);
+      this.latchC = new CountDownLatch(1);
+      this.latchEnd = new CountDownLatch(1);
     }
     
-    void latch1() {
-      latch(latch11, latch12);
+    public Context(final Context inst) {
+      super(inst);
+      this.latchA = new CountDownLatch((int) inst.latchA.getCount());
+      this.latchB = new CountDownLatch((int) inst.latchB.getCount());
+      this.latchC = new CountDownLatch((int) inst.latchC.getCount());
+      this.latchEnd = new CountDownLatch((int) inst.latchEnd.getCount());
     }
     
-    void latch2() {
-      latch(latch21, latch22);
-    }
-    
-    
-    void latch3() {
-      latch(latch31, latch32);
-    }
-    
-    void latch(CountDownLatch latchBefore, CountDownLatch latchAfter) {
-      latchBefore.countDown();
-      try {
-        latchAfter.await();
-      } catch (InterruptedException ex) {
-        throw new RuntimeException(ex);
-      }
+    @Override
+    public Context copy() {
+      return new Context(this);
     }
   }
 

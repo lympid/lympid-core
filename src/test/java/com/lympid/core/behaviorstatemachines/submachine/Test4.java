@@ -23,6 +23,8 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.SubStateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
+import org.junit.Test;
 
 /**
  * Tests chaining the same sub state machine with entry/exit points.
@@ -31,19 +33,38 @@ import com.lympid.core.behaviorstatemachines.builder.SubStateMachineBuilder;
  */
 public class Test4 extends AbstractStateMachineTest {
   
-//  @Test
+  @Test
   public void run() {
+    run(false);
+  }
+  
+  @Test
+  public void run_pause() {
+    run(true);
+  }
+  
+  private void run(final boolean pause) {
     Context ctx = new Context();
     StateMachineExecutor fsm = fsm(ctx);    
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A"));
     
+    pauseAndResume(fsm, pause);
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+  }
+
+  private void pauseAndResume(StateMachineExecutor fsm, boolean pause) {
+    if (pause) {
+      StateMachineSnapshot snapshot = fsm.pause();
+      fsm.take(new StringEvent("go"));
+      fsm.resume(snapshot);
+    }
   }
 
   @Override

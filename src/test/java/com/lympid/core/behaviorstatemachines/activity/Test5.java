@@ -49,8 +49,8 @@ public class Test5 extends AbstractStateMachineTest {
     expected
       .effect("t0").enter("sub1").effect("t0").enter("A");
     assertEquals(ACTIVITY_VALUE_SUB1, ctx.c);
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
     ctx.latch12.countDown();
     
     
@@ -60,8 +60,8 @@ public class Test5 extends AbstractStateMachineTest {
       .exit("A").effect("t1")
       .exit("sub1").effect("t1").enter("sub2").effect("t0").enter("A");
     assertEquals(ACTIVITY_VALUE_SUB2, ctx.c);
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A"));
     ctx.latch22.countDown();
     Thread.sleep(2);
     
@@ -69,8 +69,8 @@ public class Test5 extends AbstractStateMachineTest {
     expected
       .exit("A").effect("t1")
       .exit("sub2");
-    assertSequentialContextEquals(expected, ctx);    
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSequentialContextEquals(expected, fsm);    
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
   @Override

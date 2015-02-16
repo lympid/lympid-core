@@ -30,8 +30,8 @@ import java.util.Map;
 public final class StateMachineSnapshot<C> implements Serializable {
   
   private final String stateMachine;
-  private final List<StringTree> active = new ArrayList<>();
-  private final Map<String, List<StringTree>> history = new HashMap<>();
+  private final StringTree active;
+  private final Map<String, StringTree> history = new HashMap<>();
   private final boolean started;
   private final boolean terminated;
   private final C context;
@@ -42,7 +42,7 @@ public final class StateMachineSnapshot<C> implements Serializable {
     this.terminated = state.isTerminated();
     this.context = context;
     
-    createStateConfiguration(state.activeStates(), active);
+    this.active = createStateConfiguration(state.activeStates());
     createHistory(state.history());
   }
   
@@ -50,11 +50,11 @@ public final class StateMachineSnapshot<C> implements Serializable {
     return stateMachine;
   }
 
-  public List<StringTree> stateConfiguration() {
+  public StringTree stateConfiguration() {
     return active;
   }
   
-  public Map<String, List<StringTree>> history() {
+  public Map<String, StringTree> history() {
     return history;
   }
 
@@ -69,26 +69,33 @@ public final class StateMachineSnapshot<C> implements Serializable {
   public boolean isTerminated() {
     return terminated;
   }
-
-  private void createStateConfiguration(final StateConfiguration<?> config, final List<StringTree> current) {
+  
+  private StringTree createStateConfiguration(final StateConfiguration<?> config) {
     if (config.state() == null) {
-      return;
+      return null;
     }
     
     StringTree node = new StringTree();
     node.state = config.state().getId();
     if (!config.isEmpty()) {
       node.children = new ArrayList<>(config.size());
-      config.forEach((s) -> StateMachineSnapshot.this.createStateConfiguration(s, node.children));
+      config.forEach((s) -> createStateConfiguration(s, node.children));
+    }
+    return node;
+  }
+
+  private void createStateConfiguration(final StateConfiguration<?> config, final List<StringTree> current) {StringTree node = new StringTree();
+    node.state = config.state().getId();
+    if (!config.isEmpty()) {
+      node.children = new ArrayList<>(config.size());
+      config.forEach((s) -> createStateConfiguration(s, node.children));
     }
     current.add(node);
   }
 
   private void createHistory(final Map<Region, StateConfiguration<?>> histo) {
     for (Map.Entry<Region, StateConfiguration<?>> e : histo.entrySet()) {
-      List<StringTree> tree = new ArrayList<>();
-      StateMachineSnapshot.this.createStateConfiguration(e.getValue(), tree);
-      history.put(e.getKey().getId(), tree);
+      history.put(e.getKey().getId(), createStateConfiguration(e.getValue()));
     }
   }
 

@@ -45,16 +45,16 @@ public class Test5 extends AbstractStateMachineTest {
     expected
       .effect("t0").enter("ortho")
       .effect("t1").enter("compo").effect("t2").enter("B");
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "compo", "B").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "compo", "B"));
     
     fsm.take(new StringEvent("go2"));
     expected
       .exit("B").effect("t3")
       .exit("compo").effect("t4")
       .exit("ortho").effect("t7");
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
   @Override

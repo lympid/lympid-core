@@ -15,11 +15,13 @@
  */
 package com.lympid.core.behaviorstatemachines;
 
+import com.lympid.core.common.Copyable;
+
 /**
  *
  * @author Fabien Renaud 
  */
-public class SequentialContext {
+public class SequentialContext implements Copyable<SequentialContext> {
 
   private static final char SEPARATOR = ' ';
   private StringBuilder b = new StringBuilder();
@@ -28,6 +30,17 @@ public class SequentialContext {
   private boolean exitActions = true;
   private boolean transitionEffects = true;
   private boolean stateActivities = false;
+  
+  public SequentialContext() {
+  }
+  
+  public SequentialContext(final SequentialContext inst) {
+    this.b = new StringBuilder(inst.b);
+    this.entryActions = inst.entryActions;
+    this.exitActions = inst.exitActions;
+    this.transitionEffects = inst.transitionEffects;
+    this.stateActivities = inst.stateActivities;
+  }
 
   public <T extends SequentialContext> T withEntry() {
     this.entryActions = true;
@@ -99,6 +112,11 @@ public class SequentialContext {
       b.append("activity:").append(s).append(SEPARATOR);
     }
     return this;
+  }
+
+  @Override
+  public SequentialContext copy() {
+    return new SequentialContext(this);
   }
 
   @Override

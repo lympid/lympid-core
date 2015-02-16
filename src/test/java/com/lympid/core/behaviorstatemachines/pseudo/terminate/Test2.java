@@ -43,7 +43,7 @@ public class Test2 extends AbstractStateMachineTest {
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this));
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
 
   @Override

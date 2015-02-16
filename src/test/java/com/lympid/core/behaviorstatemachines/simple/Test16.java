@@ -56,8 +56,8 @@ public class Test16 extends AbstractStateMachineTest {
     ctx.latch.await();
     Thread.sleep(2);
         
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
     
     assertEquals(MAIN_LOG, log.mainBuffer());
     assertEquals(ACTIVITY_LOG, log.activityBuffer());

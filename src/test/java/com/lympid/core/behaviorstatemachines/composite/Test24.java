@@ -59,8 +59,8 @@ public class Test24 extends AbstractStateMachineTest {
     fsm.go();
     
     expected.effect("t0").enter("compo").exit("compo").effect("t1");
-    assertSequentialContextEquals(expected, ctx);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSequentialContextEquals(expected, fsm);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
   @Override

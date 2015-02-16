@@ -45,16 +45,16 @@ public class Test2 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
+    begin(fsm, expected);
     
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2").enter("B").exit("B").effect("t3");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", "C").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", "C"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("go2"));
     expected.exit("C").effect("t5").enter("D").exit("D").effect("t6");
-    end(fsm, expected, ctx);
+    end(fsm, expected);
   }
   
   @Test
@@ -64,31 +64,31 @@ public class Test2 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    begin(fsm, expected, ctx);
+    begin(fsm, expected);
     
     fsm.take(new StringEvent("go2"));
     expected.exit("C").effect("t5").enter("D").exit("D").effect("t6");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "end2").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "end2"));
+    assertSequentialContextEquals(expected, fsm);
     
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2").enter("B").exit("B").effect("t3");
-    end(fsm, expected, ctx);
+    end(fsm, expected);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
     expected
       .effect("t0")
       .effect("t1").enter("ortho").enter("A")
       .effect("t4").enter("C");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C"));
+    assertSequentialContextEquals(expected, fsm);
   }
 
-  private void end(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+  private void end(StateMachineExecutor fsm, SequentialContext expected) {
     expected.exit("ortho").effect("t7");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override

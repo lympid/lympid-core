@@ -47,7 +47,7 @@ public class Test3 extends AbstractStateMachineTest {
     ctx.latch.await();
     Thread.sleep(2);
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     assertEquals(EXPECTED_A, ctx.a);
     assertEquals(EXPECTED_B, ctx.b);
     assertEquals(EXPECTED_C, ctx.c);

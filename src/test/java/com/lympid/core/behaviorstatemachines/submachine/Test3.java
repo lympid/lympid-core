@@ -40,27 +40,27 @@ public class Test3 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);    
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
     assertEquals(counter, ctx.c);
     
     fsm.take(new StringEvent("dec"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
     assertEquals(counter, ctx.c);
     for (int i = 0; i < 4; i++) {
       fsm.take(new StringEvent("inc"));
-      assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A").get());
+      assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
       assertEquals(++counter, ctx.c);
     }
     
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A"));
     
     fsm.take(new StringEvent("inc"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A"));
     assertEquals(counter, ctx.c);
     for (int i = 0; i < 7; i++) {
       fsm.take(new StringEvent("dec"));
-      assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A").get());
+      assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A"));
       if (counter >= 0) {
         --counter;
       }
@@ -68,7 +68,7 @@ public class Test3 extends AbstractStateMachineTest {
     }
     
     fsm.take(new StringEvent("go"));    
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
   @Override

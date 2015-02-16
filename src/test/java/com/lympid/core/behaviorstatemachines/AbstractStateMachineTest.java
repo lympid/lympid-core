@@ -20,25 +20,25 @@ import com.lympid.core.behaviorstatemachines.builder.SequentialContextInjector;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.impl.TextVisitor;
+import com.lympid.core.common.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  *
- * @author Fabien Renaud 
+ * @author Fabien Renaud
  */
 public abstract class AbstractStateMachineTest implements StateMachineTest {
 
   public static final ScheduledExecutorService THREAD_POOL = Executors.newScheduledThreadPool(1);
   private static final Map<Class, StateMachine> MACHINES = new HashMap<>();
 
-  protected static void assertSequentialContextEquals(final SequentialContext expected, final SequentialContext actual) {
-    Assert.assertEquals(expected.toString(), actual.toString());
+  protected static void assertSequentialContextEquals(final SequentialContext expected, final StateMachineExecutor fsm) {
+    TestUtils.assertSequentialContextEquals(expected, fsm);
   }
 
   @Before

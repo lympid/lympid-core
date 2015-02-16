@@ -94,9 +94,9 @@ public class Test11 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#5").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#5"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
@@ -112,9 +112,9 @@ public class Test11 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#5").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#5"));
     
-    assertSequentialContextEquals(expected, ctx);
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override

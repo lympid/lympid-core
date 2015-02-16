@@ -30,15 +30,14 @@ import java.util.concurrent.Future;
  *
  * @author Fabien Renaud
  */
-public class SimpleStateMachineState implements StateMachineState {
+public class SimpleStateMachineState extends ResumableStateMachineState {
 
   private final SimpleStateConfiguration activeStates;
   private final Set<State> completed = new HashSet<>(1);
   private StateStatus status;
-  private boolean started;
-  private boolean terminated;
 
   public SimpleStateMachineState(final StateMachineMeta metadata) {
+    super(metadata);
     this.activeStates = new SimpleStateConfiguration();
   }
 
@@ -81,26 +80,6 @@ public class SimpleStateMachineState implements StateMachineState {
   @Override
   public StateStatus status(final State state) {
     return status;
-  }
-
-  @Override
-  public void start() {
-    this.started = true;
-  }
-
-  @Override
-  public boolean hasStarted() {
-    return started;
-  }
-
-  @Override
-  public void terminate() {
-    this.terminated = true;
-  }
-
-  @Override
-  public boolean isTerminated() {
-    return terminated;
   }
 
   @Override
@@ -159,13 +138,18 @@ public class SimpleStateMachineState implements StateMachineState {
   }
 
   @Override
-  public void saveDeepHistory(final Region r) {
+  public void saveDeepHistory(final Region region) {
     throw new IllegalStateException("Simple state machines can not have a deep history.");
   }
 
   @Override
-  public void saveShallowHistory(final Region r) {
+  public void saveShallowHistory(final Region region) {
     throw new IllegalStateException("Simple state machines can not have a shallow history.");
+  }
+
+  @Override
+  void saveHistory(final Region region, final MutableStateConfiguration history) {
+    throw new IllegalStateException("Simple state machines can not have any history.");
   }
 
   private void clearActivity() {
@@ -190,6 +174,14 @@ public class SimpleStateMachineState implements StateMachineState {
           }
         }
       }
+    }
+  }
+
+  @Override
+  public void pause() {
+    if (status != null) {
+      clearActivity();
+      clearEventTimers();
     }
   }
 }

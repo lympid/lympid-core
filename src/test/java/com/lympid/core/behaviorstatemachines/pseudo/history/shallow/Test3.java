@@ -33,7 +33,7 @@ public class Test3 extends HistoryTest3 {
   }
     
   @Test
-  public void run_pause_Aend() {
+  public void run_P_Aend() {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
     
@@ -41,16 +41,16 @@ public class Test3 extends HistoryTest3 {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    toA(fsm, expected, ctx);
+    toA(fsm, expected);
     
-    pauseAndResume(fsm, expected, ctx, "A", "compo");
-    resumeAend(fsm, expected, ctx);
+    toP(fsm, expected, "A", "compo");
+    resumeAend(fsm, expected);
     
-    toBCEnd(fsm, expected, ctx);
+    toBCEnd(fsm, expected);
   }
     
   @Test
-  public void run_pause_Bend() {
+  public void run_P_Bend() {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
     
@@ -58,20 +58,20 @@ public class Test3 extends HistoryTest3 {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
         
-    toA(fsm, expected, ctx);
+    toA(fsm, expected);
     
     fsm.take(new StringEvent("toB"));
     expected.exit("A").effect("t1");
-    toB(fsm, expected, ctx);
+    toB(fsm, expected);
     
-    pauseAndResume(fsm, expected, ctx, "B", "compo");
-    resumeBend(fsm, expected, ctx);
+    toP(fsm, expected, "B", "compo");
+    resumeBend(fsm, expected);
     
-    toCEnd(fsm, expected, ctx);
+    toCEnd(fsm, expected);
   }
     
   @Test
-  public void run_pause_Cend() {
+  public void run_P_Cend() {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
     
@@ -79,60 +79,60 @@ public class Test3 extends HistoryTest3 {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
         
-    toAB(fsm, expected, ctx);
+    toAB(fsm, expected);
     
     fsm.take(new StringEvent("toC"));
     expected.exit("B").effect("t2");
-    toC(fsm, expected, ctx);
+    toC(fsm, expected);
     
-    pauseAndResume(fsm, expected, ctx, "C", "compo");
-    resumeCend(fsm, expected, ctx);
+    toP(fsm, expected, "C", "compo");
+    resumeCend(fsm, expected);
     
-    toEnd(fsm, expected, ctx);
+    toEnd(fsm, expected);
   }
 
   @Override
-  protected void resumeAa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toAa(fsm, expected, ctx);
+  protected void resumeAa(StateMachineExecutor fsm, SequentialContext expected) {
+    toAa(fsm, expected);
   }
 
   @Override
-  protected void resumeAb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toAa(fsm, expected, ctx);
-    toAb(fsm, expected, ctx);
+  protected void resumeAb(StateMachineExecutor fsm, SequentialContext expected) {
+    toAa(fsm, expected);
+    toAb(fsm, expected);
   }
 
-  protected void resumeAend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toA(fsm, expected, ctx);
-  }
-
-  @Override
-  protected void resumeBa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toBa(fsm, expected, ctx);
+  protected void resumeAend(StateMachineExecutor fsm, SequentialContext expected) {
+    toA(fsm, expected);
   }
 
   @Override
-  protected void resumeBb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toBa(fsm, expected, ctx);
-    toBb(fsm, expected, ctx);
-  }
-
-  protected void resumeBend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toB(fsm, expected, ctx);
+  protected void resumeBa(StateMachineExecutor fsm, SequentialContext expected) {
+    toBa(fsm, expected);
   }
 
   @Override
-  protected void resumeCa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toCa(fsm, expected, ctx);
+  protected void resumeBb(StateMachineExecutor fsm, SequentialContext expected) {
+    toBa(fsm, expected);
+    toBb(fsm, expected);
+  }
+
+  protected void resumeBend(StateMachineExecutor fsm, SequentialContext expected) {
+    toB(fsm, expected);
   }
 
   @Override
-  protected void resumeCb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toCa(fsm, expected, ctx);
-    toCb(fsm, expected, ctx);
+  protected void resumeCa(StateMachineExecutor fsm, SequentialContext expected) {
+    toCa(fsm, expected);
   }
 
-  protected void resumeCend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    toC(fsm, expected, ctx);
+  @Override
+  protected void resumeCb(StateMachineExecutor fsm, SequentialContext expected) {
+    toCa(fsm, expected);
+    toCb(fsm, expected);
+  }
+
+  protected void resumeCend(StateMachineExecutor fsm, SequentialContext expected) {
+    toC(fsm, expected);
   }
 }

@@ -40,19 +40,19 @@ public class Test4 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
     
     /*
      * A string event other than "go" has no effect.
      */
     fsm.take(new StringEvent("pass"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
     
     /*
      * "go" event moves the state machine to its final state
      */
     fsm.take(new StringEvent("go"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
   @Override

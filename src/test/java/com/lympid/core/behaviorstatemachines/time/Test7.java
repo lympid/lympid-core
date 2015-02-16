@@ -48,12 +48,12 @@ public class Test7 extends AbstractStateMachineTest {
     fsm.setListeners(listener);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
 
     ctx.latch.await(10 * LONG_DELAY, TimeUnit.MILLISECONDS);
     
     assertEquals(1, ctx.local);
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
     assertEquals(MAIN_LOG, log.mainBuffer());
     assertEquals(ACTIVITY_LOG, log.activityBuffer());

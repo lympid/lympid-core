@@ -44,8 +44,8 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end1").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end1"));
+    assertSequentialContextEquals(expected, fsm);
   }
     
   @Test
@@ -59,8 +59,8 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end2").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end2"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
@@ -77,8 +77,8 @@ public class Test1 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end3").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end3"));
+    assertSequentialContextEquals(expected, fsm);
   }
     
   @Test(expected = RuntimeException.class)

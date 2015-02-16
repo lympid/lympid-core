@@ -96,8 +96,8 @@ public class Test8 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#3").get());
-    assertSequentialContextEquals(expected, ctx);
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#3"));
+    assertSequentialContextEquals(expected, fsm);
   }
   
   @Override
