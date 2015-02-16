@@ -34,8 +34,8 @@ import org.junit.Test;
  */
 public class Test7 extends AbstractStateMachineTest {
 
-  private static final long SHORT_DELAY = 10;
-  private static final long LONG_DELAY = 50;
+  private static final long SHORT_DELAY = 50;
+  private static final long LONG_DELAY = 200;
 
   @Test
   public void run() throws InterruptedException {
@@ -48,12 +48,12 @@ public class Test7 extends AbstractStateMachineTest {
     fsm.setListeners(listener);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
 
     ctx.latch.await(10 * LONG_DELAY, TimeUnit.MILLISECONDS);
     
     assertEquals(1, ctx.local);
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertEquals(MAIN_LOG, log.mainBuffer());
     assertEquals(ACTIVITY_LOG, log.activityBuffer());
@@ -111,18 +111,18 @@ public class Test7 extends AbstractStateMachineTest {
 "tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"null\"\n" +
 "tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"null\"\n" +
 "tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"10 ms\" context=\"null\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"10 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
 "tag=\"EVENT_ACCEPTED\" event=\"50 ms\" context=\"null\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"200 ms\" context=\"null\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
 "tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"null\"\n" +
 "tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"50 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
 "tag=\"MACHINE_TERMINATED\" context=\"null\"\n";
   private static final String ACTIVITY_LOG = "";
   

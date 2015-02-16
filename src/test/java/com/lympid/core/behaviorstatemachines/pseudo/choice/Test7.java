@@ -41,7 +41,7 @@ public class Test7 extends AbstractStateMachineTest {
       .effect("t0").enter("A")
       .exit("A").effect("t1").enter("B")
       .exit("B").effect("t2");
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
   }
 

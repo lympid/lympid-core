@@ -43,7 +43,7 @@ public class Test1 extends AbstractStateMachineTest {
     
     ctx.latch.await();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertEquals(EXPECTED_C, ctx.c);
   }
 

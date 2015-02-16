@@ -46,13 +46,13 @@ public class Test1 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2").enter("B");
-    assertStateConfiguration(fsm, new ActiveStateTree("ortho", "B").branch("ortho", "C").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "B").branch("ortho", "C").get());
     assertSequentialContextEquals(expected, ctx);
     
     fsm.take(new StringEvent("go2"));
     expected.exit("C").effect("t5").enter("D")
       .exit("B").exit("D").exit("ortho").effect("t6").effect("t3"); // join execution order
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     end(fsm, expected, ctx);
   }
   
@@ -67,13 +67,13 @@ public class Test1 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("go2"));
     expected.exit("C").effect("t5").enter("D");
-    assertStateConfiguration(fsm, new ActiveStateTree("ortho", "A").branch("ortho", "D").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "D").get());
     assertSequentialContextEquals(expected, ctx);
     
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2").enter("B")
       .exit("D").exit("B").exit("ortho").effect("t3").effect("t6"); // join execution order
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     end(fsm, expected, ctx);
   }
 
@@ -82,12 +82,12 @@ public class Test1 extends AbstractStateMachineTest {
       .effect("t0").enter("ortho")
       .effect("t4").enter("C")
       .effect("t1").enter("A");
-    assertStateConfiguration(fsm, new ActiveStateTree("ortho", "A").branch("ortho", "C").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C").get());
     assertSequentialContextEquals(expected, ctx);
   }
   private void end(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.effect("t7");
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
   }
   

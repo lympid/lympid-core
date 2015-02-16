@@ -102,16 +102,16 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A").get());
     
     fsm.take(new StringEvent("toB"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B").get());
     
     fsm.take(new StringEvent("toC"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "C"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C").get());
     
     fsm.take(new StringEvent("toEnd"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }
@@ -130,22 +130,22 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A").get());
     
     fsm.take(new StringEvent("pause"));
-    assertStateConfiguration(fsm, new ActiveStateTree("P"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("P").get());
     
     fsm.take(new StringEvent("resume"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A").get());
     
     fsm.take(new StringEvent("toB"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B").get());
     
     fsm.take(new StringEvent("toC"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "C"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C").get());
     
     fsm.take(new StringEvent("toEnd"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }
@@ -164,22 +164,22 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A").get());
     
     fsm.take(new StringEvent("toB"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B").get());
     
     fsm.take(new StringEvent("pause"));
-    assertStateConfiguration(fsm, new ActiveStateTree("P"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("P").get());
     
     fsm.take(new StringEvent("resume"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B").get());
     
     fsm.take(new StringEvent("toC"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "C"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C").get());
     
     fsm.take(new StringEvent("toEnd"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }
@@ -198,22 +198,22 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A").get());
     
     fsm.take(new StringEvent("toB"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B").get());
     
     fsm.take(new StringEvent("toC"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "C"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C").get());
     
     fsm.take(new StringEvent("pause"));
-    assertStateConfiguration(fsm, new ActiveStateTree("P"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("P").get());
     
     fsm.take(new StringEvent("resume"));
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "C"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C").get());
     
     fsm.take(new StringEvent("toEnd"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

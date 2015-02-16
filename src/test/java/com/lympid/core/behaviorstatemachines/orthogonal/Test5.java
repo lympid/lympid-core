@@ -46,7 +46,7 @@ public class Test5 extends AbstractStateMachineTest {
       .effect("t0").enter("ortho")
       .effect("t1").enter("compo").effect("t2").enter("B");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree("ortho", "compo", "B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "compo", "B").get());
     
     fsm.take(new StringEvent("go2"));
     expected
@@ -54,7 +54,7 @@ public class Test5 extends AbstractStateMachineTest {
       .exit("compo").effect("t4")
       .exit("ortho").effect("t7");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

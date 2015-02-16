@@ -30,8 +30,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 /**
- * TODO: optimize max size of the maps
- *
+ * 
  * @author Fabien Renaud
  */
 abstract class AbstractStateMachineState implements StateMachineState {
@@ -119,7 +118,6 @@ abstract class AbstractStateMachineState implements StateMachineState {
       nodesByRegion.remove(state.container());
     }
 
-//    completedStates.remove(state);
     StateStatus status = activeStateStatutes.remove(state);
     assert status != null;
 
@@ -234,10 +232,15 @@ abstract class AbstractStateMachineState implements StateMachineState {
   }
 
   @Override
+  public Map<Region, StateConfiguration<?>> history() {
+    return (Map) histories;
+  }
+
+  @Override
   public void saveDeepHistory(final Region r) {
     MutableStateConfiguration stateConfig = nodesByRegion.get(r);
     if (stateConfig == null || stateConfig.state() instanceof FinalState) {
-      histories.put(r, null);
+      histories.remove(r);
     } else {
       histories.put(r, (MutableStateConfiguration) stateConfig.copy());
     }
@@ -247,7 +250,7 @@ abstract class AbstractStateMachineState implements StateMachineState {
   public void saveShallowHistory(final Region r) {
     StateConfiguration stateConfig = nodesByRegion.get(r);
     if (stateConfig == null || stateConfig.state() instanceof FinalState) {
-      histories.put(r, null);
+      histories.remove(r);
     } else {
       histories.put(r, new SimpleStateConfiguration(stateConfig.state()));
     }

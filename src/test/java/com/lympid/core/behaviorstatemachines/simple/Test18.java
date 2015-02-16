@@ -43,7 +43,7 @@ public class Test18 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
     assertSequentialContextEquals(expected, ctx);
   }
   
@@ -58,11 +58,11 @@ public class Test18 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B").get());
     assertSequentialContextEquals(expected, ctx);
     
     fsm.take(new StringEvent("close"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Test
@@ -76,11 +76,11 @@ public class Test18 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B").get());
     assertSequentialContextEquals(expected, ctx);
     
     fsm.take(new StringEvent("close"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Test
@@ -94,11 +94,11 @@ public class Test18 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B").get());
     assertSequentialContextEquals(expected, ctx);
     
     fsm.take(new StringEvent("close"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

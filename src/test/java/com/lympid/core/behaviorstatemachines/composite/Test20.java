@@ -97,10 +97,10 @@ public class Test20 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "Aa"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
         
     fsm.take(new StringEvent("let"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }
@@ -117,13 +117,13 @@ public class Test20 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "Aa").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
         
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "#10").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "#10").get());
     
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }
@@ -141,13 +141,13 @@ public class Test20 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "Aa").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
         
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "#10").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "#10").get());
     
     fsm.take(new StringEvent("let"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

@@ -29,7 +29,10 @@ import org.junit.Assert;
  *
  * @author Fabien Renaud 
  */
-public class TestUtils {
+public final class TestUtils {
+  
+  private TestUtils() {  
+  }
   
   public static void assertSequentialContextEquals(final SequentialContext expected, final SequentialContext actual) {
     Assert.assertEquals(expected.toString(), actual.toString());

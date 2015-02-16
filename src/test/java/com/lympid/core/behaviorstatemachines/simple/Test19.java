@@ -62,18 +62,18 @@ public class Test19 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
     
     for (int i = 0; i < n; i++) {
       fsm.take(new StringEvent("try"));
-      assertStateConfiguration(fsm, new ActiveStateTree("A"));
+      assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
     }
     
     /*
      * "go" event moves the state machine to its final state
      */
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

@@ -32,7 +32,7 @@ import org.junit.Test;
  *
  * @author Fabien Renaud 
  */
-public abstract class AbstractStateMachineTest {
+public abstract class AbstractStateMachineTest implements StateMachineTest {
 
   public static final ScheduledExecutorService THREAD_POOL = Executors.newScheduledThreadPool(1);
   private static final Map<Class, StateMachine> MACHINES = new HashMap<>();
@@ -65,6 +65,7 @@ public abstract class AbstractStateMachineTest {
     }
   }
 
+  @Override
   public final StateMachine topLevelStateMachine() {
     return MACHINES.get(getClass());
   }
@@ -94,6 +95,4 @@ public abstract class AbstractStateMachineTest {
   }
 
   public abstract String stdOut();
-
-  public abstract StateMachineBuilder topLevelMachineBuilder();
 }

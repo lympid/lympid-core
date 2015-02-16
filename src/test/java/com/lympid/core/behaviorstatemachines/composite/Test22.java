@@ -129,7 +129,7 @@ public class Test22 extends AbstractStateMachineTest {
     fsm.go();
     
     if (ctx.c >= 0) {
-      ActiveStateTree tree = new ActiveStateTree("A");
+      ActiveStateTree tree = new ActiveStateTree(this).branch("A");
       assertStateConfiguration(fsm, tree);
       assertSequentialContextEquals(expected, ctx);
 
@@ -145,7 +145,7 @@ public class Test22 extends AbstractStateMachineTest {
     }
     
     expected.exit("A").effect("t1").enter("B").effect("t2").enter("Ba");
-    ActiveStateTree tree = new ActiveStateTree("#9", "Ba");
+    ActiveStateTree tree = new ActiveStateTree(this).branch("#9", "Ba");
     assertStateConfiguration(fsm, tree);
     assertSequentialContextEquals(expected, ctx);
     
@@ -174,7 +174,7 @@ public class Test22 extends AbstractStateMachineTest {
     expected
       .exit("Ba").effect("t3").exit("B").effect("t4").enter("C")
       .exit("C").effect("t5");
-    assertStateConfiguration(fsm, new ActiveStateTree("end").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
   }
   

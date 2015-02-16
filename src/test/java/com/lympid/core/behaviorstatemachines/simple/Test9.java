@@ -54,18 +54,18 @@ public class Test9 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
     
     context.counter = 1;
     /*
      * An unknown event has no effect
      */
     fsm.take(new Event() { @Override public String toString() { return "unknown"; }});
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
     assertFalse(context.fired);
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertTrue(context.fired);
     
     assertEquals(MAIN_LOG, log.mainBuffer());

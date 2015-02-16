@@ -20,7 +20,9 @@ import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineMeta;
 import com.lympid.core.behaviorstatemachines.Transition;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -149,6 +151,11 @@ public class SimpleStateMachineState implements StateMachineState {
   @Override
   public StateConfiguration<?> restore(final Region r) {
     throw new IllegalStateException("Simple state machines have no history.");
+  }
+
+  @Override
+  public Map<Region, StateConfiguration<?>> history() {
+    return Collections.EMPTY_MAP;
   }
 
   @Override

@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class Test1 extends AbstractStateMachineTest {
 
-  private static final long DELAY = 10;
+  private static final long DELAY = 50;
 
   @Test
   public void run() throws InterruptedException {
@@ -40,14 +40,14 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
 
     ctx.latch.await(10 * DELAY, TimeUnit.MILLISECONDS);
     
-    assertStateConfiguration(fsm, new ActiveStateTree("B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B").get());
 
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

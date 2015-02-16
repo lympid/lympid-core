@@ -40,13 +40,13 @@ public class Test1 extends AbstractStateMachineTest {
     assertFalse(ctx.exitedSubMachine);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("sub", "A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("sub", "A").get());
     assertTrue(ctx.enteredSubMachine);
     assertFalse(ctx.exitedSubMachine);
     
     fsm.take(new StringEvent("go"));
     
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertTrue(ctx.enteredSubMachine);
     assertTrue(ctx.exitedSubMachine);
   }

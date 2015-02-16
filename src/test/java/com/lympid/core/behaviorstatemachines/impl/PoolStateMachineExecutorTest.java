@@ -33,7 +33,7 @@ import org.junit.Test;
  */
 public class PoolStateMachineExecutorTest {
   
-  private static final long DELAY = 10;
+  private static final long DELAY = 50;
   private StateMachineShardPoolExecutor pool;
   private int step;
   

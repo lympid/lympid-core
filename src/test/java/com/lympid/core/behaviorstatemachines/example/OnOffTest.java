@@ -64,10 +64,10 @@ public class OnOffTest extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm();
     fsm.go();
 
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
 
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Test
@@ -75,16 +75,16 @@ public class OnOffTest extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm();
     fsm.go();
 
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
 
     fsm.take(new StringEvent("on"));
-    assertStateConfiguration(fsm, new ActiveStateTree("ON"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ON").get());
 
     fsm.take(new StringEvent("off"));
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
 
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Test
@@ -92,19 +92,19 @@ public class OnOffTest extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm();
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
 
     int repeat = new Random().nextInt(10) + 2;
     for (int i = 0; i < repeat; i++) {
       fsm.take(new StringEvent("on"));
-      assertStateConfiguration(fsm, new ActiveStateTree("ON"));
+      assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ON").get());
 
       fsm.take(new StringEvent("off"));
-      assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+      assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
     }
 
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("#3"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#3").get());
   }
 
   @Test
@@ -112,34 +112,34 @@ public class OnOffTest extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm();
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
-    System.out.println(fsm.snapshot().activateStates());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
+    System.out.println(fsm.snapshot().stateConfiguration());
 
     fsm.take(new StringEvent("off"));
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
 
     fsm.take(new StringEvent("on"));
-    assertStateConfiguration(fsm, new ActiveStateTree("ON"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ON").get());
     fsm.take(new StringEvent("on"));
-    assertStateConfiguration(fsm, new ActiveStateTree("ON"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ON").get());
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("ON"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ON").get());
 
     fsm.take(new StringEvent("off"));
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
     fsm.take(new StringEvent("off"));
-    assertStateConfiguration(fsm, new ActiveStateTree("OFF"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("OFF").get());
 
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     fsm.take(new StringEvent("on"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     fsm.take(new StringEvent("off"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

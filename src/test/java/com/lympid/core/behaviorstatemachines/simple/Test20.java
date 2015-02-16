@@ -46,15 +46,15 @@ public class Test20 extends AbstractStateMachineTest {
     fsm.listeners().add(log);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("#6"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
     
     Thread.sleep(10);
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("#6"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
     
     fsm.take(new StringEvent("go2"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertEquals(MAIN_LOG, log.mainBuffer());
     assertEquals(ACTIVITY_LOG, log.activityBuffer());
@@ -65,15 +65,15 @@ public class Test20 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm();
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("#6"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
     
     Thread.sleep(10);
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("#6"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
     
     fsm.take(new StringEvent("go2"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override
@@ -101,11 +101,11 @@ public class Test20 extends AbstractStateMachineTest {
           .activity((c) -> { throw new RuntimeException("something"); })
           .transition("t1")
             .on("go")
-            .guard((e,c) -> { throw new RuntimeException("guard"); })
+            .guard((e, c) -> { throw new RuntimeException("guard"); })
             .target(end)
           .transition("t2")
             .on("go2")
-            .effect((e,c) -> { throw new RuntimeException("effect"); })
+            .effect((e, c) -> { throw new RuntimeException("effect"); })
             .target(end);
     
     return builder;

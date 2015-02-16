@@ -95,10 +95,10 @@ public class Test4 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("B", "Ba"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B", "Ba").get());
     
     fsm.take(new StringEvent("finishIt"));
-    assertStateConfiguration(fsm, new ActiveStateTree("#3"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#3").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

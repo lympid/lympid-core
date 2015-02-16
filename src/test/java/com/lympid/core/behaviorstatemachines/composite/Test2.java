@@ -91,13 +91,13 @@ public class Test2 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "Aa").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
     
     fsm.take(new StringEvent("let"));
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "#9").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "#9").get());
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("#3"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#3").get());
     
     assertSequentialContextEquals(expected, ctx);
   }
@@ -113,10 +113,10 @@ public class Test2 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "Aa"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "Aa").get());
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("#3"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#3").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

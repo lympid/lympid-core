@@ -96,13 +96,13 @@ public class Test7 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("B", "Ba"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B", "Ba").get());
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("B", "rend"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B", "rend").get());
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree("#3"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#3").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

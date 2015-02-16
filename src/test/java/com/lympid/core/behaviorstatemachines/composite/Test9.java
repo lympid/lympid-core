@@ -90,7 +90,7 @@ public class Test9 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("#5"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#5").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

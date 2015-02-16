@@ -45,13 +45,13 @@ public class Test8 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "B").get());
 
     ctx.latchStarted.await();
     
     fsm.take(new StringEvent("end"));
 
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertEquals(0, ctx.c);
     
     ctx.latchInterrupted.await();

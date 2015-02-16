@@ -85,6 +85,11 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     this.machine = machine;
     this.machineState = createMachineState(machine);
   }
+  
+  @Override
+  public StateMachine stateMachine() {
+    return machine;
+  }
 
   protected StateMachineState createMachineState(final StateMachine machine) {
     return StateMachineStateFactory.get(machine.metadata());
@@ -129,7 +134,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
 
   @Override
   public StateMachineSnapshot snapshot() {
-    return new StateMachineSnapshot(machineState, context);
+    return new StateMachineSnapshot(machine, machineState, context);
   }
 
   @Override

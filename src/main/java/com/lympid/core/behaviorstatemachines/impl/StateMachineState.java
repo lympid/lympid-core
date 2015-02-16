@@ -19,6 +19,7 @@ import com.lympid.core.behaviorstatemachines.PseudoState;
 import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.Transition;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -61,6 +62,8 @@ public interface StateMachineState {
   boolean isTerminated();
 
   StateConfiguration<?> restore(final Region r);
+
+  Map<Region, StateConfiguration<?>> history();
 
   void saveDeepHistory(final Region r);
 
@@ -206,6 +209,15 @@ public interface StateMachineState {
       StateConfiguration out;
       synchronized (mutex) {
         out = inst.restore(r);
+      }
+      return out;
+    }
+
+    @Override
+    public Map<Region, StateConfiguration<?>> history() {
+      Map<Region, StateConfiguration<?>> out;
+      synchronized (mutex) {
+        out = inst.history();
       }
       return out;
     }

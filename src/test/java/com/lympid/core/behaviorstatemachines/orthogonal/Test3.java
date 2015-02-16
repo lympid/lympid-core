@@ -56,7 +56,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
-    ActiveStateTree tree = new ActiveStateTree()
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "D", "endE")
       .branch("ortho", "D", "F")
       .branch("ortho", "A", "B")
@@ -67,7 +67,7 @@ public class Test3 extends AbstractStateMachineTest {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "C");
@@ -76,7 +76,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "endB")
       .branch("ortho", "A", "C");
@@ -87,7 +87,7 @@ public class Test3 extends AbstractStateMachineTest {
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree("end");
+    tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, ctx);
     assertStateConfiguration(fsm, tree);
   }
@@ -103,7 +103,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11");
-    ActiveStateTree tree = new ActiveStateTree()
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "D", "E")
       .branch("ortho", "D", "endF")
       .branch("ortho", "A", "B")
@@ -114,7 +114,7 @@ public class Test3 extends AbstractStateMachineTest {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "C");
@@ -123,7 +123,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "endB")
       .branch("ortho", "A", "C");
@@ -134,7 +134,7 @@ public class Test3 extends AbstractStateMachineTest {
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree("end");
+    tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, ctx);
     assertStateConfiguration(fsm, tree);
   }
@@ -150,7 +150,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
-    ActiveStateTree tree = new ActiveStateTree()
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "D", "endE")
       .branch("ortho", "D", "F")
       .branch("ortho", "A", "B")
@@ -161,7 +161,7 @@ public class Test3 extends AbstractStateMachineTest {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "C");
@@ -170,7 +170,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "endC");
@@ -181,7 +181,7 @@ public class Test3 extends AbstractStateMachineTest {
     expected.exit("B").effect("t3")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree("end");
+    tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, ctx);
     assertStateConfiguration(fsm, tree);
   }
@@ -197,7 +197,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
-    ActiveStateTree tree = new ActiveStateTree()
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "D", "endE")
       .branch("ortho", "D", "F")
       .branch("ortho", "A", "B")
@@ -207,7 +207,7 @@ public class Test3 extends AbstractStateMachineTest {
     
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "D", "endE")
       .branch("ortho", "D", "F")
       .branch("ortho", "A", "endB")
@@ -218,7 +218,7 @@ public class Test3 extends AbstractStateMachineTest {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree()
+    tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "endB")
       .branch("ortho", "A", "C");
@@ -229,7 +229,7 @@ public class Test3 extends AbstractStateMachineTest {
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree("end");
+    tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, ctx);
     assertStateConfiguration(fsm, tree);
   }
@@ -243,7 +243,7 @@ public class Test3 extends AbstractStateMachineTest {
         .effect("t1").enter("A")
           .effect("t2").enter("B")
           .effect("t4").enter("C");
-    ActiveStateTree tree = new ActiveStateTree()
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "D", "E")
       .branch("ortho", "D", "F")
       .branch("ortho", "A", "B")

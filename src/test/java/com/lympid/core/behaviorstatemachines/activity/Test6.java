@@ -47,14 +47,14 @@ public class Test6 extends AbstractStateMachineTest {
     expected.effect("t0").enter("compo");
     StateMachineSnapshot<Context> snapshot = fsm.snapshot();
     assertSequentialContextEquals(expected, snapshot.context());
-    assertStateConfiguration(snapshot, new ActiveStateTree("compo"));
+    assertStateConfiguration(snapshot, new ActiveStateTree(this).branch("compo").get());
     
     ctx.latch.await();
     
     expected.activity("someactivity").exit("compo").effect("t1");
     snapshot = fsm.snapshot();
     assertSequentialContextEquals(expected, snapshot.context());
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

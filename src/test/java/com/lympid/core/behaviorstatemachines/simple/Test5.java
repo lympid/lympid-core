@@ -41,7 +41,7 @@ public class Test5 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(context);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

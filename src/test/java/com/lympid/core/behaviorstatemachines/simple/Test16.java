@@ -24,6 +24,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
+import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -47,14 +48,15 @@ public class Test16 extends AbstractStateMachineTest {
       .exit("abs")
       .exit("bat");
     
-    SequentialContext ctx = new SequentialContext();
+    Context ctx = new Context();
     StateMachineExecutor fsm = fsm(ctx);
     addLogger(fsm, log);
     fsm.go();
     
+    ctx.latch.await();
     Thread.sleep(2);
         
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
     
     assertEquals(MAIN_LOG, log.mainBuffer());
@@ -63,7 +65,7 @@ public class Test16 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     VertexBuilderReference end = builder
       .region()
@@ -84,7 +86,10 @@ public class Test16 extends AbstractStateMachineTest {
           .entry((c) -> { c.enter("bar"); })
           .exit((c) -> { c.exit("abs"); })
           .exit((c) -> { c.exit("bat"); })
-          .activity((c) -> { c.activity("something"); })
+          .activity((c) -> { 
+            c.activity("something");
+            c.latch.countDown();
+          })
           .transition()
             .target(end);
     
@@ -152,6 +157,10 @@ public class Test16 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+  
+  private static final class Context extends SequentialContext {
+    CountDownLatch latch = new CountDownLatch(1);
   }
   
   private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"\"\n" +

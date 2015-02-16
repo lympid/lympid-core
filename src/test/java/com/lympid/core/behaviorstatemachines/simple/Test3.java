@@ -37,7 +37,7 @@ public class Test3 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Test
@@ -49,13 +49,13 @@ public class Test3 extends AbstractStateMachineTest {
     /*
      * Machine hasn't started.
      */
-    assertStateConfiguration(fsm, new ActiveStateTree());
+    assertStateConfiguration(fsm, new ActiveStateTree(this));
     
     /*
      * Start the machine.
      */
     fsm.take(new Event() {});
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Override

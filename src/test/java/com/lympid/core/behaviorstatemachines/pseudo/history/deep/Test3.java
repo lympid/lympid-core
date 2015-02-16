@@ -87,42 +87,42 @@ public class Test3 extends HistoryTest3 {
   @Override
   protected void resumeAa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("A").enter("Aa");
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "A", "Aa"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A", "Aa").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   @Override
   protected void resumeAb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("A").enter("Ab");
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "A", "Ab"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A", "Ab").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   @Override
   protected void resumeBa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("B").enter("Ba");
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "B", "Ba"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B", "Ba").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   @Override
   protected void resumeBb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("B").enter("Bb");
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "B", "Bb"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B", "Bb").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   @Override
   protected void resumeCa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("C").enter("Ca");
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "C", "Ca"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C", "Ca").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   @Override
   protected void resumeCb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("C").enter("Cb");
-    assertStateConfiguration(fsm, new ActiveStateTree("compo", "C", "Cb"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C", "Cb").get());
     assertSequentialContextEquals(expected, ctx);
   }
 

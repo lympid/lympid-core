@@ -33,6 +33,8 @@ public interface StateMachineExecutor<C> {
   ExecutorListener listeners();
 
   void setStateMachine(StateMachine machine);
+  
+  StateMachine stateMachine();
 
   ExecutorConfiguration configuration();
 

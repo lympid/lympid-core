@@ -73,7 +73,7 @@ public class Test2 extends AbstractStateMachineTest {
       .effect("t0").enter("sub")
       .effect("t0").enter("A");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree("sub", "A"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("sub", "A").get());
     assertTrue(ctx.enteredSubMachine);
     assertFalse(ctx.exitedSubMachine);
     
@@ -83,7 +83,7 @@ public class Test2 extends AbstractStateMachineTest {
         .exit("A").effect("t1").exit("sub")
         .effect("t1").enter("sub").effect("t2").enter("A");
       assertSequentialContextEquals(expected, ctx);
-      assertStateConfiguration(fsm, new ActiveStateTree("sub", "A"));
+      assertStateConfiguration(fsm, new ActiveStateTree(this).branch("sub", "A").get());
       assertTrue(ctx.enteredSubMachine);
       assertTrue(ctx.exitedSubMachine);
     }
@@ -93,7 +93,7 @@ public class Test2 extends AbstractStateMachineTest {
       .exit("A").effect("t1").exit("sub")
       .effect("t2");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertTrue(ctx.enteredSubMachine);
     assertTrue(ctx.exitedSubMachine);
   }

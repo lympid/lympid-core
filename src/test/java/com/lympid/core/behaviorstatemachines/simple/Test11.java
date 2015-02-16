@@ -22,6 +22,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -39,10 +40,11 @@ public class Test11 extends AbstractStateMachineTest {
     
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
-    
+  
+    ctx.latch.await();
     Thread.sleep(2);
     
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertEquals(ctx.hashCode(), ctx.hash);
   }
 
@@ -63,7 +65,10 @@ public class Test11 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .activity((c) -> { c.hash = c.hashCode(); })
+          .activity((c) -> {
+            c.hash = c.hashCode();
+            c.latch.countDown();
+          })
           .transition()
             .target(end);
     
@@ -76,6 +81,7 @@ public class Test11 extends AbstractStateMachineTest {
   }
   
   private static final class Context {
+    CountDownLatch latch = new CountDownLatch(1);
     int hash;
   }
   

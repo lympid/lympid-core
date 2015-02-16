@@ -46,7 +46,7 @@ public class Test25 extends AbstractStateMachineTest {
       .exit("A").effect("t2")
       .exit("compo").effect("t3");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

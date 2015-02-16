@@ -37,7 +37,7 @@ import org.junit.Test;
  */
 public class Test5 extends AbstractStateMachineTest {
 
-  private static final long DELAY = 10;
+  private static final long DELAY = 50;
   
   @Test
   public void run_2() throws InterruptedException {
@@ -71,7 +71,7 @@ public class Test5 extends AbstractStateMachineTest {
     
     StateMachineSnapshot snapshot = fsm.snapshot();
     if (ctx.latch.getCount() > 0) {
-        assertStateConfiguration(snapshot, new ActiveStateTree("A"));
+        assertStateConfiguration(snapshot, new ActiveStateTree(this).branch("A").get());
     }
 
     int actualCount = 0;
@@ -92,10 +92,10 @@ public class Test5 extends AbstractStateMachineTest {
     
     ctx.latch.await();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("B"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B").get());
 
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
     assertEquals(actualCount, ctx.c);
   }

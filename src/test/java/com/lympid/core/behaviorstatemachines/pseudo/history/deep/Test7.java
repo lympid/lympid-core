@@ -35,14 +35,14 @@ public class Test7 extends HistoryTest7 {
   @Override
   protected void resumeA(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("A").enter("Aa").enter("Aaa").enter("Aaaa").enter("Aaaaa");
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "Aa", "Aaa", "Aaaa", "Aaaaa"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaaa").get());
     assertSequentialContextEquals(expected, ctx);
   }
   
   @Override
   protected void resumeB(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("A").enter("Aa").enter("Aaa").enter("Aaaa").enter("Aaaab");
-    assertStateConfiguration(fsm, new ActiveStateTree("A", "Aa", "Aaa", "Aaaa", "Aaaab"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaab").get());
     assertSequentialContextEquals(expected, ctx);
   }
 

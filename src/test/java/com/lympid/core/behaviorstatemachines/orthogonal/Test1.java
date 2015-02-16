@@ -105,28 +105,28 @@ public class Test1 extends AbstractStateMachineTest {
       .effect("t0").enter("ortho")
       .effect("t4").enter("C")
       .effect("t1").enter("A");
-    assertStateConfiguration(fsm, new ActiveStateTree("ortho", "A").branch("ortho", "C").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   private void fireGo1(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx, String otherRegionState) {
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2").enter("B").exit("B").effect("t3");
-    assertStateConfiguration(fsm, new ActiveStateTree("ortho", "end1").branch("ortho", otherRegionState).get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState).get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   private void fireGo2(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx, String otherRegionState) {
     fsm.take(new StringEvent("go2"));
     expected.exit("C").effect("t5").enter("D").exit("D").effect("t6");
-    assertStateConfiguration(fsm, new ActiveStateTree("ortho", otherRegionState).branch("ortho", "end2").get());
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   private void fireEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t7");
-    assertStateConfiguration(fsm, new ActiveStateTree("end"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
   }
   

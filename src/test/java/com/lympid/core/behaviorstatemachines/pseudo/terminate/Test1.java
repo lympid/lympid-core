@@ -41,7 +41,7 @@ public class Test1 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree());
+    assertStateConfiguration(fsm, new ActiveStateTree(this));
   }
   
   @Test
@@ -54,10 +54,10 @@ public class Test1 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree());
+    assertStateConfiguration(fsm, new ActiveStateTree(this));
     
     fsm.take(new Event() {});
-    assertStateConfiguration(fsm, new ActiveStateTree());
+    assertStateConfiguration(fsm, new ActiveStateTree(this));
     
     assertEquals(executorId, fsm.getId());
   }

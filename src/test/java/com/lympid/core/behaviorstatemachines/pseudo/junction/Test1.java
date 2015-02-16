@@ -57,7 +57,7 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("end1"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end1").get());
     assertSequentialContextEquals(expected, ctx);
     assertEquals(newValueForC, ctx.c);
   }
@@ -80,7 +80,7 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree("end2"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end2").get());
     assertSequentialContextEquals(expected, ctx);
     assertEquals(newValueForC, ctx.c);
   }
@@ -106,7 +106,7 @@ public class Test1 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertStateConfiguration(fsm, new ActiveStateTree("end3"));
+    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end3").get());
     assertSequentialContextEquals(expected, ctx);
     assertEquals(newValueForC, ctx.c);
   }
