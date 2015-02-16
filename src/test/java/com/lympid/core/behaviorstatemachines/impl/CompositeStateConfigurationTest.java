@@ -114,10 +114,13 @@ public class CompositeStateConfigurationTest {
     assertFalse(config.isEmpty());
     config.removeChild(child1);
     assertTrue(config.isEmpty());
+    assertTrue(config.children().isEmpty());
     assertNull(child1.parent());
     
     child1 = config.addChild(state2);
     assertFalse(config.isEmpty());
+    assertEquals(1, config.children().size());
+    assertTrue(config.children().contains(child1));
     assertTrue(config == child1.parent());
   }
   

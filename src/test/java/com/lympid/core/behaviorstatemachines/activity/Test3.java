@@ -19,7 +19,7 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import java.util.concurrent.CountDownLatch;
@@ -47,7 +47,7 @@ public class Test3 extends AbstractStateMachineTest {
     ctx.latch.await();
     Thread.sleep(2);
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     assertEquals(EXPECTED_A, ctx.a);
     assertEquals(EXPECTED_B, ctx.b);
     assertEquals(EXPECTED_C, ctx.c);

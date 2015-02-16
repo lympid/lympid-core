@@ -20,7 +20,7 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.JunctionBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
@@ -57,7 +57,7 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end1").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end1").get());
     assertSequentialContextEquals(expected, ctx);
     assertEquals(newValueForC, ctx.c);
   }
@@ -80,7 +80,7 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end2").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end2").get());
     assertSequentialContextEquals(expected, ctx);
     assertEquals(newValueForC, ctx.c);
   }
@@ -106,7 +106,7 @@ public class Test1 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end3").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end3").get());
     assertSequentialContextEquals(expected, ctx);
     assertEquals(newValueForC, ctx.c);
   }

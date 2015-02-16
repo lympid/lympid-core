@@ -20,7 +20,7 @@ import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import org.junit.Test;
@@ -36,35 +36,35 @@ public class Test10 extends AbstractStateMachineTest {
   public void run_go() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Test
   public void run_a() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("a"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Test
   public void run_finish() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("finish"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Test
   public void run_end() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("end"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   @Test
   public void run_foo() {
     StateMachineExecutor fsm = commonTest();
     fsm.take(new StringEvent("foo"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
   
   private StateMachineExecutor commonTest() {
@@ -74,13 +74,13 @@ public class Test10 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
         
     /*
      * A string event other than "go" has no effect.
      */
     fsm.take(new StringEvent("pass"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
     
     return fsm;
   }

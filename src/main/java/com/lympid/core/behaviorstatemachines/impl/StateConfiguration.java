@@ -16,7 +16,6 @@
 package com.lympid.core.behaviorstatemachines.impl;
 
 import com.lympid.core.behaviorstatemachines.State;
-import com.lympid.core.common.Copiable;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -24,7 +23,7 @@ import java.util.function.Consumer;
  *
  * @author Fabien Renaud
  */
-public interface StateConfiguration<T extends StateConfiguration> extends Copiable<StateConfiguration> {
+public interface StateConfiguration<T extends StateConfiguration> {
   
   State state();
   

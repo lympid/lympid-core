@@ -38,6 +38,7 @@ public class MutableStateTest {
   public void testEquals() {
     Object obj = null;
     assertFalse(state.equals(obj));
+    assertFalse(state.equals(new Object()));
   }
 
   @Test

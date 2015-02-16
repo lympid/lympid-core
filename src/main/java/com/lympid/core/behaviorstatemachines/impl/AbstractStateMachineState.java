@@ -242,7 +242,7 @@ abstract class AbstractStateMachineState implements StateMachineState {
     if (stateConfig == null || stateConfig.state() instanceof FinalState) {
       histories.remove(r);
     } else {
-      histories.put(r, (MutableStateConfiguration) stateConfig.copy());
+      histories.put(r, stateConfig.copy());
     }
   }
 

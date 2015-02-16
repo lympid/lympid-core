@@ -32,4 +32,6 @@ interface MutableStateConfiguration<T extends MutableStateConfiguration> extends
   void removeChild(T state);
   
   void clear();
+  
+  MutableStateConfiguration copy();
 }

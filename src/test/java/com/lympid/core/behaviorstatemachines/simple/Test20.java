@@ -20,7 +20,7 @@ import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.SimpleStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
@@ -46,15 +46,15 @@ public class Test20 extends AbstractStateMachineTest {
     fsm.listeners().add(log);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#6").get());
     
     Thread.sleep(10);
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#6").get());
     
     fsm.take(new StringEvent("go2"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertEquals(MAIN_LOG, log.mainBuffer());
     assertEquals(ACTIVITY_LOG, log.activityBuffer());
@@ -65,15 +65,15 @@ public class Test20 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm();
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#6").get());
     
     Thread.sleep(10);
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#6").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#6").get());
     
     fsm.take(new StringEvent("go2"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

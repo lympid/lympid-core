@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import org.junit.Test;
 
@@ -62,18 +62,18 @@ public class Test19 extends AbstractStateMachineTest {
     /*
      * Machine has started and is on state A.
      */
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
     
     for (int i = 0; i < n; i++) {
       fsm.take(new StringEvent("try"));
-      assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
+      assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
     }
     
     /*
      * "go" event moves the state machine to its final state
      */
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

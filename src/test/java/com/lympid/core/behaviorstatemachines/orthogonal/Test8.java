@@ -20,7 +20,7 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
@@ -46,7 +46,7 @@ public class Test8 extends AbstractStateMachineTest {
       .effect("t0").enter("ortho")
       .effect("t1").enter("sub").effect("t0").enter("A");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "sub", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "sub", "A").get());
     
     fsm.take(new StringEvent("go"));
     expected
@@ -54,7 +54,7 @@ public class Test8 extends AbstractStateMachineTest {
       .exit("sub").effect("t2")
       .exit("ortho").effect("t3");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

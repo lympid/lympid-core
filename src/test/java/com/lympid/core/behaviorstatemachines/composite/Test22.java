@@ -27,7 +27,7 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -130,13 +130,13 @@ public class Test22 extends AbstractStateMachineTest {
     
     if (ctx.c >= 0) {
       ActiveStateTree tree = new ActiveStateTree(this).branch("A");
-      assertStateConfiguration(fsm, tree);
+      assertSnapshotEquals(fsm, tree);
       assertSequentialContextEquals(expected, ctx);
 
       while (ctx.c > 0) {
         fsm.take(new StringEvent("dec"));
         expected.exit("A").effect("t7").enter("A");
-        assertStateConfiguration(fsm, tree);
+        assertSnapshotEquals(fsm, tree);
         assertSequentialContextEquals(expected, ctx);
       }
 
@@ -146,27 +146,27 @@ public class Test22 extends AbstractStateMachineTest {
     
     expected.exit("A").effect("t1").enter("B").effect("t2").enter("Ba");
     ActiveStateTree tree = new ActiveStateTree(this).branch("#9", "Ba");
-    assertStateConfiguration(fsm, tree);
+    assertSnapshotEquals(fsm, tree);
     assertSequentialContextEquals(expected, ctx);
     
     while (ctx.c <= 0) {
       fsm.take(new StringEvent("go")); // has no effect
-      assertStateConfiguration(fsm, tree);
+      assertSnapshotEquals(fsm, tree);
       assertSequentialContextEquals(expected, ctx);
       
       fsm.take(new StringEvent("inc"));
       expected.exit("Ba").effect("t6").enter("Ba");
-      assertStateConfiguration(fsm, tree);
+      assertSnapshotEquals(fsm, tree);
       assertSequentialContextEquals(expected, ctx);
       
       fsm.take(new StringEvent("dec"));
       expected.effect("t7");
-      assertStateConfiguration(fsm, tree);
+      assertSnapshotEquals(fsm, tree);
       assertSequentialContextEquals(expected, ctx);
       
       fsm.take(new StringEvent("inc"));
       expected.exit("Ba").effect("t6").enter("Ba");
-      assertStateConfiguration(fsm, tree);
+      assertSnapshotEquals(fsm, tree);
       assertSequentialContextEquals(expected, ctx);
     }
     
@@ -174,7 +174,7 @@ public class Test22 extends AbstractStateMachineTest {
     expected
       .exit("Ba").effect("t3").exit("B").effect("t4").enter("C")
       .exit("C").effect("t5");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
   }
   

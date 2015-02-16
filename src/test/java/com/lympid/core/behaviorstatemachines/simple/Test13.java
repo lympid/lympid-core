@@ -19,7 +19,7 @@ package com.lympid.core.behaviorstatemachines.simple;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import static org.junit.Assert.assertEquals;
@@ -40,7 +40,7 @@ public class Test13 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     assertEquals(ctx.hashCode(), ctx.hash);
   }
 

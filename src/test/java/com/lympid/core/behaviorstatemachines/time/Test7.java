@@ -18,7 +18,7 @@ package com.lympid.core.behaviorstatemachines.time;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorListener;
 import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
@@ -48,12 +48,12 @@ public class Test7 extends AbstractStateMachineTest {
     fsm.setListeners(listener);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
 
     ctx.latch.await(10 * LONG_DELAY, TimeUnit.MILLISECONDS);
     
     assertEquals(1, ctx.local);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     
     assertEquals(MAIN_LOG, log.mainBuffer());
     assertEquals(ACTIVITY_LOG, log.activityBuffer());

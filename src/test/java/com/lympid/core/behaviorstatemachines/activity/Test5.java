@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
@@ -50,7 +50,7 @@ public class Test5 extends AbstractStateMachineTest {
       .effect("t0").enter("sub1").effect("t0").enter("A");
     assertEquals(ACTIVITY_VALUE_SUB1, ctx.c);
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("sub1", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A").get());
     ctx.latch12.countDown();
     
     
@@ -61,7 +61,7 @@ public class Test5 extends AbstractStateMachineTest {
       .exit("sub1").effect("t1").enter("sub2").effect("t0").enter("A");
     assertEquals(ACTIVITY_VALUE_SUB2, ctx.c);
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("sub2", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A").get());
     ctx.latch22.countDown();
     Thread.sleep(2);
     
@@ -70,7 +70,7 @@ public class Test5 extends AbstractStateMachineTest {
       .exit("A").effect("t1")
       .exit("sub2");
     assertSequentialContextEquals(expected, ctx);    
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

@@ -88,7 +88,7 @@ public class SimpleStateConfiguration implements MutableStateConfiguration<Simpl
   }
 
   @Override
-  public StateConfiguration copy() {
+  public MutableStateConfiguration copy() {
     SimpleStateConfiguration config = new SimpleStateConfiguration();
     config.state = state;
     return config;

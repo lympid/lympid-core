@@ -27,7 +27,7 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -95,21 +95,21 @@ public class Test6 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B", "Ba").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B", "Ba").get());
     
     fsm.take(new StringEvent("let"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B", "Ba").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B", "Ba").get());
     assertEquals(1, ctx.c);
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B", "rend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B", "rend").get());
     
     fsm.take(new StringEvent("let"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B", "rend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B", "rend").get());
     assertEquals(2, ctx.c);
     
     fsm.take(new StringEvent("go"));
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("#3").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#3").get());
     
     assertSequentialContextEquals(expected, ctx);
   }

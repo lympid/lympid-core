@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.ForkBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
@@ -106,7 +106,7 @@ public class Test4 extends AbstractStateMachineTest {
   private void begin(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected
       .effect("t0").enter("ortho").enter("E");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "E").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "E").get());
     assertSequentialContextEquals(expected, ctx);
     
     fsm.take(new StringEvent("doFork"));
@@ -114,28 +114,28 @@ public class Test4 extends AbstractStateMachineTest {
       .exit("E").effect("tE")
         .effect("t1").enter("A")
         .effect("t4").enter("C");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   private void fireGo1(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx, String otherRegionState) {
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2").enter("B").exit("B").effect("t3");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState).get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState).get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   private void fireGo2(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx, String otherRegionState) {
     fsm.take(new StringEvent("go2"));
     expected.exit("C").effect("t5").enter("D").exit("D").effect("t6");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   private void fireEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t7");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
   }
   

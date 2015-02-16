@@ -19,7 +19,7 @@ import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -40,13 +40,13 @@ public class Test1 extends AbstractStateMachineTest {
     assertFalse(ctx.exitedSubMachine);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("sub", "A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub", "A").get());
     assertTrue(ctx.enteredSubMachine);
     assertFalse(ctx.exitedSubMachine);
     
     fsm.take(new StringEvent("go"));
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     assertTrue(ctx.enteredSubMachine);
     assertTrue(ctx.exitedSubMachine);
   }

@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
@@ -41,7 +41,7 @@ public class Test1 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this));
   }
   
   @Test
@@ -54,10 +54,10 @@ public class Test1 extends AbstractStateMachineTest {
     fsm.configuration().autoStart(true);
     fsm.go();
     
-    assertStateConfiguration(fsm, new ActiveStateTree(this));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this));
     
     fsm.take(new Event() {});
-    assertStateConfiguration(fsm, new ActiveStateTree(this));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this));
     
     assertEquals(executorId, fsm.getId());
   }

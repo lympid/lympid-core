@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTest;
 import com.lympid.core.behaviorstatemachines.builder.SequentialContextInjector;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
@@ -70,24 +70,24 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     
     expected.effect("t0").enter("A");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("A").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A").get());
     
     ctx.latch1.await(10 * DELAY, TimeUnit.MILLISECONDS);
     Thread.sleep(DELAY);
     expected.exit("A").effect("t1").enter("B");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("B").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B").get());
     
     ctx.latch2.countDown();
     Thread.sleep(DELAY);
     expected.exit("B").effect("t2").enter("C");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("C").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("C").get());
     
     fsm.take(new StringEvent("go"));
     expected.exit("C").effect("t3");
     assertSequentialContextEquals(expected, ctx);
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
   }
 
   @Override

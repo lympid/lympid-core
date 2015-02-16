@@ -31,16 +31,40 @@ import static org.junit.Assert.assertTrue;
  * @author Fabien Renaud
  */
 public final class StateMachineProcessorTester {
-
-  public static void assertStateConfiguration(final StateMachineExecutor fsm, final ActiveStateTree expected) {
-    assertStateConfiguration(fsm.snapshot(), expected.tree());
+  
+  
+  public static void assertSnapshotHistoryEquals(final StateMachineExecutor fsm, final String region, final ActiveStateTree expected) {
+    StateMachineSnapshot<?> snapshot = fsm.snapshot();
+    assertEquals(fsm.stateMachine().getId(), snapshot.stateMachine());
+    
+    final String regionId = region.charAt(0) == '#'
+      ? region.substring(1)
+      : null; // not supported
+    assertSnapshotHistoryEquals(snapshot, regionId, expected.tree());
+  }
+  
+  private static void assertSnapshotHistoryEquals(final StateMachineSnapshot<?> snapshot, final String regionId, final TreeNode<String> expected) {
+    assert regionId != null;
+    
+    assertNotNull(snapshot);
+    assertNotNull(snapshot.history());
+    List<StringTree> history = snapshot.history().get(regionId);
+    assertNotNull(history);
+    
+    assertStateConfigurationEquals(expected, history);
   }
 
-  public static void assertStateConfiguration(final StateMachineSnapshot snapshot, final ActiveStateTree expected) {
-    assertStateConfiguration(snapshot, expected.tree());
+  public static void assertSnapshotEquals(final StateMachineExecutor fsm, final ActiveStateTree expected) {
+    StateMachineSnapshot<?> snapshot = fsm.snapshot();
+    assertEquals(fsm.stateMachine().getId(), snapshot.stateMachine());
+    assertSnapshotEquals(snapshot, expected.tree());
   }
 
-  private static void assertStateConfiguration(final StateMachineSnapshot<?> snapshot, final TreeNode<String> expected) {
+  public static void assertSnapshotEquals(final StateMachineSnapshot snapshot, final ActiveStateTree expected) {
+    assertSnapshotEquals(snapshot, expected.tree());
+  }
+
+  private static void assertSnapshotEquals(final StateMachineSnapshot<?> snapshot, final TreeNode<String> expected) {
     assertNotNull(snapshot);
     assertNotNull(snapshot.stateConfiguration());
     assertStateConfigurationEquals(expected, snapshot.stateConfiguration());
@@ -56,11 +80,11 @@ public final class StateMachineProcessorTester {
     if (actual.isEmpty()) {
       assertNull(expected.content());
     } else {
-      assertStateConfigurationEquals(expected, actual.get(0));
+      assertSnapshotEquals(expected, actual.get(0));
     }
   }
 
-  private static void assertStateConfigurationEquals(final TreeNode<String> expected, final StringTree actual) {
+  private static void assertSnapshotEquals(final TreeNode<String> expected, final StringTree actual) {
     if (expected.content().contains(":")) { // now ids, used to be names
       String wActual = ":" + actual.state() + ":";
       if (!expected.content().contains(wActual)) {
@@ -78,7 +102,7 @@ public final class StateMachineProcessorTester {
     expected.children().sort(ACTIVATE_STATE_COMPARATOR);
     actual.children().sort(STATE_COMPARATOR);
     for (int i = 0; i < expected.size(); i++) {
-      assertStateConfigurationEquals(expected.children().get(i), actual.children().get(i));
+      assertSnapshotEquals(expected.children().get(i), actual.children().get(i));
     }
   }
 

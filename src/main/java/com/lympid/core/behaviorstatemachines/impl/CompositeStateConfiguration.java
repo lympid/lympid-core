@@ -111,7 +111,7 @@ public class CompositeStateConfiguration implements MutableStateConfiguration<Co
   }
 
   @Override
-  public StateConfiguration copy() {
+  public MutableStateConfiguration copy() {
     return new CompositeStateConfiguration(this);
   }
 

@@ -13,37 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lympid.core.behaviorstatemachines.pseudo.history.deep;
 
+package com.lympid.core.behaviorstatemachines.pseudo.history.shallow;
+
+import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
-import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest7;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotHistoryEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest9;
 
 /**
  *
  * @author Fabien Renaud 
  */
-public class Test7 extends HistoryTest7 {
-
-  public Test7() {
-    super(PseudoStateKind.DEEP_HISTORY);
+public class Test9 extends HistoryTest9 {
+  
+  public Test9() {
+    super(PseudoStateKind.SHALLOW_HISTORY);
   }
   
   @Override
-  protected void resumeA(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    expected.enter("A").enter("Aa").enter("Aaa").enter("Aaaa").enter("Aaaaa");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaaa").get());
+  protected void resume_B1A_B2A_sub1(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
+    assertSnapshotHistoryEquals(fsm, "#7", new ActiveStateTree(this).branch("B"));
+    
+    fsm.take(new StringEvent("resume"));
+    expected
+      .exit("P").effect("t13").enter("compo").enter("B")
+      .effect("t6").enter("B2A")
+      .effect("t9").enter("sub1").effect("t0").enter("Z")
+      .effect("t4").enter("B1").enter("B1A");
+    assertSnapshotEquals(fsm, new ActiveStateTree(this)
+      .branch("compo", "B", "B1", "B1A")
+      .branch("compo", "B", "B2A")
+      .branch("compo", "B", "sub1", "Z")
+    );
     assertSequentialContextEquals(expected, ctx);
   }
-  
-  @Override
-  protected void resumeB(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
-    expected.enter("A").enter("Aa").enter("Aaa").enter("Aaaa").enter("Aaaab");
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaab").get());
-    assertSequentialContextEquals(expected, ctx);
-  }
-
 }

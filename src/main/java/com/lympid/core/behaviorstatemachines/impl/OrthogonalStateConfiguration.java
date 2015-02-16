@@ -115,7 +115,7 @@ public class OrthogonalStateConfiguration implements MutableStateConfiguration<O
   }
 
   @Override
-  public StateConfiguration copy() {
+  public MutableStateConfiguration copy() {
     return new OrthogonalStateConfiguration(this);
   }
 }

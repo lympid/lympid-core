@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertStateConfiguration;
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import org.junit.Test;
@@ -240,67 +240,67 @@ public abstract class HistoryTest3 extends AbstractHistoryTest {
   protected final void toEnd(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("toEnd"));
     expected.exit("C").exit("compo").effect("t3");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("end").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toCend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("toCend"));
     expected.exit("Cb").effect("t2_C");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C", "Cend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Cend").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toCb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("toCb"));
     expected.exit("Ca").effect("t1_C").enter("Cb");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C", "Cb").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Cb").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toCa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("C").effect("t0_C").enter("Ca");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "C", "Ca").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Ca").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toBend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("toBend"));
     expected.exit("Bb").effect("t2_B");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B", "Bend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Bend").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toBb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("toBb"));
     expected.exit("Ba").effect("t1_B").enter("Bb");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B", "Bb").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Bb").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toBa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("B").effect("t0_B").enter("Ba");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "B", "Ba").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Ba").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toAend(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("toAend"));
     expected.exit("Ab").effect("t2_A");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A", "Aend").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Aend").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toAb(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     fsm.take(new StringEvent("toAb"));
     expected.exit("Aa").effect("t1_A").enter("Ab");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A", "Ab").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Ab").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
   protected final void toAa(StateMachineExecutor fsm, SequentialContext expected, SequentialContext ctx) {
     expected.enter("A").effect("t0_A").enter("Aa");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("compo", "A", "Aa").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Aa").get());
     assertSequentialContextEquals(expected, ctx);
   }
 
@@ -310,7 +310,7 @@ public abstract class HistoryTest3 extends AbstractHistoryTest {
       expected.exit(e);
     }
     expected.effect("t4").enter("P");
-    assertStateConfiguration(fsm, new ActiveStateTree(this).branch("P").get());
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P").get());
     assertSequentialContextEquals(expected, ctx);
     
     fsm.take(new StringEvent("resume"));
