@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachine;
+import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 

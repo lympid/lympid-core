@@ -17,7 +17,8 @@ package com.lympid.core.behaviorstatemachines.impl;
 
 import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.StateMachine;
-import java.io.Serializable;
+import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
+import com.lympid.core.common.StringTree;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +28,8 @@ import java.util.Map;
  *
  * @author Fabien Renaud
  */
-public final class StateMachineSnapshot<C> implements Serializable {
-  
+final class StateMachineSnapshotImpl<C> implements StateMachineSnapshot<C> {
+
   private final String stateMachine;
   private final StringTree active;
   private final Map<String, StringTree> history = new HashMap<>();
@@ -36,59 +37,66 @@ public final class StateMachineSnapshot<C> implements Serializable {
   private final boolean terminated;
   private final C context;
 
-  StateMachineSnapshot(final StateMachine machine, final StateMachineState state, final C context) {
+  StateMachineSnapshotImpl(final StateMachine machine, final StateMachineState state, final C context) {
     this.stateMachine = machine.getId();
     this.started = state.hasStarted();
     this.terminated = state.isTerminated();
     this.context = context;
-    
+
     this.active = createStateConfiguration(state.activeStates());
     createHistory(state.history());
   }
-  
+
+  @Override
   public String stateMachine() {
     return stateMachine;
   }
 
+  @Override
   public StringTree stateConfiguration() {
     return active;
   }
-  
+
+  @Override
   public Map<String, StringTree> history() {
     return history;
   }
 
+  @Override
   public C context() {
     return context;
   }
 
+  @Override
   public boolean isStarted() {
     return started;
   }
 
+  @Override
   public boolean isTerminated() {
     return terminated;
   }
-  
+
   private StringTree createStateConfiguration(final StateConfiguration<?> config) {
     if (config.state() == null) {
       return null;
     }
-    
-    StringTree node = new StringTree();
-    node.state = config.state().getId();
+
+    StringTree node = new StringTree(config.state().getId());
     if (!config.isEmpty()) {
-      node.children = new ArrayList<>(config.size());
-      config.forEach((s) -> createStateConfiguration(s, node.children));
+      List<StringTree> children = new ArrayList<>(config.size());
+      config.forEach((s) -> createStateConfiguration(s, children));
+      node.setChildren(children);
     }
     return node;
   }
 
-  private void createStateConfiguration(final StateConfiguration<?> config, final List<StringTree> current) {StringTree node = new StringTree();
-    node.state = config.state().getId();
+  private void createStateConfiguration(final StateConfiguration<?> config, final List<StringTree> current) {
+    StringTree node = new StringTree(config.state().getId());
     if (!config.isEmpty()) {
-      node.children = new ArrayList<>(config.size());
-      config.forEach((s) -> createStateConfiguration(s, node.children));
+      List<StringTree> children = new ArrayList<>(config.size());
+      config.forEach((s) -> createStateConfiguration(s, children));
+      node.setChildren(children);
     }
     current.add(node);
   }
@@ -97,21 +105,6 @@ public final class StateMachineSnapshot<C> implements Serializable {
     for (Map.Entry<Region, StateConfiguration<?>> e : histo.entrySet()) {
       history.put(e.getKey().getId(), createStateConfiguration(e.getValue()));
     }
-  }
-
-  public static final class StringTree implements Serializable {
-
-    private String state;
-    private List<StringTree> children;
-
-    public String state() {
-      return state;
-    }
-
-    public List<StringTree> children() {
-      return children;
-    }
-
   }
 
 }

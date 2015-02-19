@@ -18,7 +18,8 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineMeta;
-import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot.StringTree;
+import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
+import com.lympid.core.common.StringTree;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -77,7 +78,7 @@ abstract class ResumableStateMachineState implements StateMachineState {
     activate(state);
 
     if (active.children() != null) {
-      for (StateMachineSnapshot.StringTree child : active.children()) {
+      for (StringTree child : active.children()) {
         reactivate(child);
       }
     }

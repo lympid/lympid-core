@@ -18,7 +18,6 @@ package com.lympid.core.behaviorstatemachines;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorListener;
-import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
 
 /**
  *

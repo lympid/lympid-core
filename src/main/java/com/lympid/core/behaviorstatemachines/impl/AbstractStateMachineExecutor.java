@@ -36,6 +36,7 @@ import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
+import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.Transition;
 import static com.lympid.core.behaviorstatemachines.TransitionKind.EXTERNAL;
 import static com.lympid.core.behaviorstatemachines.TransitionKind.INTERNAL;
@@ -135,13 +136,13 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
 
   @Override
   public StateMachineSnapshot snapshot() {
-    return new StateMachineSnapshot(machine, machineState, context);
+    return new StateMachineSnapshotImpl(machine, machineState, context);
   }
 
   @Override
   public StateMachineSnapshot pause() {
     machineState.pause();
-    StateMachineSnapshot snapshot = new StateMachineSnapshot(machine, machineState, context);
+    StateMachineSnapshotImpl snapshot = new StateMachineSnapshotImpl(machine, machineState, context);
     machineState.start();
     machineState.terminate();
     return snapshot;
@@ -155,7 +156,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     this.machineState = createMachineState(machine);
     this.machineState.resume(snapshot);
     doAllActivities();
-    scheduleAllTimeEvents();
+    postFire();
   }
 
   @Override

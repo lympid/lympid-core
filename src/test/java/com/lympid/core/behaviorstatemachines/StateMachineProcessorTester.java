@@ -15,8 +15,7 @@
  */
 package com.lympid.core.behaviorstatemachines;
 
-import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot;
-import com.lympid.core.behaviorstatemachines.impl.StateMachineSnapshot.StringTree;
+import com.lympid.core.common.StringTree;
 import com.lympid.core.common.TreeNode;
 import java.util.Comparator;
 import static org.junit.Assert.assertEquals;

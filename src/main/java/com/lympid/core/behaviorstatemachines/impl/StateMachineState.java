@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.behaviorstatemachines.PseudoState;
 import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.State;
+import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.Transition;
 import java.util.Map;
 import java.util.Set;

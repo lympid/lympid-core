@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
+import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
