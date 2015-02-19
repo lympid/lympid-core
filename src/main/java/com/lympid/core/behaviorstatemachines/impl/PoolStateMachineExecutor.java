@@ -90,6 +90,7 @@ public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
     try {
       return asyncPause().get();
     } catch (InterruptedException | ExecutionException ex) {
+      ex.printStackTrace(); // FIXME
     }
     return null;
   }
@@ -107,6 +108,7 @@ public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
     try {
       return asyncSnapshot().get();
     } catch (InterruptedException | ExecutionException ex) {
+      ex.printStackTrace(); // FIXME
     }
     return null;
   }

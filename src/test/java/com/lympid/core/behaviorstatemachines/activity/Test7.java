@@ -100,7 +100,7 @@ public class Test7 extends AbstractStateMachineTest {
   }
 
   private static final class Context {
-    int c;
+    volatile int c;
     CountDownLatch latchStarted = new CountDownLatch(1);
     CountDownLatch latchInterrupted = new CountDownLatch(1);
   }
