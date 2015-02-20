@@ -26,18 +26,53 @@ package com.lympid.core.behaviorstatemachines;
  */
 public abstract class SimpleVisitor implements Visitor {
 
+  /**
+   * Visits a connection point reference.
+   *
+   * @param visitable The {@code ConnectionPointReference} to visit.
+   */
   public abstract void visit(ConnectionPointReference visitable);
 
+  /**
+   * Visits a state.
+   *
+   * @param visitable The {@code State} to visit.
+   */
   public abstract void visit(State visitable);
 
+  /**
+   * Visits a pseudo state.
+   *
+   * @param visitable The {@code PseudoState} to visit.
+   */
   public abstract void visit(PseudoState visitable);
 
+  /**
+   * Visits a final state.
+   *
+   * @param visitable The {@code FinalState} to visit.
+   */
   public abstract void visit(FinalState visitable);
 
+  /**
+   * Visits a region.
+   *
+   * @param visitable The {@code Region} to visit.
+   */
   public abstract void visit(Region visitable);
 
+  /**
+   * Visits a state machine.
+   *
+   * @param visitable The {@code StateMachine} to visit.
+   */
   public abstract void visit(StateMachine visitable);
 
+  /**
+   * Visits a transition,
+   *
+   * @param visitable The {@code Transition} to visit.
+   */
   public abstract void visit(Transition visitable);
 
   @Override

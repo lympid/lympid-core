@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
+import com.lympid.core.common.Copyable;
 import com.lympid.core.common.StringTree;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ final class StateMachineSnapshotImpl<C> implements StateMachineSnapshot<C> {
     this.stateMachine = machine.getId();
     this.started = state.hasStarted();
     this.terminated = state.isTerminated();
-    this.context = context;
+    this.context = context instanceof Copyable ? (C) ((Copyable) context).copy() : context;
 
     this.active = createStateConfiguration(state.activeStates());
     createHistory(state.history());

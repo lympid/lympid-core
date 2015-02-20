@@ -167,14 +167,19 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   
   private static final class Context extends SequentialContext {
     
-    final CountDownLatch latch1 = new CountDownLatch(1);
-    final CountDownLatch latch2 = new CountDownLatch(1);
+    final CountDownLatch latch1;
+    final CountDownLatch latch2;
     
     public Context() {
+      this.latch1 = new CountDownLatch(1);
+      this.latch2 = new CountDownLatch(1);
+    
     }
     
     public Context(final Context inst) {
       super(inst);
+      this.latch1 = inst.latch1;
+      this.latch2 = inst.latch2;
     }
     
     @Override

@@ -57,13 +57,13 @@ public interface Region extends UmlElement, Visitable {
    */
   Collection<? extends Vertex> subVertex();
 
-  /**
+  /*
    * The region of which this region is an extension.
    *
    * @return The region of which this region is an extension.
    */
 //  Region extendedRegion();
-  /**
+  /*
    * Returns the StateMachine in which this Region is defined.
    *
    * @return The StateMachine in which this Region is defined.

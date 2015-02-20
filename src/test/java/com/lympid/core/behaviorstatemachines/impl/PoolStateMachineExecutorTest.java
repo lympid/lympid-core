@@ -164,10 +164,10 @@ public class PoolStateMachineExecutorTest {
     
     public Context(final Context inst) {
       super(inst);
-      this.latchA = new CountDownLatch((int) inst.latchA.getCount());
-      this.latchB = new CountDownLatch((int) inst.latchB.getCount());
-      this.latchC = new CountDownLatch((int) inst.latchC.getCount());
-      this.latchEnd = new CountDownLatch((int) inst.latchEnd.getCount());
+      this.latchA = inst.latchA;
+      this.latchB = inst.latchB;
+      this.latchC = inst.latchC;
+      this.latchEnd = inst.latchEnd;
     }
     
     @Override
