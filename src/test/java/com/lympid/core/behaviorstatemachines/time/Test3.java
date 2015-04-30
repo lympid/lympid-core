@@ -87,8 +87,6 @@ public class Test3 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .entry((c) -> { c.enterA = System.currentTimeMillis(); })
-          .exit((c) -> { c.exitA = System.currentTimeMillis(); })
           .transition("t1")
             .after(TIME_SHORT, TimeUnit.MILLISECONDS)
             .guard((e, c) -> { return c.c == 1; })
@@ -125,8 +123,6 @@ public class Test3 extends AbstractStateMachineTest {
   private static final class Context extends SequentialContext {
     CountDownLatch latch = new CountDownLatch(1);
     int c;
-    long enterA;
-    long exitA;
    
     Context(final int c) {
       this.c = c;

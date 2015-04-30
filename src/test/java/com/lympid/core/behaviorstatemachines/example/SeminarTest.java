@@ -60,7 +60,7 @@ public class SeminarTest extends AbstractStateMachineTest {
   }
 
   private void testEnrollmentState(Vertex vertex) {
-    State state = StateMachineTester.assertComposite(vertex);
+    StateMachineTester.assertComposite(vertex);
   }
 
   private void testBeingTaughState(Vertex vertex) {
@@ -73,7 +73,7 @@ public class SeminarTest extends AbstractStateMachineTest {
   }
 
   private void testFinalExams(Vertex vertex) {
-    State state = StateMachineTester.assertSimple(vertex);
+    StateMachineTester.assertSimple(vertex);
   }
 
   @Override

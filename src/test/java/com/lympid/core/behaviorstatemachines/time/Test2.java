@@ -38,7 +38,7 @@ public class Test2 extends AbstractStateMachineTest {
 
   @Test
   public void run() throws InterruptedException {
-        SequentialContext expected = new SequentialContext()
+    SequentialContext expected = new SequentialContext()
       .effect("t0").enter("A")
       .exit("A").effect("t2").enter("B")
       .exit("B").effect("t3");
@@ -74,8 +74,6 @@ public class Test2 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .entry((c) -> { c.enterA = System.currentTimeMillis(); })
-          .exit((c) -> { c.exitA = System.currentTimeMillis(); })
           .transition("t1")
             .after(DELAY, TimeUnit.MILLISECONDS)
             .effect((e, c) -> { c.fired = true; c.latch.countDown(); })
@@ -106,8 +104,6 @@ public class Test2 extends AbstractStateMachineTest {
   private static final class Context extends SequentialContext {
     CountDownLatch latch = new CountDownLatch(1);
     volatile boolean fired;
-    long enterA;
-    long exitA;
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test2.class.getSimpleName() + "\"\n" +

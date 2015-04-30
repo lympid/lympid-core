@@ -44,9 +44,9 @@ public class SimpleStateConfigurationTest {
     config = new SimpleStateConfiguration(state1);
   }
 
-  @Test
+  @Test(expected = IllegalStateException.class)
   public void testParent() {
-    assertNull(config.parent());
+    config.parent();
   }
 
   @Test

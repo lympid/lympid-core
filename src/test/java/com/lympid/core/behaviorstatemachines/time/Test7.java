@@ -99,31 +99,31 @@ public class Test7 extends AbstractStateMachineTest {
     
     @Override
     public String toString() {
-      return null;
+      return "";
     }
   }
   
-  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"null\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"null\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
-"tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"null\"\n" +
-"tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"null\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"50 ms\" context=\"null\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"null\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"200 ms\" context=\"null\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
-"tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"null\"\n" +
-"tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"null\"\n" +
-"tag=\"MACHINE_TERMINATED\" context=\"null\"\n";
+  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"50 ms\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" event=\"200 ms\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"TRANSITION_ENDED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"MACHINE_TERMINATED\" context=\"\"\n";
   private static final String ACTIVITY_LOG = "";
   
   private static final String STDOUT = "StateMachine: \"" + Test7.class.getSimpleName() + "\"\n" +

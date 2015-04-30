@@ -63,8 +63,6 @@ public class Test1 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .entry((c) -> { c.enterA = System.currentTimeMillis(); })
-          .exit((c) -> { c.exitA = System.currentTimeMillis(); })
           .transition("t1")
             .after(DELAY, TimeUnit.MILLISECONDS)
             .effect((e, c) -> c.latch.countDown())
@@ -92,8 +90,6 @@ public class Test1 extends AbstractStateMachineTest {
   private static final class Context {
 
     CountDownLatch latch = new CountDownLatch(1);
-    long enterA;
-    long exitA;
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +

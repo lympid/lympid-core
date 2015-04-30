@@ -39,7 +39,7 @@ public class SimpleStateConfiguration implements MutableStateConfiguration<Simpl
 
   @Override
   public SimpleStateConfiguration parent() {
-    return null;
+    throw new IllegalStateException();
   }
 
   @Override

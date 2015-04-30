@@ -648,6 +648,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
           }
         }
         machineState.clearJoin(pseudoState);
+        fire(CompletionEvent.INSTANCE, paths.get(0));
+        break;
       case INITIAL:
       case JUNCTION:
       case ENTRY_POINT:
@@ -909,6 +911,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
 
     @Override
     public void run() {
+      assert state.doActivity() != null;
+      
       try {
 
         if (listeners.hasStateActivityBeforeExecution()) {
