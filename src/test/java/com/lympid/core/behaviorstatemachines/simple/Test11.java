@@ -67,9 +67,9 @@ public class Test11 extends AbstractStateMachineTest {
         .state("A")
           .activity((c) -> {
             c.hash = c.hashCode();
-            c.latch.countDown();
           })
           .transition()
+            .effect((e, c) -> c.latch.countDown())
             .target(end);
     
     return builder;

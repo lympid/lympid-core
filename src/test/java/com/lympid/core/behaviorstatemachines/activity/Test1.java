@@ -21,7 +21,6 @@ import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
 import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -64,6 +63,7 @@ public class Test1 extends AbstractStateMachineTest {
         .state("A")
           .activity(Activity.class)
           .transition("t1")
+            .effect((e, c) -> c.latch.countDown())
             .target("end");
 
     builder
@@ -88,7 +88,6 @@ public class Test1 extends AbstractStateMachineTest {
     @Override
     public void accept(Context ctx) {
       ctx.c = EXPECTED_C;
-      ctx.latch.countDown();
     }
     
   }
