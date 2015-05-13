@@ -88,9 +88,9 @@ public class Test16 extends AbstractStateMachineTest {
           .exit((c) -> { c.exit("bat"); })
           .activity((c) -> { 
             c.activity("something");
-            c.latch.countDown();
           })
           .transition()
+            .effect((e, c) -> c.latch.countDown())
             .target(end);
     
     return builder;
@@ -173,6 +173,8 @@ public class Test16 extends AbstractStateMachineTest {
 "tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
 "tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
 "tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
 "tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
 "tag=\"MACHINE_TERMINATED\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n";
   private static final String ACTIVITY_LOG = "tag=\"STATE_ACTIVITY_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
