@@ -959,6 +959,10 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
       }
     }
 
+    @Override
+    public String toString() {
+      return getClass().getSimpleName() + "{state=" + state + "}";
+    }
   }
 
   private final class RunnableEvent implements Runnable {
@@ -974,6 +978,11 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     @Override
     public void run() {
       take(event, state);
+    }
+
+    @Override
+    public String toString() {
+      return getClass().getSimpleName() + "{state=" + state + ",event=" + event + "}";
     }
 
   }

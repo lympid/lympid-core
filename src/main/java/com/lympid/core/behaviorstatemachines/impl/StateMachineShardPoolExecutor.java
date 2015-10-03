@@ -19,12 +19,15 @@ import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,20 +36,140 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Fabien Renaud
  */
-public class StateMachineShardPoolExecutor {
+public final class StateMachineShardPoolExecutor {
 
-  private final Worker[] pool;
+  private final LinkedBlockingDeque<Runnable>[] queues;
+  private final ThreadPoolExecutor[] pools;
 
   public StateMachineShardPoolExecutor(final int poolSize) {
     this(poolSize, Executors.defaultThreadFactory());
   }
 
   public StateMachineShardPoolExecutor(final int poolSize, final ThreadFactory threadFactory) {
-    this.pool = new Worker[poolSize];
+    this.queues = new LinkedBlockingDeque[poolSize];
+    this.pools = new ThreadPoolExecutor[poolSize];
     for (int i = 0; i < poolSize; i++) {
-      Worker worker = new Worker();
-      pool[i] = worker;
-      worker.start();
+      queues[i] = new LinkedBlockingDeque<>();
+      pools[i] = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, queues[i], threadFactory);
+      pools[i].prestartAllCoreThreads();
+    }
+  }
+
+  /**
+   * Shuts down all the thread pools this {@link StateMachineShardPoolExecutor}
+   * instance holds.
+   *
+   * @see ThreadPoolExecutor#shutdown
+   */
+  public void shutdown() {
+    for (ThreadPoolExecutor pool : pools) {
+      pool.shutdown();
+    }
+  }
+
+  /**
+   * Attempts to stop all actively executing tasks, halts the processing of
+   * waiting tasks, and returns a list of the tasks that were awaiting execution
+   * for all the thread pools this instance holds.
+   *
+   * @return list of tasks that never commenced execution
+   * @see ThreadPoolExecutor#shutdownNow
+   */
+  public List<Runnable> shutdownNow() {
+    final List<Runnable> list = new ArrayList<>();
+    for (ThreadPoolExecutor pool : pools) {
+      list.addAll(pool.shutdownNow());
+    }
+    return list;
+  }
+
+  /**
+   * Returns true if all thread pools have been shut down.
+   *
+   * @return true if all thread pools have been shut down
+   * @see ThreadPoolExecutor#isShutdown
+   */
+  public boolean isShutdown() {
+    for (ThreadPoolExecutor pool : pools) {
+      if (!pool.isShutdown()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Returns true if all thread pools have completed following shut down. Note
+   * that {@link #isTerminated} is never true unless either {@link #shutdown} or
+   * {@link #shutdownNow} was called first.
+   *
+   * @return true if all thread pools have terminated
+   * @see ThreadPoolExecutor#isTerminated
+   */
+  public boolean isTerminated() {
+    for (ThreadPoolExecutor pool : pools) {
+      if (!pool.isTerminated()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Blocks until all tasks of all the thread pools hold by this instance have
+   * completed execution after a shutdown request, or the timeout occurs, or the
+   * current thread is interrupted, whichever happens first.
+   *
+   * @param timeout the maximum time to wait
+   * @param unit the time unit of the timeout argument
+   * @return true if all the threads pools terminated and false if the timeout
+   * elapsed before termination for any of them
+   * @throws InterruptedException if interrupted while waiting
+   * @see ThreadPoolExecutor#awaitTermination
+   */
+  public boolean awaitTermination(final long timeout, final TimeUnit unit) throws InterruptedException {
+    int failed = 0;
+    for (ThreadPoolExecutor pool : pools) {
+      if (!pool.awaitTermination(timeout, unit)) {
+        failed++;
+      }
+    }
+    return failed == 0;
+  }
+
+  /**
+   * Returns true if this executor is in the process of terminating after
+   * {@link StateMachineShardPoolExecutor#shutdown} or
+   * {@link StateMachineShardPoolExecutor#shutdownNow} but has not completely
+   * terminated.
+   *
+   * @return true if at least one thread pool is terminating and all the other
+   * thread pools are either terminating or terminated.
+   * @see ThreadPoolExecutor#isTerminating
+   */
+  public boolean isTerminating() {
+    int terminated = 0;
+    int terminating = 0;
+    for (ThreadPoolExecutor pool : pools) {
+      if (pool.isTerminating()) {
+        terminating++;
+      } else if (pool.isTerminated()) {
+        terminated++;
+      }
+    }
+
+    return terminating > 0 && pools.length == terminating + terminated;
+  }
+
+  /**
+   * Tries to remove from the work queues all {@link Event} tasks that have been
+   * cancelled.
+   *
+   * @see ThreadPoolExecutor#purge
+   */
+  public void purge() {
+    for (ThreadPoolExecutor pool : pools) {
+      pool.purge();
     }
   }
 
@@ -67,8 +190,8 @@ public class StateMachineShardPoolExecutor {
   }
 
   private LinkedBlockingDeque<Runnable> queue(final StateMachineExecutor executor) {
-    int shard = executor.getId() % pool.length;
-    return pool[shard].queue;
+    int shard = executor.getId() % queues.length;
+    return queues[shard];
   }
 
   void resume(final PoolStateMachineExecutor executor, final StateMachineSnapshot snapshot) {
@@ -85,27 +208,6 @@ public class StateMachineShardPoolExecutor {
     StateMachineSnapshotRunnable runnable = new StateMachineSnapshotRunnable(executor);
     queue(executor).addFirst(runnable);
     return runnable;
-  }
-
-  private static final class Worker extends Thread {
-
-    private final LinkedBlockingDeque<Runnable> queue = new LinkedBlockingDeque<>();
-
-    private Worker() {
-    }
-
-    @Override
-    public void run() {
-      Thread t = Thread.currentThread();
-      while (!t.isInterrupted()) {
-        try {
-          queue.takeFirst().run();
-        } catch (InterruptedException ex) {
-          ex.printStackTrace(); // FIXME
-        }
-      }
-    }
-
   }
 
   private static final class StateMachineStart implements Runnable {
@@ -190,13 +292,13 @@ public class StateMachineShardPoolExecutor {
     }
 
   }
-  
+
   private static abstract class StateMachineSnapshotFuture implements Future<StateMachineSnapshot>, Runnable {
 
     private final CountDownLatch latch = new CountDownLatch(1);
     private final AtomicInteger status = new AtomicInteger();
     private StateMachineSnapshot snapshot;
-    
+
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
       return status.compareAndSet(0, -1);
@@ -230,14 +332,14 @@ public class StateMachineShardPoolExecutor {
         latch.countDown();
         return;
       }
-      
+
       snapshot = snapshot();
       latch.countDown();
       status.set(1);
     }
-    
+
     abstract StateMachineSnapshot snapshot();
-    
+
   }
 
   private static final class StateMachinePauseRunnable extends StateMachineSnapshotFuture {
