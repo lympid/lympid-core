@@ -15,12 +15,15 @@
  */
 package com.lympid.core.behaviorstatemachines.listener;
 
+import com.lympid.core.behaviorstatemachines.State;
+import com.lympid.core.behaviorstatemachines.StateMachine;
+import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
+
 /**
  *
  * @author Fabien Renaud
  */
-public interface AllStateListener<C> extends
-        StateActivityBeforeExecutionListener<C>, StateActivityAfterExecutionListener<C>, StateActivityExceptionListener<C>,
-        StateEnterListener<C>, StateEnterBeforeExecutionListener<C>, StateEnterAfterExecutionListener<C>, StateEnterExceptionListener<C>,
-        StateExitListener<C>, StateExitBeforeExecutionListener<C>, StateExitAfterExecutionListener<C>, StateExitExceptionListener<C> {
+public interface StateEnterListener<C> extends MachineListener {
+
+  void onStateEnter(StateMachineExecutor executor, StateMachine machine, C context, State state);
 }

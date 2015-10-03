@@ -23,7 +23,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
+import com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerListener;
 import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class Test16 extends AbstractStateMachineTest {
   
   @Test
   public void run() throws InterruptedException {
-    final StringLoggerListener log = new StringLoggerListener();
+    final StringBufferLoggerListener log = new StringBufferLoggerListener();
     
     SequentialContext expected = new SequentialContext();
     expected
@@ -101,7 +101,7 @@ public class Test16 extends AbstractStateMachineTest {
     return false;
   }
   
-  private void addLogger(StateMachineExecutor fsm, StringLoggerListener log) {    
+  private void addLogger(StateMachineExecutor fsm, StringBufferLoggerListener log) {    
     fsm.listeners().addEventAcceptedListener(log);
     fsm.listeners().addEventDeferredListener(log);
     fsm.listeners().addEventDeniedListener(log);
@@ -153,6 +153,11 @@ public class Test16 extends AbstractStateMachineTest {
     
     fsm.listeners().add(log);
   }
+  
+  @Override
+  protected String executorName() {
+    return "Simple." + getClass().getSimpleName();
+  }
 
   @Override
   public String stdOut() {
@@ -163,22 +168,25 @@ public class Test16 extends AbstractStateMachineTest {
     CountDownLatch latch = new CountDownLatch(1);
   }
   
-  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"\"\n" +
-"tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"\"\n" +
-"tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
-"tag=\"MACHINE_TERMINATED\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n";
-  private static final String ACTIVITY_LOG = "tag=\"STATE_ACTIVITY_BEFORE_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
-"tag=\"STATE_ACTIVITY_AFTER_EXECUTION\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n";
+  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" executor=\"Simple.Test16\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" executor=\"Simple.Test16\" event=\"CompletionEvent\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" executor=\"Simple.Test16\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER\" executor=\"Simple.Test16\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_BEFORE_EXECUTION\" executor=\"Simple.Test16\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_AFTER_EXECUTION\" executor=\"Simple.Test16\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"TRANSITION_ENDED\" executor=\"Simple.Test16\" event=\"CompletionEvent\" transition=\"#5\" source=\"#4\" target=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"EVENT_ACCEPTED\" executor=\"Simple.Test16\" event=\"CompletionEvent\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"TRANSITION_STARTED\" executor=\"Simple.Test16\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"STATE_EXIT\" executor=\"Simple.Test16\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"STATE_EXIT_BEFORE_EXECUTION\" executor=\"Simple.Test16\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"STATE_EXIT_AFTER_EXECUTION\" executor=\"Simple.Test16\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" executor=\"Simple.Test16\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" executor=\"Simple.Test16\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"STATE_ENTER\" executor=\"Simple.Test16\" state=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"TRANSITION_ENDED\" executor=\"Simple.Test16\" event=\"CompletionEvent\" transition=\"#7\" source=\"A\" target=\"end\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n" +
+"tag=\"MACHINE_TERMINATED\" executor=\"Simple.Test16\" context=\"enter:foo enter:iak enter:dir enter:bar exit:abs exit:bat \"\n";
+  private static final String ACTIVITY_LOG = "tag=\"STATE_ACTIVITY_BEFORE_EXECUTION\" executor=\"Simple.Test16\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n" +
+"tag=\"STATE_ACTIVITY_AFTER_EXECUTION\" executor=\"Simple.Test16\" state=\"A\" context=\"enter:foo enter:iak enter:dir enter:bar \"\n";
   
   private static final String STDOUT = "StateMachine: \"" + Test16.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +

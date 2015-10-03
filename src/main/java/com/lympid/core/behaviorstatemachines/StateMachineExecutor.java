@@ -40,6 +40,13 @@ public interface StateMachineExecutor<C> {
    * @return The unique id of the executor.
    */
   int getId();
+  
+  /**
+   * Gets the name of this executor.
+   * 
+   * @return The name of the executor. 
+   */
+  String getName();
 
   /**
    * Sets listeners for the state machine executor.

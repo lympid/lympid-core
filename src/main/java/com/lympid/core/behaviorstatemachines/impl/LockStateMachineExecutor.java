@@ -30,8 +30,16 @@ public class LockStateMachineExecutor extends AbstractStateMachineExecutor {
 
   private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
+  public LockStateMachineExecutor(final int id, final String name) {
+    super(id, name);
+  }
+  
   public LockStateMachineExecutor(final int id) {
     super(id);
+  }
+  
+  public LockStateMachineExecutor(final String name) {
+    super(name);
   }
 
   public LockStateMachineExecutor() {

@@ -26,8 +26,16 @@ import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
  */
 public class SyncStateMachineExecutor extends AbstractStateMachineExecutor {
 
+  public SyncStateMachineExecutor(final int id, final String name) {
+    super(id, name);
+  }
+  
   public SyncStateMachineExecutor(final int id) {
     super(id);
+  }
+  
+  public SyncStateMachineExecutor(final String name) {
+    super(name);
   }
 
   public SyncStateMachineExecutor() {

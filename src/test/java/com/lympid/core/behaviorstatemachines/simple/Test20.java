@@ -24,7 +24,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.SimpleStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
+import com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerListener;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class Test20 extends AbstractStateMachineTest {
   
   @Test
   public void run_log() throws InterruptedException {
-    final StringLoggerListener log = new StringLoggerListener();
+    final StringBufferLoggerListener log = new StringBufferLoggerListener();
    
     StateMachineExecutor fsm = fsm();
     fsm.listeners().add(log);
@@ -115,31 +115,39 @@ public class Test20 extends AbstractStateMachineTest {
   protected boolean sequentialContextInjection() {
     return false;
   }
+  
+  @Override
+  protected String executorName() {
+    return "Simple." + getClass().getSimpleName();
+  }
 
   @Override
   public String stdOut() {
     return STDOUT;
   }
   
-  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"null\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"null\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#4\" target=\"#6\" context=\"null\"\n" +
-"tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"#6\" context=\"null\"\n" +
-"tag=\"STATE_ENTER_EXCEPTION\" state=\"#6\" context=\"null\" java.lang.RuntimeException: foo\n" +
-"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#4\" target=\"#6\" context=\"null\"\n" +
-"tag=\"TRANSITION_GUARD_BEFORE_EXECUTION\" event=\"go\" transition=\"t1\" source=\"#6\" target=\"end\" context=\"null\"\n" +
-"tag=\"TRANSITION_GUARD_EXCEPTION\" event=\"go\" transition=\"t1\" source=\"#6\" target=\"end\" context=\"null\" java.lang.RuntimeException: guard\n" +
-"tag=\"EVENT_DENIED\" event=\"go\" context=\"null\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"go2\" context=\"null\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\"\n" +
-"tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"#6\" context=\"null\"\n" +
-"tag=\"STATE_EXIT_EXCEPTION\" state=\"#6\" context=\"null\" java.lang.RuntimeException: bar\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\"\n" +
-"tag=\"TRANSITION_EFFECT_EXCEPTION\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\" java.lang.RuntimeException: effect\n" +
-"tag=\"TRANSITION_ENDED\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\"\n" +
-"tag=\"MACHINE_TERMINATED\" context=\"null\"\n";
-  private static final String  ACTIVITY_LOG = "tag=\"STATE_ACTIVITY_BEFORE_EXECUTION\" state=\"#6\" context=\"null\"\n" +
-"tag=\"STATE_ACTIVITY_EXCEPTION\" state=\"#6\" context=\"null\" java.lang.RuntimeException: something\n";
+  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" executor=\"Simple.Test20\" context=\"null\"\n" +
+"tag=\"EVENT_ACCEPTED\" executor=\"Simple.Test20\" event=\"CompletionEvent\" context=\"null\"\n" +
+"tag=\"TRANSITION_STARTED\" executor=\"Simple.Test20\" event=\"CompletionEvent\" transition=\"t0\" source=\"#4\" target=\"#6\" context=\"null\"\n" +
+"tag=\"STATE_ENTER\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\"\n" +
+"tag=\"STATE_ENTER_BEFORE_EXECUTION\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\"\n" +
+"tag=\"STATE_ENTER_EXCEPTION\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\" java.lang.RuntimeException: foo\n" +
+"tag=\"TRANSITION_ENDED\" executor=\"Simple.Test20\" event=\"CompletionEvent\" transition=\"t0\" source=\"#4\" target=\"#6\" context=\"null\"\n" +
+"tag=\"TRANSITION_GUARD_BEFORE_EXECUTION\" executor=\"Simple.Test20\" event=\"go\" transition=\"t1\" source=\"#6\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_GUARD_EXCEPTION\" executor=\"Simple.Test20\" event=\"go\" transition=\"t1\" source=\"#6\" target=\"end\" context=\"null\" java.lang.RuntimeException: guard\n" +
+"tag=\"EVENT_DENIED\" executor=\"Simple.Test20\" event=\"go\" context=\"null\"\n" +
+"tag=\"EVENT_ACCEPTED\" executor=\"Simple.Test20\" event=\"go2\" context=\"null\"\n" +
+"tag=\"TRANSITION_STARTED\" executor=\"Simple.Test20\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\"\n" +
+"tag=\"STATE_EXIT\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\"\n" +
+"tag=\"STATE_EXIT_BEFORE_EXECUTION\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\"\n" +
+"tag=\"STATE_EXIT_EXCEPTION\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\" java.lang.RuntimeException: bar\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" executor=\"Simple.Test20\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_EFFECT_EXCEPTION\" executor=\"Simple.Test20\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\" java.lang.RuntimeException: effect\n" +
+"tag=\"STATE_ENTER\" executor=\"Simple.Test20\" state=\"end\" context=\"null\"\n" +
+"tag=\"TRANSITION_ENDED\" executor=\"Simple.Test20\" event=\"go2\" transition=\"t2\" source=\"#6\" target=\"end\" context=\"null\"\n" +
+"tag=\"MACHINE_TERMINATED\" executor=\"Simple.Test20\" context=\"null\"\n";
+  private static final String  ACTIVITY_LOG = "tag=\"STATE_ACTIVITY_BEFORE_EXECUTION\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\"\n" +
+"tag=\"STATE_ACTIVITY_EXCEPTION\" executor=\"Simple.Test20\" state=\"#6\" context=\"null\" java.lang.RuntimeException: something\n";
   
   private static final String STDOUT = "StateMachine: \"" + Test20.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +

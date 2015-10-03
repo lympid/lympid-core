@@ -63,14 +63,24 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
 
   private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
   private final int id;
+  private final String name;
   private StateMachine machine;
   private StateMachineState machineState;
   private Object context;
   private ExecutorConfiguration configuration = ExecutorConfiguration.DEFAULT;
   private ExecutorListener listeners = ExecutorListener.DEFAULT;
 
-  public AbstractStateMachineExecutor(final int id) {
+  public AbstractStateMachineExecutor(final int id, final String name) {
     this.id = id;
+    this.name = name;
+  }
+
+  public AbstractStateMachineExecutor(final int id) {
+    this(id, "StateMachineExecutor-" + id);
+  }
+
+  public AbstractStateMachineExecutor(final String name) {
+    this(ID_GENERATOR.incrementAndGet(), name);
   }
 
   public AbstractStateMachineExecutor() {
@@ -80,6 +90,11 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   @Override
   public int getId() {
     return id;
+  }
+
+  @Override
+  public String getName() {
+    return name;
   }
 
   @Override
@@ -151,8 +166,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   @Override
   public void resume(final StateMachineSnapshot snapshot) {
     this.context = snapshot.context() instanceof Copyable
-            ? ((Copyable) snapshot.context()).copy()
-            : snapshot.context();
+      ? ((Copyable) snapshot.context()).copy()
+      : snapshot.context();
     this.machineState = createMachineState(machine);
     this.machineState.resume(snapshot);
     doAllActivities();
@@ -255,7 +270,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
       }
     }
   }
-  
+
   private void scheduleAllTimeEvents() {
     if (!machineState.isTerminated() && machine.metadata().hasTimeEvents()) {
       scheduleTimeEvents(machineState.activeStates());
@@ -430,6 +445,10 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   private void leaveState(final State state) {
     machineState.deactivate(state);
 
+    if (listeners.hasStateExit()) {
+      listeners.onStateExit(this, machine, context, state);
+    }
+
     if (!state.exit().isEmpty()) {
       try {
 
@@ -493,6 +512,10 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   private void entry(final State state) {
     machineState.activate(state);
 
+    if (listeners.hasStateEnter()) {
+      listeners.onStateEnter(this, machine, context, state);
+    }
+
     if (!state.entry().isEmpty()) {
       try {
 
@@ -532,13 +555,13 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
       }
     }
   }
-  
+
   private void doAllActivities() {
     if (!machineState.isTerminated() && machine.metadata().hasActivities()) {
       doActivities(machineState.activeStates());
     }
   }
-  
+
   private void doActivities(final StateConfiguration<?> config) {
     assert config.state() != null;
     if (config.state().doActivity() != null) {
@@ -546,7 +569,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     }
     config.forEach(this::doActivities);
   }
- 
+
   private void doActivity(final State state) {
     Future<?> f = configuration.executor().submit(new RunnableActivity(this, state));
     machineState.setActivity(state, f);
@@ -912,7 +935,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     @Override
     public void run() {
       assert state.doActivity() != null;
-      
+
       try {
 
         if (listeners.hasStateActivityBeforeExecution()) {

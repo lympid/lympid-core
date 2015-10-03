@@ -26,9 +26,11 @@ import com.lympid.core.behaviorstatemachines.listener.StateActivityExceptionList
 import com.lympid.core.behaviorstatemachines.listener.StateEnterAfterExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateEnterBeforeExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateEnterExceptionListener;
+import com.lympid.core.behaviorstatemachines.listener.StateEnterListener;
 import com.lympid.core.behaviorstatemachines.listener.StateExitAfterExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateExitBeforeExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateExitExceptionListener;
+import com.lympid.core.behaviorstatemachines.listener.StateExitListener;
 import com.lympid.core.behaviorstatemachines.listener.TransitionEffectAfterExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.TransitionEffectBeforeExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.TransitionEffectExceptionListener;
@@ -69,9 +71,11 @@ public enum ExecutorEvent {
   /*
    *
    */
+  STATE_ENTER(StateEnterListener.class),
   STATE_ENTER_BEFORE_EXECUTION(StateEnterBeforeExecutionListener.class),
   STATE_ENTER_AFTER_EXECUTION(StateEnterAfterExecutionListener.class),
   STATE_ENTER_EXCEPTION(StateEnterExceptionListener.class),
+  STATE_EXIT(StateExitListener.class),
   STATE_EXIT_BEFORE_EXECUTION(StateExitBeforeExecutionListener.class),
   STATE_EXIT_AFTER_EXECUTION(StateExitAfterExecutionListener.class),
   STATE_EXIT_EXCEPTION(StateExitExceptionListener.class),

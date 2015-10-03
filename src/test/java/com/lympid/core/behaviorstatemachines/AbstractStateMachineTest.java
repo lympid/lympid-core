@@ -77,7 +77,9 @@ public abstract class AbstractStateMachineTest implements StateMachineTest {
   public StateMachineExecutor fsm(Object context) {
     StateMachine machine = topLevelStateMachine();
 
-    StateMachineExecutor fsm = new SyncStateMachineExecutor();
+    StateMachineExecutor fsm = executorName() == null
+      ? new SyncStateMachineExecutor()
+      : new SyncStateMachineExecutor(executorName());
     fsm.setStateMachine(machine);
     fsm.setContext(context);
     if (machine.metadata().hasActivities() || machine.metadata().hasTimeEvents()) {
@@ -88,6 +90,10 @@ public abstract class AbstractStateMachineTest implements StateMachineTest {
 
   protected final String name() {
     return getClass().getSimpleName();
+  }
+  
+  protected String executorName() {
+    return null;
   }
 
   protected boolean sequentialContextInjection() {

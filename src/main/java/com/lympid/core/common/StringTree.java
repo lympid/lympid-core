@@ -42,4 +42,17 @@ public class StringTree implements Serializable {
   public void setChildren(final List<StringTree> children) {
     this.children = children;
   }
+  
+  @Override
+  public String toString() {
+      if (value == null) {
+          return "";
+      }
+      
+      if (children == null) {
+          return value;
+      }
+      
+      return value + " " + children;
+  }
 }

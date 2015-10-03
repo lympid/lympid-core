@@ -33,9 +33,11 @@ import com.lympid.core.behaviorstatemachines.listener.StateActivityExceptionList
 import com.lympid.core.behaviorstatemachines.listener.StateEnterAfterExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateEnterBeforeExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateEnterExceptionListener;
+import com.lympid.core.behaviorstatemachines.listener.StateEnterListener;
 import com.lympid.core.behaviorstatemachines.listener.StateExitAfterExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateExitBeforeExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.StateExitExceptionListener;
+import com.lympid.core.behaviorstatemachines.listener.StateExitListener;
 import com.lympid.core.behaviorstatemachines.listener.TransitionEffectAfterExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.TransitionEffectBeforeExecutionListener;
 import com.lympid.core.behaviorstatemachines.listener.TransitionEffectExceptionListener;
@@ -219,6 +221,18 @@ public class ExecutorListener<C> implements AllListener<C> {
   public boolean removeTransitionEffectExceptionListener(final TransitionEffectExceptionListener listener) {
     return remove(ExecutorEvent.TRANSITION_EFFECT_EXCEPTION, listener);
   }
+  
+  public boolean hasStateEnter() {
+      return has(ExecutorEvent.STATE_ENTER);
+  }
+
+  public boolean addStateEnter(final StateEnterListener listener) {
+    return add(ExecutorEvent.STATE_ENTER, listener);
+  }
+
+  public boolean removeStateEnter(final StateEnterListener listener) {
+    return remove(ExecutorEvent.STATE_ENTER, listener);
+  }
 
   public boolean hasStateEnterBeforeExecution() {
     return has(ExecutorEvent.STATE_ENTER_BEFORE_EXECUTION);
@@ -254,6 +268,18 @@ public class ExecutorListener<C> implements AllListener<C> {
 
   public boolean removeStateEnterException(final StateEnterExceptionListener listener) {
     return remove(ExecutorEvent.STATE_ENTER_EXCEPTION, listener);
+  }
+  
+  public boolean hasStateExit() {
+      return has(ExecutorEvent.STATE_EXIT);
+  }
+
+  public boolean addStateExit(final StateExitListener listener) {
+    return add(ExecutorEvent.STATE_EXIT, listener);
+  }
+
+  public boolean removeStateExit(final StateExitListener listener) {
+    return remove(ExecutorEvent.STATE_EXIT, listener);
   }
 
   public boolean hasStateExitBeforeExecution() {
@@ -439,6 +465,14 @@ public class ExecutorListener<C> implements AllListener<C> {
       l.onStateActivityException(executor, machine, context, state, exception);
     }
   }
+  
+  @Override
+  public void onStateEnter(StateMachineExecutor executor, StateMachine machine, C context, State state) {
+    List<StateEnterListener<C>> list = get(ExecutorEvent.STATE_ENTER);
+    for (StateEnterListener<C> l : list) {
+      l.onStateEnter(executor, machine, context, state);
+    }
+  }
 
   @Override
   public void onStateEnterBeforeExecution(StateMachineExecutor executor, StateMachine machine, C context, State state) {
@@ -461,6 +495,14 @@ public class ExecutorListener<C> implements AllListener<C> {
     List<StateEnterExceptionListener<C>> list = get(ExecutorEvent.STATE_ENTER_EXCEPTION);
     for (StateEnterExceptionListener<C> l : list) {
       l.onStateEnterException(executor, machine, context, state, exception);
+    }
+  }
+  
+  @Override
+  public void onStateExit(StateMachineExecutor executor, StateMachine machine, C context, State state) {
+    List<StateExitListener<C>> list = get(ExecutorEvent.STATE_EXIT);
+    for (StateExitListener<C> l : list) {
+      l.onStateExit(executor, machine, context, state);
     }
   }
 

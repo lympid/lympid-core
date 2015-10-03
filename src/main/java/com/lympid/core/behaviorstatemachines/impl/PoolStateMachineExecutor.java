@@ -30,8 +30,18 @@ public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
 
   private final StateMachineShardPoolExecutor pool;
 
+  public PoolStateMachineExecutor(final StateMachineShardPoolExecutor pool, final int id, final String name) {
+    super(id, name);
+    this.pool = pool;
+  }
+  
   public PoolStateMachineExecutor(final StateMachineShardPoolExecutor pool, final int id) {
     super(id);
+    this.pool = pool;
+  }
+
+  public PoolStateMachineExecutor(final StateMachineShardPoolExecutor pool, final String name) {
+    super(name);
     this.pool = pool;
   }
 

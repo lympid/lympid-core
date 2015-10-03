@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorListener;
-import com.lympid.core.behaviorstatemachines.listener.StringLoggerListener;
+import com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerListener;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
@@ -39,7 +39,7 @@ public class Test7 extends AbstractStateMachineTest {
 
   @Test
   public void run() throws InterruptedException {
-    final StringLoggerListener log = new StringLoggerListener();
+    final StringBufferLoggerListener log = new StringBufferLoggerListener();
     ExecutorListener listener = new ExecutorListener();
     listener.add(log);
     
@@ -87,6 +87,11 @@ public class Test7 extends AbstractStateMachineTest {
 
     return builder;
   }
+  
+  @Override
+  protected String executorName() {
+    return "Time." + getClass().getSimpleName();
+  }
 
   @Override
   public String stdOut() {
@@ -103,27 +108,30 @@ public class Test7 extends AbstractStateMachineTest {
     }
   }
   
-  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" context=\"\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"CompletionEvent\" context=\"\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
-"tag=\"STATE_ENTER_BEFORE_EXECUTION\" state=\"A\" context=\"\"\n" +
-"tag=\"STATE_ENTER_AFTER_EXECUTION\" state=\"A\" context=\"\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"50 ms\" context=\"\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
-"tag=\"EVENT_ACCEPTED\" event=\"200 ms\" context=\"\"\n" +
-"tag=\"TRANSITION_STARTED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
-"tag=\"STATE_EXIT_BEFORE_EXECUTION\" state=\"A\" context=\"\"\n" +
-"tag=\"STATE_EXIT_AFTER_EXECUTION\" state=\"A\" context=\"\"\n" +
-"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
-"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
-"tag=\"TRANSITION_ENDED\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
-"tag=\"MACHINE_TERMINATED\" context=\"\"\n";
+  private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" executor=\"Time.Test7\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" executor=\"Time.Test7\" event=\"CompletionEvent\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" executor=\"Time.Test7\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" executor=\"Time.Test7\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" executor=\"Time.Test7\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER\" executor=\"Time.Test7\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_BEFORE_EXECUTION\" executor=\"Time.Test7\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_ENTER_AFTER_EXECUTION\" executor=\"Time.Test7\" state=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_ENDED\" executor=\"Time.Test7\" event=\"CompletionEvent\" transition=\"t0\" source=\"#3\" target=\"A\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" executor=\"Time.Test7\" event=\"50 ms\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" executor=\"Time.Test7\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" executor=\"Time.Test7\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" executor=\"Time.Test7\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_ENDED\" executor=\"Time.Test7\" event=\"50 ms\" transition=\"t1\" source=\"A\" target=\"A\" context=\"\"\n" +
+"tag=\"EVENT_ACCEPTED\" executor=\"Time.Test7\" event=\"200 ms\" context=\"\"\n" +
+"tag=\"TRANSITION_STARTED\" executor=\"Time.Test7\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"STATE_EXIT\" executor=\"Time.Test7\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_EXIT_BEFORE_EXECUTION\" executor=\"Time.Test7\" state=\"A\" context=\"\"\n" +
+"tag=\"STATE_EXIT_AFTER_EXECUTION\" executor=\"Time.Test7\" state=\"A\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_BEFORE_EXECUTION\" executor=\"Time.Test7\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"TRANSITION_EFFECT_AFTER_EXECUTION\" executor=\"Time.Test7\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"STATE_ENTER\" executor=\"Time.Test7\" state=\"end\" context=\"\"\n" +
+"tag=\"TRANSITION_ENDED\" executor=\"Time.Test7\" event=\"200 ms\" transition=\"t2\" source=\"A\" target=\"end\" context=\"\"\n" +
+"tag=\"MACHINE_TERMINATED\" executor=\"Time.Test7\" context=\"\"\n";
   private static final String ACTIVITY_LOG = "";
   
   private static final String STDOUT = "StateMachine: \"" + Test7.class.getSimpleName() + "\"\n" +
