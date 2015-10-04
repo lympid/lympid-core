@@ -45,7 +45,7 @@ Add the following dependency to your `pom` to use this package:
 <dependency>
   <groupId>com.lympid</groupId>
   <artifactId>lympid-core</artifactId>
-  <version>0.9.0</version>
+  <version>0.9.1</version>
 </dependency>
 ```
 
