@@ -27,7 +27,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorListener;
-import com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerListener;
+import com.lympid.core.behaviorstatemachines.listener.StringBufferLogger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -42,7 +42,7 @@ public class Test9 extends AbstractStateMachineTest {
   
   @Test
   public void run() {    
-    final StringBufferLoggerListener log = new StringBufferLoggerListener();
+    final StringBufferLogger log = new StringBufferLogger();
     
     Context context = new Context();
     context.counter = 1;
@@ -72,7 +72,7 @@ public class Test9 extends AbstractStateMachineTest {
     assertEquals(ACTIVITY_LOG, log.activityBuffer());
   }
   
-  private ExecutorListener listeners(final StringBufferLoggerListener log) {
+  private ExecutorListener listeners(final StringBufferLogger log) {
     ExecutorListener listener = new ExecutorListener();
     listener.add(log);
     listener.add(null);

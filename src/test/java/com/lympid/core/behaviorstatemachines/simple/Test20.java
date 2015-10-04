@@ -24,7 +24,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.SimpleStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerListener;
+import com.lympid.core.behaviorstatemachines.listener.StringBufferLogger;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class Test20 extends AbstractStateMachineTest {
   
   @Test
   public void run_log() throws InterruptedException {
-    final StringBufferLoggerListener log = new StringBufferLoggerListener();
+    final StringBufferLogger log = new StringBufferLogger();
    
     StateMachineExecutor fsm = fsm();
     fsm.listeners().add(log);

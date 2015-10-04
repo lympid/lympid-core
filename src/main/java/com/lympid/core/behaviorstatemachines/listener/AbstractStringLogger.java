@@ -51,7 +51,7 @@ import static com.lympid.core.behaviorstatemachines.impl.ExecutorEvent.TRANSITIO
  *
  * @author Fabien Renaud
  */
-public abstract class AbstractStringLoggerListener implements AllListener {
+public abstract class AbstractStringLogger implements AllListener {
 
   @Override
   public void onStateEnterException(StateMachineExecutor executor, StateMachine machine, Object context, State state, Exception exception) {

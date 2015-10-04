@@ -23,7 +23,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import com.lympid.core.behaviorstatemachines.listener.StringBufferLoggerListener;
+import com.lympid.core.behaviorstatemachines.listener.StringBufferLogger;
 import java.util.concurrent.CountDownLatch;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class Test16 extends AbstractStateMachineTest {
   
   @Test
   public void run() throws InterruptedException {
-    final StringBufferLoggerListener log = new StringBufferLoggerListener();
+    final StringBufferLogger log = new StringBufferLogger();
     
     SequentialContext expected = new SequentialContext();
     expected
@@ -101,7 +101,7 @@ public class Test16 extends AbstractStateMachineTest {
     return false;
   }
   
-  private void addLogger(StateMachineExecutor fsm, StringBufferLoggerListener log) {    
+  private void addLogger(StateMachineExecutor fsm, StringBufferLogger log) {    
     fsm.listeners().addEventAcceptedListener(log);
     fsm.listeners().addEventDeferredListener(log);
     fsm.listeners().addEventDeniedListener(log);

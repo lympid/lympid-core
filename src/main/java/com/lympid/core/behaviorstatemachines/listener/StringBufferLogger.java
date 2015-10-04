@@ -21,7 +21,7 @@ import com.lympid.core.behaviorstatemachines.impl.ExecutorEvent;
  *
  * @author Fabien Renaud
  */
-public final class StringBufferLoggerListener extends AbstractStringLoggerListener {
+public final class StringBufferLogger extends AbstractStringLogger {
 
   private final StringBuffer buffer = new StringBuffer();
   private final StringBuffer activityBuffer = new StringBuffer();
