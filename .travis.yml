@@ -9,5 +9,5 @@ jdk:
 branches:
   only:
     - master
-    - travis-debug
+    - travis
 
