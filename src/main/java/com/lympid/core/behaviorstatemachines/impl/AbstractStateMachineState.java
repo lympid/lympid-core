@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -127,6 +129,15 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
   @Override
   public StateStatus status(final State state) {
     return activeStateStatutes.get(state);
+  }
+
+  @Override
+  public Lock activityLock(final State state) {
+    StateStatus status = activeStateStatutes.get(state);
+    if (status.getLock() == null) {
+      status.setLock(new ReentrantLock());
+    }
+    return status.getLock();
   }
 
   @Override
@@ -234,7 +245,7 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
       saveHistory(region, new SimpleStateConfiguration(stateConfig.state()));
     }
   }
-  
+
   @Override
   void saveHistory(final Region region, final MutableStateConfiguration history) {
     histories.put(region, history);

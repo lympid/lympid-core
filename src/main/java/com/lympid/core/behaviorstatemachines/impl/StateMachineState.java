@@ -23,6 +23,7 @@ import com.lympid.core.behaviorstatemachines.Transition;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
 
 /**
  *
@@ -70,6 +71,8 @@ public interface StateMachineState {
 
   void saveShallowHistory(Region r);
 
+  Lock activityLock(State state);
+  
   void setActivity(State state, Future<?> future);
 
   void start();
@@ -238,6 +241,13 @@ public interface StateMachineState {
     public void saveShallowHistory(Region r) {
       synchronized (mutex) {
         inst.saveShallowHistory(r);
+      }
+    }
+    
+    @Override
+    public Lock activityLock(State state) {
+      synchronized (mutex) {
+        return inst.activityLock(state);
       }
     }
 

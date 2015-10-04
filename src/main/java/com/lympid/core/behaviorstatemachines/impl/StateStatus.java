@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.behaviorstatemachines.State;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
 
 /**
  *
@@ -27,6 +28,7 @@ class StateStatus {
 
   private final State state;
   private final long activationTime;
+  private Lock lock;
   private Future activity;
   private List<Future> eventTimers;
 
@@ -45,6 +47,14 @@ class StateStatus {
 
   public long getActivationTime() {
     return activationTime;
+  }
+
+  public void setLock(final Lock lock) {
+    this.lock = lock;
+  }
+
+  public Lock getLock() {
+    return lock;
   }
 
   public void setActivity(final Future f) {

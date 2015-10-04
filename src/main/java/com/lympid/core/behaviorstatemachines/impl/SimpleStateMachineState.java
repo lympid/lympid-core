@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *
@@ -80,6 +82,14 @@ public class SimpleStateMachineState extends ResumableStateMachineState {
   @Override
   public StateStatus status(final State state) {
     return status;
+  }
+  
+  @Override
+  public Lock activityLock(final State state) {
+    if (status.getLock() == null) {
+      status.setLock(new ReentrantLock());
+    }
+    return status.getLock();
   }
 
   @Override

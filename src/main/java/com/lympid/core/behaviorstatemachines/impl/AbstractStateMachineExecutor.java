@@ -571,8 +571,13 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   }
 
   private void doActivity(final State state) {
-    Future<?> f = configuration.executor().submit(new RunnableActivity(this, state));
-    machineState.setActivity(state, f);
+    try {
+      machineState.activityLock(state).lock();
+      Future<?> f = configuration.executor().submit(new RunnableActivity(this, state));
+      machineState.setActivity(state, f);
+    } finally {
+      machineState.activityLock(state).unlock();
+    }
   }
 
   private void enterFinalState(final FinalState state) {
@@ -935,8 +940,9 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     @Override
     public void run() {
       assert state.doActivity() != null;
-
+      
       try {
+        machineState.activityLock(state).lock();
 
         if (listeners.hasStateActivityBeforeExecution()) {
           listeners.onStateActivityBeforeExecution(executor, machine, context, state);
@@ -952,6 +958,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
         if (listeners.hasStateActivityException()) {
           listeners.onStateActivityException(executor, machine, context, state, ex);
         }
+      } finally {
+        machineState.activityLock(state).unlock();
       }
 
       if (machineState.activityCompleted(state)) {
