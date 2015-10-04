@@ -18,28 +18,24 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachine;
+import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 
 /**
  *
  * @author Fabien Renaud
  */
-public class SyncStateMachineExecutor extends AbstractStateMachineExecutor {
+public class SyncStateMachineExecutor<C> extends AbstractStateMachineExecutor<C> {
 
-  public SyncStateMachineExecutor(final int id, final String name) {
-    super(id, name);
-  }
-  
-  public SyncStateMachineExecutor(final int id) {
-    super(id);
-  }
-  
-  public SyncStateMachineExecutor(final String name) {
-    super(name);
-  }
-
-  public SyncStateMachineExecutor() {
-    super();
+  private SyncStateMachineExecutor(
+    final int id,
+    final String name,
+    final StateMachine machine,
+    final C context,
+    final ExecutorConfiguration configuration,
+    final StateMachineSnapshot<C> snapshot
+  ) {
+    super(id, name, machine, context, configuration, snapshot);
   }
 
   @Override
@@ -68,18 +64,34 @@ public class SyncStateMachineExecutor extends AbstractStateMachineExecutor {
   }
 
   @Override
-  public synchronized StateMachineSnapshot snapshot() {
+  public synchronized StateMachineSnapshot<C> snapshot() {
     return super.snapshot();
   }
 
   @Override
-  public synchronized StateMachineSnapshot pause() {
+  public synchronized StateMachineSnapshot<C> pause() {
     return super.pause();
   }
 
   @Override
-  public synchronized void resume(final StateMachineSnapshot snapshot) {
-    super.resume(snapshot);
+  public synchronized void resume() {
+    super.resume();
+  }
+
+  public static final class Builder<C> extends AbstractBuilder<C> {
+
+    @Override
+    public StateMachineExecutor<C> build() {
+      return new SyncStateMachineExecutor<>(
+        getId(),
+        getName(),
+        getMachine(),
+        getContext(),
+        getConfiguration(),
+        getSnapshot()
+      );
+    }
+
   }
 
 }

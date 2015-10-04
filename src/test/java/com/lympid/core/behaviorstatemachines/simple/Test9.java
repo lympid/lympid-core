@@ -48,7 +48,7 @@ public class Test9 extends AbstractStateMachineTest {
     context.counter = 1;
     assertFalse(context.fired);
     StateMachineExecutor fsm = fsm(context);
-    fsm.setListeners(listeners(log));
+    setListeners(fsm.listeners(), log);
     fsm.go();
     
     /*
@@ -72,14 +72,12 @@ public class Test9 extends AbstractStateMachineTest {
     assertEquals(ACTIVITY_LOG, log.activityBuffer());
   }
   
-  private ExecutorListener listeners(final StringBufferLogger log) {
-    ExecutorListener listener = new ExecutorListener();
+  private void setListeners(final ExecutorListener listener, final StringBufferLogger log) {
     listener.add(log);
     listener.add(null);
     listener.remove(null);
     listener.remove(log);
     listener.add(log);
-    return listener;
   }
 
   @Override

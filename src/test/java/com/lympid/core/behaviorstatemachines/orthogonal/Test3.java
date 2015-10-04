@@ -311,7 +311,7 @@ public class Test3 extends AbstractStateMachineTest {
       fsm.take(new StringEvent("goE"));
       fsm.take(new StringEvent("goF"));
 
-      fsm.resume(snapshot);
+      fsm.resume();
     }
   }
   

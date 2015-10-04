@@ -40,34 +40,13 @@ public interface StateMachineExecutor<C> {
    * @return The unique id of the executor.
    */
   int getId();
-  
+
   /**
    * Gets the name of this executor.
-   * 
-   * @return The name of the executor. 
+   *
+   * @return The name of the executor.
    */
   String getName();
-
-  /**
-   * Sets listeners for the state machine executor.
-   *
-   * @param listeners The listeners that executor must call back.
-   */
-  void setListeners(final ExecutorListener listeners);
-
-  /**
-   * Gets the listeners the executor has been subscribed to.
-   *
-   * @return The listeners the executor has been subscribed to.
-   */
-  ExecutorListener listeners();
-
-  /**
-   * Sets the state machine the executor will process.
-   *
-   * @param machine The state machine to use for processing.
-   */
-  void setStateMachine(StateMachine machine);
 
   /**
    * Gets the state machine of the executor.
@@ -76,14 +55,12 @@ public interface StateMachineExecutor<C> {
    */
   StateMachine stateMachine();
 
-  ExecutorConfiguration configuration();
-
   /**
-   * Sets the context of the state machine.
+   * Sets listeners for the state machine executor.
    *
-   * @param context The context of the state machine.
+   * @return listeners The listeners that executor must call back.
    */
-  void setContext(C context);
+  ExecutorListener listeners();
 
   /**
    * Starts the state machine. The state machine, its context, listeners and
@@ -112,13 +89,60 @@ public interface StateMachineExecutor<C> {
    * @return The snapshot of the state machine when it was paused. This snapshot
    * can be used to resume the state machine.
    */
-  StateMachineSnapshot pause();
+  StateMachineSnapshot<C> pause();
 
   /**
    * Resumes a state machine with the specified active state configuration and
    * context.
-   *
-   * @param snapshot The state of the state machine where to resume from.
    */
-  void resume(StateMachineSnapshot snapshot);
+  void resume();
+
+  interface Builder<C> {
+
+    /**
+     * Sets the unique id of the executor. The id is unique per JVM process
+     * only.
+     *
+     * @param id a unique id for the executor.
+     * @return this builder
+     */
+    Builder<C> setId(final int id);
+
+    /**
+     * Sets the name of the executor.
+     *
+     * @param name the name of the executor.
+     * @return this builder
+     */
+    Builder<C> setName(final String name);
+
+    /**
+     * Sets the state machine the executor will process.
+     *
+     * @param machine The state machine to use for processing.
+     * @return this builder
+     */
+    Builder<C> setStateMachine(final StateMachine machine);
+
+    Builder<C> setConfiguration(final ExecutorConfiguration configuration);
+
+    /**
+     * Sets the context of the state machine.
+     *
+     * @param context The context of the state machine.
+     * @return this builder
+     */
+    Builder<C> setContext(final C context);
+
+    /**
+     * Sets the state of the state machine where the machine should be resumed
+     * from.
+     *
+     * @param snapshot The state of the state machine where to resume from.
+     * @return this builder
+     */
+    Builder<C> setSnapshot(final StateMachineSnapshot<C> snapshot);
+
+    StateMachineExecutor<C> build();
+  }
 }

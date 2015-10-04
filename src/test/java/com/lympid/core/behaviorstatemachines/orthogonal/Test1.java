@@ -166,7 +166,7 @@ public class Test1 extends AbstractStateMachineTest {
     fsm.take(new StringEvent("go2"));
     fsm.take(new StringEvent("end"));
     
-    fsm.resume(snapshot);
+    fsm.resume();
   }
   
   @Override

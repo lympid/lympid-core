@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines;
 import static com.lympid.core.behaviorstatemachines.StateMachineTester.assertTextVisitor;
 import com.lympid.core.behaviorstatemachines.builder.SequentialContextInjector;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.impl.TextVisitor;
 import com.lympid.core.common.TestUtils;
@@ -70,22 +71,43 @@ public abstract class AbstractStateMachineTest implements StateMachineTest {
     return MACHINES.get(getClass());
   }
 
-  public StateMachineExecutor fsm() {
-    return fsm(null);
+  public <C> StateMachineExecutor<C> fsm() {
+    return fsm(null, null);
+  }
+  
+  public <C> StateMachineExecutor<C> fsm(ExecutorConfiguration configuration) {
+    return fsm(null, configuration);
+  }
+  
+  public <C> StateMachineExecutor<C> fsm(C context) {
+    return fsm(context, null);
+  }
+  
+  public <C> StateMachineExecutor<C> fsm(StateMachineSnapshot<C> snapshot) {
+    return fsm(null, null, snapshot);
+  }
+  
+  public <C> StateMachineExecutor<C> fsm(C context, ExecutorConfiguration configuration) {
+    return fsm(context, configuration, null);
   }
 
-  public StateMachineExecutor fsm(Object context) {
+  public <C> StateMachineExecutor<C> fsm(C context, ExecutorConfiguration configuration, StateMachineSnapshot snapshot) {
     StateMachine machine = topLevelStateMachine();
 
-    StateMachineExecutor fsm = executorName() == null
-      ? new SyncStateMachineExecutor()
-      : new SyncStateMachineExecutor(executorName());
-    fsm.setStateMachine(machine);
-    fsm.setContext(context);
     if (machine.metadata().hasActivities() || machine.metadata().hasTimeEvents()) {
-      fsm.configuration().executor(THREAD_POOL);
+      if (configuration == null) {
+        configuration = new ExecutorConfiguration();
+      }
+      configuration.executor(THREAD_POOL);
     }
-    return fsm;
+    
+    return new SyncStateMachineExecutor.Builder()
+      .setName(executorName())
+      .setStateMachine(machine)
+      .setContext(context)
+      .setConfiguration(configuration)
+      .setSnapshot(snapshot)
+      .build();
   }
 
   protected final String name() {

@@ -24,6 +24,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
 import java.util.Random;
 import static org.junit.Assert.assertEquals;
@@ -37,8 +38,10 @@ public class Test1 extends AbstractStateMachineTest {
   
   @Test
   public void run_WithAutoStart() {
-    StateMachineExecutor fsm = fsm();
-    fsm.configuration().autoStart(true);
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .autoStart(true);
+    
+    StateMachineExecutor fsm = fsm(config);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this));
@@ -49,9 +52,14 @@ public class Test1 extends AbstractStateMachineTest {
     final int executorId = new Random().nextInt();
     StateMachine machine = topLevelStateMachine();
     
-    StateMachineExecutor fsm = new SyncStateMachineExecutor(executorId);
-    fsm.setStateMachine(machine);
-    fsm.configuration().autoStart(true);
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .autoStart(true);
+    
+    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder()
+      .setId(executorId)
+      .setStateMachine(machine)
+      .setConfiguration(config)
+      .build();
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this));

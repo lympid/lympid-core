@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines.submachine;
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
+import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
@@ -62,15 +63,29 @@ public class Test1 extends AbstractStateMachineTest {
       fsm.take(new StringEvent("go"));
       assertSnapshotEquals(fsm, active);
       
-      fsm.resume(snapshot);
+      resume(fsm);
+      resume(snapshot);
+    } else {
+      goEnd(fsm);
     }
-    
-    fsm.take(new StringEvent("go"));
-    
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
-    StateMachineSnapshot<Context> snapshot = fsm.snapshot();
-    assertTrue(snapshot.context().enteredSubMachine);
-    assertTrue(snapshot.context().exitedSubMachine);
+  }
+  
+  private void resume(final StateMachineExecutor<SequentialContext> fsm) {
+    fsm.resume();
+    goEnd(fsm);
+  }
+  
+  private void resume(final StateMachineSnapshot snapshot) {
+    resume(fsm(snapshot));
+  }
+
+  private void goEnd(StateMachineExecutor fsm) {
+      fsm.take(new StringEvent("go"));
+      
+      assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+      StateMachineSnapshot<Context> snapshot = fsm.snapshot();
+      assertTrue(snapshot.context().enteredSubMachine);
+      assertTrue(snapshot.context().exitedSubMachine);
   }
 
   @Override

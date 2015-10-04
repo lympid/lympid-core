@@ -60,6 +60,8 @@ public interface StateMachineState {
   void clearJoin(PseudoState joinVertex);
 
   boolean isActive(State s);
+  
+  boolean isTerminatedOrPaused();
 
   boolean isTerminated();
 
@@ -72,7 +74,7 @@ public interface StateMachineState {
   void saveShallowHistory(Region r);
 
   Lock activityLock(State state);
-  
+
   void setActivity(State state, Future<?> future);
 
   void start();
@@ -80,9 +82,11 @@ public interface StateMachineState {
   StateStatus status(State state);
 
   void terminate();
-  
+
   void pause();
-  
+
+  void resume();
+
   void resume(StateMachineSnapshot<?> snapshot);
 
   public static class SynchronizedStateMachineState implements StateMachineState {
@@ -188,6 +192,15 @@ public interface StateMachineState {
     }
 
     @Override
+    public boolean isTerminatedOrPaused() {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.isTerminatedOrPaused();
+      }
+      return out;
+    }
+
+    @Override
     public boolean isTerminated() {
       boolean out;
       synchronized (mutex) {
@@ -243,7 +256,7 @@ public interface StateMachineState {
         inst.saveShallowHistory(r);
       }
     }
-    
+
     @Override
     public Lock activityLock(State state) {
       synchronized (mutex) {
@@ -285,6 +298,13 @@ public interface StateMachineState {
     public void pause() {
       synchronized (mutex) {
         inst.pause();
+      }
+    }
+
+    @Override
+    public void resume() {
+      synchronized (mutex) {
+        inst.resume();
       }
     }
 

@@ -171,6 +171,7 @@ public class SimpleStateMachineState extends ResumableStateMachineState {
         // TODO
       }
     }
+    status.setActivity(null);
   }
 
   private void clearEventTimers() {
@@ -184,11 +185,13 @@ public class SimpleStateMachineState extends ResumableStateMachineState {
           }
         }
       }
+      status.setEventTimers(null);
     }
   }
 
   @Override
   public void pause() {
+    super.pause();
     if (status != null) {
       clearActivity();
       clearEventTimers();

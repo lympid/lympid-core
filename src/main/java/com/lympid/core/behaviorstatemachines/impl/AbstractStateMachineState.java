@@ -260,6 +260,7 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
         // TODO
       }
     }
+    status.setActivity(null);
   }
 
   private void clearEventTimers(final StateStatus status) {
@@ -273,11 +274,13 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
           }
         }
       }
+      status.setEventTimers(null);
     }
   }
 
   @Override
   public void pause() {
+    super.pause();
     for (StateStatus status : activeStateStatutes.values()) {
       clearActivity(status);
       clearEventTimers(status);

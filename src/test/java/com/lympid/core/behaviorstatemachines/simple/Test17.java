@@ -156,9 +156,17 @@ public class Test17 extends AbstractStateMachineTest {
     /*
      * Resuming
      */
-    fsm.resume(snapshot);
-
+    resume(fsm);
+    resume(snapshot);
+  }
+  
+  private void resume(final StateMachineExecutor<SequentialContext> fsm) {
+    fsm.resume();
     weg(fsm);
+  }
+  
+  private void resume(final StateMachineSnapshot snapshot) {
+    resume(fsm(snapshot));
   }
   
   @Test
@@ -167,7 +175,7 @@ public class Test17 extends AbstractStateMachineTest {
       .withoutEntry()
       .withoutExit();
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<SequentialContext> fsm = fsm(ctx);
     fsm.go();
     
     ActiveStateTree active = new ActiveStateTree(this).branch("A");
@@ -188,13 +196,13 @@ public class Test17 extends AbstractStateMachineTest {
     /*
      * Resuming
      */
-    StateMachineExecutor fork1 = fsm();    
-    StateMachineExecutor fork2 = fsm();
-    StateMachineExecutor fork3 = fsm();
+    StateMachineExecutor fork1 = fsm(snapshot);    
+    StateMachineExecutor fork2 = fsm(snapshot);
+    StateMachineExecutor fork3 = fsm(snapshot);
     
-    fork1.resume(snapshot);
-    fork2.resume(snapshot);
-    fork3.resume(snapshot);
+    fork1.resume();
+    fork2.resume();
+    fork3.resume();
 
     go(fork1);
     va(fork2);

@@ -32,6 +32,7 @@ abstract class ResumableStateMachineState implements StateMachineState {
   private final StateMachineMeta metadata;
   private boolean started;
   private boolean terminated;
+  private boolean paused;
 
   protected ResumableStateMachineState(final StateMachineMeta metadata) {
     this.metadata = metadata;
@@ -58,6 +59,21 @@ abstract class ResumableStateMachineState implements StateMachineState {
   }
 
   @Override
+  public boolean isTerminatedOrPaused() {
+    return terminated || paused;
+  }
+
+  @Override
+  public void pause() {
+    this.paused = true;
+  }
+
+  @Override
+  public final void resume() {
+    this.paused = false;
+  }
+
+  @Override
   public void resume(final StateMachineSnapshot<?> snapshot) {
     this.started = snapshot.isStarted();
     this.terminated = snapshot.isTerminated();
@@ -68,6 +84,7 @@ abstract class ResumableStateMachineState implements StateMachineState {
     if (!snapshot.history().isEmpty()) {
       learnHistory(snapshot.history());
     }
+    resume();
   }
 
   private void reactivate(final StringTree active) {
@@ -110,8 +127,8 @@ abstract class ResumableStateMachineState implements StateMachineState {
     }
 
     MutableStateConfiguration config = metadata.hasOrthogonalStates()
-            ? new OrthogonalStateConfiguration()
-            : new CompositeStateConfiguration();
+      ? new OrthogonalStateConfiguration()
+      : new CompositeStateConfiguration();
     config.setState(state);
 
     for (StringTree child : tree.children()) {

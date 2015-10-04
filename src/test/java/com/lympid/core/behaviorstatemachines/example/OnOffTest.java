@@ -113,7 +113,6 @@ public class OnOffTest extends AbstractStateMachineTest {
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("OFF"));
-    System.out.println(fsm.snapshot().stateConfiguration());
 
     fsm.take(new StringEvent("off"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("OFF"));

@@ -38,6 +38,7 @@ import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.DefaultHistoryEntryException;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultHistoryFailover;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -127,9 +128,11 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
   
   @Test
   public void runHistory_failOverDisable() {
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .defaultHistoryFailover(DefaultHistoryFailover.DISABLE_TRANSITION);
+    
     Context ctx = new Context(true);
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.configuration().defaultHistoryFailover(DefaultHistoryFailover.DISABLE_TRANSITION);
+    StateMachineExecutor fsm = fsm(ctx, config);
     fsm.go();
     
     SequentialContext expected = new SequentialContext();

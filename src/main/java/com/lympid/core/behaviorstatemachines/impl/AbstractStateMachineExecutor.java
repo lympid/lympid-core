@@ -59,32 +59,38 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author Fabien Renaud
  */
-public abstract class AbstractStateMachineExecutor implements StateMachineExecutor {
+public abstract class AbstractStateMachineExecutor<C> implements StateMachineExecutor<C> {
 
-  private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
   private final int id;
   private final String name;
-  private StateMachine machine;
-  private StateMachineState machineState;
-  private Object context;
-  private ExecutorConfiguration configuration = ExecutorConfiguration.DEFAULT;
+  private final StateMachine machine;
+  private final StateMachineState machineState;
+  private final C context;
+  private final ExecutorConfiguration configuration;
   private ExecutorListener listeners = ExecutorListener.DEFAULT;
 
-  public AbstractStateMachineExecutor(final int id, final String name) {
+  public AbstractStateMachineExecutor(
+    final int id,
+    final String name,
+    final StateMachine machine,
+    final C context,
+    final ExecutorConfiguration configuration,
+    final StateMachineSnapshot<C> snapshot
+  ) {
     this.id = id;
     this.name = name;
-  }
+    this.machine = machine;
+    this.configuration = configuration;
+    this.machineState = createMachineState(machine);
+    if (snapshot == null) {
+      this.context = context;
+    } else {
+      this.context = snapshot.context() instanceof Copyable
+        ? ((Copyable<C>) snapshot.context()).copy()
+        : snapshot.context();
 
-  public AbstractStateMachineExecutor(final int id) {
-    this(id, "StateMachineExecutor-" + id);
-  }
-
-  public AbstractStateMachineExecutor(final String name) {
-    this(ID_GENERATOR.incrementAndGet(), name);
-  }
-
-  public AbstractStateMachineExecutor() {
-    this(ID_GENERATOR.incrementAndGet());
+      this.machineState.resume(snapshot); // TODO: make thread-safe
+    }
   }
 
   @Override
@@ -98,32 +104,10 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   }
 
   @Override
-  public void setStateMachine(final StateMachine machine) {
-    this.machine = machine;
-  }
-
-  @Override
   public StateMachine stateMachine() {
     return machine;
   }
-
-  protected StateMachineState createMachineState(final StateMachine machine) {
-    return StateMachineStateFactory.get(machine.metadata());
-  }
-
-  @Override
-  public ExecutorConfiguration configuration() {
-    if (configuration == ExecutorConfiguration.DEFAULT) {
-      configuration = new ExecutorConfiguration();
-    }
-    return configuration;
-  }
-
-  @Override
-  public void setListeners(final ExecutorListener listeners) {
-    this.listeners = listeners;
-  }
-
+  
   @Override
   public ExecutorListener listeners() {
     if (listeners == ExecutorListener.DEFAULT) {
@@ -132,9 +116,8 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     return listeners;
   }
 
-  @Override
-  public void setContext(final Object context) {
-    this.context = context;
+  protected StateMachineState createMachineState(final StateMachine machine) {
+    return StateMachineStateFactory.get(machine.metadata());
   }
 
   @Override
@@ -143,33 +126,26 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
       throw new RuntimeException(); // TODO: custom exception
     }
 
-    machineState = createMachineState(machine);
     if (configuration.autoStart()) {
       start();
     }
   }
 
   @Override
-  public StateMachineSnapshot snapshot() {
-    return new StateMachineSnapshotImpl(machine, machineState, context);
+  public StateMachineSnapshot<C> snapshot() {
+    return new StateMachineSnapshotImpl<>(machine, machineState, context);
   }
 
   @Override
-  public StateMachineSnapshot pause() {
+  public StateMachineSnapshot<C> pause() {
     machineState.pause();
-    StateMachineSnapshotImpl snapshot = new StateMachineSnapshotImpl(machine, machineState, context);
-    machineState.start();
-    machineState.terminate();
+    StateMachineSnapshotImpl<C> snapshot = new StateMachineSnapshotImpl<>(machine, machineState, context);
     return snapshot;
   }
 
   @Override
-  public void resume(final StateMachineSnapshot snapshot) {
-    this.context = snapshot.context() instanceof Copyable
-      ? ((Copyable) snapshot.context()).copy()
-      : snapshot.context();
-    this.machineState = createMachineState(machine);
-    this.machineState.resume(snapshot);
+  public void resume() {
+    machineState.resume();
     doAllActivities();
     postFire();
   }
@@ -179,7 +155,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     if (!machineState.hasStarted()) {
       start();
     }
-    if (machineState.isTerminated()) {
+    if (machineState.isTerminatedOrPaused()) {
       onEventDenied(event);
       return;
     }
@@ -192,7 +168,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   }
 
   protected void take(final Event event, final State state) {
-    if (machineState.isTerminated() || !machineState.isActive(state)) {
+    if (machineState.isTerminatedOrPaused() || !machineState.isActive(state)) {
       onEventDenied(event);
       return;
     }
@@ -201,7 +177,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   }
 
   protected void takeCompletionEvent() {
-    if (machineState.isTerminated()) {
+    if (machineState.isTerminatedOrPaused()) {
       return;
     }
 
@@ -233,7 +209,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
      * Completion events have priority over any over events that might be in the
      * queue.
      */
-    if (!machineState.isTerminated() && machine.metadata().hasCompletionEvents()) {
+    if (!machineState.isTerminatedOrPaused() && machine.metadata().hasCompletionEvents()) {
       internalTakeCompletionEvents();
     }
 
@@ -265,14 +241,14 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
        * hasn't changed and that firing transitions for that set of states will
        * not result in any changes in the next few iterations.
        */
-      if ((stateHashBefore == stateHashAfter && contextHashBefore == contextHashAfter) || machineState.isTerminated()) { // possible infinite loop detected.
+      if ((stateHashBefore == stateHashAfter && contextHashBefore == contextHashAfter) || machineState.isTerminatedOrPaused()) { // possible infinite loop detected.
         break;
       }
     }
   }
 
   private void scheduleAllTimeEvents() {
-    if (!machineState.isTerminated() && machine.metadata().hasTimeEvents()) {
+    if (!machineState.isTerminatedOrPaused() && machine.metadata().hasTimeEvents()) {
       scheduleTimeEvents(machineState.activeStates());
     }
   }
@@ -557,7 +533,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
   }
 
   private void doAllActivities() {
-    if (!machineState.isTerminated() && machine.metadata().hasActivities()) {
+    if (!machineState.isTerminatedOrPaused() && machine.metadata().hasActivities()) {
       doActivities(machineState.activeStates());
     }
   }
@@ -940,7 +916,7 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     @Override
     public void run() {
       assert state.doActivity() != null;
-      
+
       try {
         machineState.activityLock(state).lock();
 
@@ -991,6 +967,88 @@ public abstract class AbstractStateMachineExecutor implements StateMachineExecut
     @Override
     public String toString() {
       return getClass().getSimpleName() + "{state=" + state + ",event=" + event + "}";
+    }
+
+  }
+
+  public static abstract class AbstractBuilder<C> implements StateMachineExecutor.Builder<C> {
+
+    private static final AtomicInteger ID_GENERATOR = new AtomicInteger();
+
+    private int id;
+    private String name;
+    private StateMachine machine;
+    private C context;
+    private ExecutorConfiguration configuration;
+    private StateMachineSnapshot snapshot;
+
+    @Override
+    public Builder<C>setId(int id) {
+      this.id = id;
+      return this;
+    }
+
+    int getId() {
+      if (id == 0) {
+        id = ID_GENERATOR.incrementAndGet();
+      }
+      return id;
+    }
+
+    @Override
+    public Builder<C>setName(String name) {
+      this.name = name;
+      return this;
+    }
+
+    String getName() {
+      if (name == null) {
+        name = "StateMachineExecutor-" + getId();
+      }
+      return name;
+    }
+
+    @Override
+    public Builder<C>setStateMachine(StateMachine machine) {
+      this.machine = machine;
+      return this;
+    }
+
+    StateMachine getMachine() {
+      return machine;
+    }
+
+    @Override
+    public Builder<C>setConfiguration(final ExecutorConfiguration configuration) {
+      this.configuration = configuration;
+      return this;
+    }
+
+    ExecutorConfiguration getConfiguration() {
+      if (configuration == null) {
+        configuration = ExecutorConfiguration.DEFAULT;
+      }
+      return configuration;
+    }
+    
+    @Override
+    public Builder<C>setContext(C context) {
+      this.context = context;
+      return this;
+    }
+
+    C getContext() {
+      return context;
+    }
+
+    @Override
+    public Builder<C>setSnapshot(StateMachineSnapshot<C> snapshot) {
+      this.snapshot = snapshot;
+      return this;
+    }
+
+    StateMachineSnapshot getSnapshot() {
+      return snapshot;
     }
 
   }

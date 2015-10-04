@@ -63,7 +63,7 @@ public class Test4 extends AbstractStateMachineTest {
     if (pause) {
       StateMachineSnapshot snapshot = fsm.pause();
       fsm.take(new StringEvent("go"));
-      fsm.resume(snapshot);
+      fsm.resume();
     }
   }
 

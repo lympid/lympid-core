@@ -22,6 +22,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultEntryRule;
 import org.junit.Test;
 
@@ -34,10 +35,11 @@ public class Test26 extends AbstractStateMachineTest {
   @Test
   public void run() {
     SequentialContext expected = new SequentialContext();
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .defaultEntryRule(DefaultEntryRule.NONE);
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.configuration().defaultEntryRule(DefaultEntryRule.NONE);    
+    StateMachineExecutor fsm = fsm(ctx, config);
     fsm.go();
     
     expected

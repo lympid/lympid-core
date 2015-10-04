@@ -25,6 +25,7 @@ import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.DefaultEntryException;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultEntryRule;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -56,8 +57,11 @@ public class Test23 extends AbstractStateMachineTest {
   public void defaultEntryRule_none() {
     SequentialContext expected = new SequentialContext();
     SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.configuration().defaultEntryRule(DefaultEntryRule.NONE);    
+    
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .defaultEntryRule(DefaultEntryRule.NONE);
+    
+    StateMachineExecutor fsm = fsm(ctx, config);
     fsm.go();
     
     expected.effect("t0").enter("compo");

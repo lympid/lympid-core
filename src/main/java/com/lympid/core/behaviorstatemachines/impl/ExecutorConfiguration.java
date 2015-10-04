@@ -31,7 +31,7 @@ public class ExecutorConfiguration {
   private DefaultHistoryFailover defaultHistoryFailover = DefaultHistoryFailover.EXCEPTION;
   private ScheduledExecutorService executor;
 
-  ExecutorConfiguration() {
+  public ExecutorConfiguration() {
   }
 
   /**

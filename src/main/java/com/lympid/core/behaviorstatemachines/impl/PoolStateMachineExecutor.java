@@ -17,6 +17,8 @@ package com.lympid.core.behaviorstatemachines.impl;
 
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
+import com.lympid.core.behaviorstatemachines.StateMachine;
+import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -26,36 +28,29 @@ import java.util.concurrent.Future;
  *
  * @author Fabien Renaud
  */
-public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
+public class PoolStateMachineExecutor<C> extends AbstractStateMachineExecutor<C> {
 
-  private final StateMachineShardPoolExecutor pool;
+  private final StateMachineShardPoolExecutor<C> pool;
 
-  public PoolStateMachineExecutor(final StateMachineShardPoolExecutor pool, final int id, final String name) {
-    super(id, name);
-    this.pool = pool;
-  }
-
-  public PoolStateMachineExecutor(final StateMachineShardPoolExecutor pool, final int id) {
-    super(id);
-    this.pool = pool;
-  }
-
-  public PoolStateMachineExecutor(final StateMachineShardPoolExecutor pool, final String name) {
-    super(name);
-    this.pool = pool;
-  }
-
-  public PoolStateMachineExecutor(final StateMachineShardPoolExecutor pool) {
-    super();
+  private PoolStateMachineExecutor(
+    final int id,
+    final String name,
+    final StateMachine machine,
+    final C context,
+    final ExecutorConfiguration configuration,
+    final StateMachineSnapshot<C> snapshot,
+    final StateMachineShardPoolExecutor<C> pool
+  ) {
+    super(id, name, machine, context, configuration, snapshot);
     this.pool = pool;
   }
 
   @Override
-  public void start() {
+  protected void start() {
     pool.start(this);
   }
 
-  public void doStart() {
+  void doStart() {
     super.start();
   }
 
@@ -87,34 +82,36 @@ public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
   }
 
   @Override
-  public void resume(final StateMachineSnapshot snapshot) {
-    pool.resume(this, snapshot);
+  public void resume() {
+    throw new UnsupportedOperationException("This implementation is unstable for now and can not be trusted.");
+//    pool.resume(this);
   }
 
-  void doResume(final StateMachineSnapshot snapshot) {
-    super.resume(snapshot);
+  void doResume() {
+    super.resume();
   }
 
   @Override
-  public StateMachineSnapshot pause() {
-    try {
-      return asyncPause().get();
-    } catch (InterruptedException | ExecutionException ex) {
-      ex.printStackTrace(); // FIXME
-    }
-    return null;
+  public StateMachineSnapshot<C> pause() {
+    throw new UnsupportedOperationException("This implementation is unstable for now and can not be trusted.");
+//    try {
+//      return asyncPause().get();
+//    } catch (InterruptedException | ExecutionException ex) {
+//      ex.printStackTrace(); // FIXME
+//    }
+//    return null;
   }
 
-  public Future<StateMachineSnapshot> asyncPause() {
+  private Future<StateMachineSnapshot<C>> asyncPause() {
     return pool.pause(this);
   }
 
-  StateMachineSnapshot doPause() {
+  StateMachineSnapshot<C> doPause() {
     return super.pause();
   }
 
   @Override
-  public StateMachineSnapshot snapshot() {
+  public StateMachineSnapshot<C> snapshot() {
     try {
       return asyncSnapshot().get();
     } catch (InterruptedException | ExecutionException ex) {
@@ -123,12 +120,34 @@ public class PoolStateMachineExecutor extends AbstractStateMachineExecutor {
     return null;
   }
 
-  public Future<StateMachineSnapshot> asyncSnapshot() {
+  private Future<StateMachineSnapshot<C>> asyncSnapshot() {
     return pool.snapshot(this);
   }
 
-  StateMachineSnapshot doSnapshot() {
+  StateMachineSnapshot<C> doSnapshot() {
     return super.snapshot();
   }
 
+  public static final class Builder<C> extends AbstractBuilder<C> {
+
+    private final StateMachineShardPoolExecutor<C> pool;
+    
+    public Builder(final StateMachineShardPoolExecutor<C> pool) {
+      this.pool = pool;
+    }
+    
+    @Override
+    public StateMachineExecutor<C> build() {
+      return new PoolStateMachineExecutor<>(
+        getId(),
+        getName(),
+        getMachine(),
+        getContext(),
+        getConfiguration(),
+        getSnapshot(),
+        pool
+      );
+    }
+
+  }
 }

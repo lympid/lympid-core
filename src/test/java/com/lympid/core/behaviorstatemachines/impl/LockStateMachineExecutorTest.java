@@ -42,34 +42,41 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
 
   @Test
   public void run1() throws InterruptedException {
-    run(new LockStateMachineExecutor(), false);
+    run(0, false);
   }
   
   @Test
   public void run1_pause() throws InterruptedException {
-    run(new LockStateMachineExecutor(), true);
+    run(0, true);
   }
 
   @Test
   public void run2() throws InterruptedException {
-    run(new LockStateMachineExecutor(12), false);
+    run(12, false);
   }
   
   @Test(expected = RuntimeException.class)
   public void go_fail() {
-    LockStateMachineExecutor fsm = new LockStateMachineExecutor();
-    fsm.setStateMachine(topLevelStateMachine());
-    fsm.setContext(new Context());
+    StateMachineExecutor fsm = new LockStateMachineExecutor.Builder()
+      .setStateMachine(topLevelStateMachine())
+      .setContext(new Context())
+      .build();
     fsm.go();
   }
   
-  private void run(final StateMachineExecutor<Context> fsm, final boolean pause) throws InterruptedException {
+  private void run(final int id, final boolean pause) throws InterruptedException {
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
     
-    fsm.configuration().executor(AbstractStateMachineTest.THREAD_POOL);
-    fsm.setStateMachine(topLevelStateMachine());
-    fsm.setContext(ctx);
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .executor(AbstractStateMachineTest.THREAD_POOL);
+    
+    StateMachineExecutor<Context> fsm = new LockStateMachineExecutor.Builder()
+      .setId(id)
+      .setStateMachine(topLevelStateMachine())
+      .setContext(ctx)
+      .setConfiguration(config)
+      .build();
     fsm.go();
     
     expected.effect("t0").enter("A");
@@ -106,7 +113,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     if (pause) {
       StateMachineSnapshot snapshot = fsm.pause();
       fsm.take(new StringEvent("go"));
-      fsm.resume(snapshot);
+      fsm.resume();
     }
   }
 

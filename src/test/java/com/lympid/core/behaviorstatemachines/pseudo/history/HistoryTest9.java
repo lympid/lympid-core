@@ -332,7 +332,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
       fsm.take(new StringEvent("end"));
       fsm.take(new StringEvent("pause"));
       fsm.take(new StringEvent("resume"));
-      fsm.resume(snapshot);
+      fsm.resume();
     }
   }
   

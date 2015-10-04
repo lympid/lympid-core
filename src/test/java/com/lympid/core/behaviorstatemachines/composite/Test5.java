@@ -114,12 +114,26 @@ public class Test5 extends AbstractStateMachineTest {
       fsm.take(new StringEvent("finishIt"));
       assertSnapshotEquals(fsm, active);
       
-      fsm.resume(snapshot);
+      resume(fsm, expected);
+      resume(snapshot, expected);
+    } else {
+      finishIt(fsm, expected);
     }
-    
+  }
+  
+  private void resume(final StateMachineExecutor<SequentialContext> fsm, final SequentialContext expected) {
+    fsm.resume();
+    finishIt(fsm, expected);
+  }
+  
+  private void resume(final StateMachineSnapshot snapshot, final SequentialContext expected) {
+    resume(fsm(snapshot), expected);
+  }
+
+  private void finishIt(StateMachineExecutor<SequentialContext> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("finishIt"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#3"));
-    
+
     assertSequentialContextEquals(expected, fsm);
   }
   

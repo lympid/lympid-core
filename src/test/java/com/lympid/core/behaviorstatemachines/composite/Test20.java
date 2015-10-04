@@ -116,12 +116,26 @@ public class Test20 extends AbstractStateMachineTest {
       fsm.take(new StringEvent("let"));
       assertSnapshotEquals(fsm, active);
       
-      fsm.resume(snapshot);
+      resume(fsm, expected);
+      resume(snapshot, expected);
+    } else {
+      letEnd(fsm, expected);
     }
-    
+  }
+  
+  private void resume(final StateMachineExecutor<SequentialContext> fsm, final SequentialContext expected) {
+    fsm.resume();
+    letEnd(fsm, expected);
+  }
+  
+  private void resume(final StateMachineSnapshot snapshot, final SequentialContext expected) {
+    resume(fsm(snapshot), expected);
+  }
+
+  private void letEnd(StateMachineExecutor<SequentialContext> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("let"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
-    
+
     assertSequentialContextEquals(expected, fsm);
   }
   
@@ -166,10 +180,7 @@ public class Test20 extends AbstractStateMachineTest {
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "#10"));
     
-    fsm.take(new StringEvent("let"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
-    
-    assertSequentialContextEquals(expected, fsm);
+    letEnd(fsm, expected);
   }
   
   @Override

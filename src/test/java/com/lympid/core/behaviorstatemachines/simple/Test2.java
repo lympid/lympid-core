@@ -23,6 +23,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -44,9 +45,11 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test
   public void run_WithoutAutoStart() {
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .autoStart(false);
+    
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.configuration().autoStart(false);
+    StateMachineExecutor fsm = fsm(ctx, config);
     fsm.go();
 
     assertSnapshotEquals(fsm, new ActiveStateTree(this));

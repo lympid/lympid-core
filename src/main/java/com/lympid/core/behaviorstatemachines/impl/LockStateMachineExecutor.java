@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachine;
+import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -26,24 +27,19 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Fabien Renaud
  */
-public class LockStateMachineExecutor extends AbstractStateMachineExecutor {
+public class LockStateMachineExecutor<C> extends AbstractStateMachineExecutor<C> {
 
   private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-  public LockStateMachineExecutor(final int id, final String name) {
-    super(id, name);
-  }
-  
-  public LockStateMachineExecutor(final int id) {
-    super(id);
-  }
-  
-  public LockStateMachineExecutor(final String name) {
-    super(name);
-  }
-
-  public LockStateMachineExecutor() {
-    super();
+  private LockStateMachineExecutor(
+    final int id,
+    final String name,
+    final StateMachine machine,
+    final C context,
+    final ExecutorConfiguration configuration,
+    final StateMachineSnapshot<C> snapshot
+  ) {
+    super(id, name, machine, context, configuration, snapshot);
   }
 
   @Override
@@ -92,7 +88,7 @@ public class LockStateMachineExecutor extends AbstractStateMachineExecutor {
   }
 
   @Override
-  public StateMachineSnapshot snapshot() {
+  public StateMachineSnapshot<C> snapshot() {
     lock.readLock().lock();
     try {
       return super.snapshot();
@@ -102,7 +98,7 @@ public class LockStateMachineExecutor extends AbstractStateMachineExecutor {
   }
 
   @Override
-  public StateMachineSnapshot pause() {
+  public StateMachineSnapshot<C> pause() {
     lock.writeLock().lock();
     try {
       return super.pause();
@@ -112,13 +108,29 @@ public class LockStateMachineExecutor extends AbstractStateMachineExecutor {
   }
 
   @Override
-  public void resume(final StateMachineSnapshot snapshot) {
+  public void resume() {
     lock.writeLock().lock();
     try {
-      super.resume(snapshot);
+      super.resume();
     } finally {
       lock.writeLock().unlock();
     }
+  }
+
+  public static final class Builder<C> extends AbstractBuilder<C> {
+
+    @Override
+    public StateMachineExecutor<C> build() {
+      return new LockStateMachineExecutor<>(
+        getId(),
+        getName(),
+        getMachine(),
+        getContext(),
+        getConfiguration(),
+        getSnapshot()
+      );
+    }
+
   }
 
 }

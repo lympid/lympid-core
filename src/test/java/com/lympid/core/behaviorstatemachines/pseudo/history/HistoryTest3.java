@@ -420,7 +420,7 @@ public abstract class HistoryTest3 extends AbstractHistoryTest {
       fsm.take(new StringEvent("toEnd"));
       fsm.take(new StringEvent("pause"));
       fsm.take(new StringEvent("resume"));
-      fsm.resume(snapshot);
+      fsm.resume();
     }
   }
   

@@ -278,7 +278,7 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
       fsm.take(new StringEvent("toC"));
       fsm.take(new StringEvent("pause"));
       fsm.take(new StringEvent("resume"));
-      fsm.resume(snapshot);
+      fsm.resume();
     }
   }
   

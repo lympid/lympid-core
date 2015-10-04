@@ -20,7 +20,6 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import com.lympid.core.behaviorstatemachines.impl.ExecutorListener;
 import com.lympid.core.behaviorstatemachines.listener.StringBufferLogger;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -40,12 +39,10 @@ public class Test7 extends AbstractStateMachineTest {
   @Test
   public void run() throws InterruptedException {
     final StringBufferLogger log = new StringBufferLogger();
-    ExecutorListener listener = new ExecutorListener();
-    listener.add(log);
     
     Context ctx = new Context();
     StateMachineExecutor fsm = fsm(ctx);
-    fsm.setListeners(listener);
+    fsm.listeners().add(log);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
