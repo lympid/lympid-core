@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lympid.core.behaviorstatemachines.time;
+package com.lympid.core.behaviorstatemachines.time.relative.function;
 
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
@@ -21,18 +21,18 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 /**
  * Tests a time transition gets fired.
+ * The state machine is the same as for {@link com.lympid.core.behaviorstatemachines.time.relative.Test1}.
  * 
  * @author Fabien Renaud 
  */
-public class Test1 extends AbstractStateMachineTest {
-
-  private static final long DELAY = 50;
+public class Test2 extends AbstractStateMachineTest {
 
   @Test
   public void run() throws InterruptedException {
@@ -40,12 +40,8 @@ public class Test1 extends AbstractStateMachineTest {
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
-
-    ctx.latch.await(10 * DELAY, TimeUnit.MILLISECONDS);
+    ctx.latch.await(100, TimeUnit.MINUTES);
     
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
-
     fsm.take(new StringEvent("end"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
@@ -64,7 +60,7 @@ public class Test1 extends AbstractStateMachineTest {
       .region()
         .state("A")
           .transition("t1")
-            .after(DELAY, TimeUnit.MILLISECONDS)
+            .after((c) -> Duration.ofMillis(0))
             .effect((e, c) -> c.latch.countDown())
             .target("B");
 
@@ -92,7 +88,7 @@ public class Test1 extends AbstractStateMachineTest {
     CountDownLatch latch = new CountDownLatch(1);
   }
 
-  private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +
+  private static final String STDOUT = "StateMachine: \"" + Test2.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    PseudoState: #3 kind: INITIAL\n" +
 "    State: \"A\"\n" +

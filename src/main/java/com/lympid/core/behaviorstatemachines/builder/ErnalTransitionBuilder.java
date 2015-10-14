@@ -16,13 +16,16 @@
 package com.lympid.core.behaviorstatemachines.builder;
 
 import com.lympid.core.basicbehaviors.Event;
-import com.lympid.core.basicbehaviors.RelativeTimeEvent;
 import com.lympid.core.basicbehaviors.StringEvent;
+import com.lympid.core.basicbehaviors.TimeEvent;
 import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
 import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
 import com.lympid.core.behaviorstatemachines.Transition;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
 
 /**
  * Implementation for building internal and/or external transition for
@@ -52,9 +55,15 @@ public final class ErnalTransitionBuilder<V extends VertexBuilder<?, ?, C>, C, E
   }
 
   @Override
-  public TransitionTrigger<V, C, RelativeTimeEvent> after(final long delay, final TimeUnit unit) {
+  public TransitionTrigger<V, C, TimeEvent> after(final long delay, final TimeUnit unit) {
     setAfter(delay, unit);
-    return (TransitionTrigger<V, C, RelativeTimeEvent>) this;
+    return (TransitionTrigger<V, C, TimeEvent>) this;
+  }
+
+  @Override
+  public TransitionTrigger<V, C, TimeEvent> after(final Function<C, Duration> delayFunction) {
+    setAfter(delayFunction);
+    return (TransitionTrigger<V, C, TimeEvent>) this;
   }
 
   @Override

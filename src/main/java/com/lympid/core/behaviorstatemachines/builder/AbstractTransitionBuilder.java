@@ -17,6 +17,7 @@ package com.lympid.core.behaviorstatemachines.builder;
 
 import com.lympid.core.basicbehaviors.Constraint;
 import com.lympid.core.basicbehaviors.Event;
+import com.lympid.core.basicbehaviors.FunctionRelativeTimeEvent;
 import com.lympid.core.basicbehaviors.RelativeTimeEvent;
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
@@ -24,9 +25,11 @@ import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
 import com.lympid.core.behaviorstatemachines.Transition;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.common.Trigger;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * Provides an abstract builder and common functionality for creating external,
@@ -83,6 +86,11 @@ public abstract class AbstractTransitionBuilder<V extends VertexBuilder, C> impl
   @Override
   public void setAfter(final long delay, final TimeUnit unit) {
     setOn(new RelativeTimeEvent(delay, unit));
+  }
+
+  @Override
+  public void setAfter(final Function<C, Duration> delayFunction) {
+    setOn(new FunctionRelativeTimeEvent<>(delayFunction));
   }
 
   @Override

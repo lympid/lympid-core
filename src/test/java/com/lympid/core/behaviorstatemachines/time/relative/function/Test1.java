@@ -13,65 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.lympid.core.behaviorstatemachines.time;
+package com.lympid.core.behaviorstatemachines.time.relative.function;
 
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
-import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 
 /**
- * Tests time transitions apply guards and that multiple time transitions can
- * be fired from the same state under different conditions.
+ * Tests a time transition gets fired.
+ * The state machine is the same as for {@link com.lympid.core.behaviorstatemachines.time.relative.Test1}.
  * 
  * @author Fabien Renaud 
  */
-public class Test3 extends AbstractStateMachineTest {
+public class Test1 extends AbstractStateMachineTest {
 
-  private static final long TIME_SHORT = 50;
-  private static final long TIME_MEDIUM = 100;
-  private static final long TIME_LONG = 150;
-  
-  @Test
-  public void run_short() throws InterruptedException {
-    run(1, "t1");
-  }
+  private static final long DELAY = 50;
 
   @Test
-  public void run_medium() throws InterruptedException {
-    run(2, "t2");
-  }
-
-  @Test
-  public void run_long() throws InterruptedException {
-    run(3, "t3");
-  }
-  
-  private void run(final int c, final String transition) throws InterruptedException {
-    SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("A")
-      .exit("A").effect(transition).enter("B")
-      .exit("B").effect("t4");
-
-    Context ctx = new Context(c);
+  public void run() throws InterruptedException {
+    Context ctx = new Context();
     StateMachineExecutor fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
 
-    ctx.latch.await();
+    ctx.latch.await(10 * DELAY, TimeUnit.MINUTES);
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
 
     fsm.take(new StringEvent("end"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
-    assertSequentialContextEquals(expected, fsm);
   }
 
   @Override
@@ -88,23 +66,14 @@ public class Test3 extends AbstractStateMachineTest {
       .region()
         .state("A")
           .transition("t1")
-            .after(TIME_SHORT, TimeUnit.MILLISECONDS)
-            .guard((e, c) -> { return c.c == 1; })
-            .target("B")
-          .transition("t2")
-            .after(TIME_MEDIUM, TimeUnit.MILLISECONDS)
-            .guard((e, c) -> { return c.c == 2; })
-            .target("B")
-          .transition("t3")
-            .after(TIME_LONG, TimeUnit.MILLISECONDS)
-            .guard((e, c) -> { return c.c == 3; })
+            .after((c) -> Duration.ofMillis(DELAY))
+            .effect((e, c) -> c.latch.countDown())
             .target("B");
 
     builder
       .region()
         .state("B")
-          .entry((c) -> c.latch.countDown())
-          .transition("t4")
+          .transition("t2")
             .on("end")
             .target("end");
 
@@ -120,28 +89,18 @@ public class Test3 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  private static final class Context extends SequentialContext {
+  private static final class Context {
+
     CountDownLatch latch = new CountDownLatch(1);
-    int c;
-   
-    Context(final int c) {
-      this.c = c;
-    }
-
-    Context() {
-
-    }
   }
 
-  private static final String STDOUT = "StateMachine: \"" + Test3.class.getSimpleName() + "\"\n" +
+  private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
-"    FinalState: \"end\"\n" +
 "    PseudoState: #3 kind: INITIAL\n" +
 "    State: \"A\"\n" +
 "    State: \"B\"\n" +
+"    FinalState: \"end\"\n" +
 "    Transition: \"t0\" --- #3 -> \"A\"\n" +
 "    Transition: \"t1\" --- \"A\" -> \"B\"\n" +
-"    Transition: \"t2\" --- \"A\" -> \"B\"\n" +
-"    Transition: \"t3\" --- \"A\" -> \"B\"\n" +
-"    Transition: \"t4\" --- \"B\" -> \"end\"";
+"    Transition: \"t2\" --- \"B\" -> \"end\"";
 }

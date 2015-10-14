@@ -59,6 +59,11 @@ public class StringEventTest {
     evt = new StringEvent(expected);
     assertEquals(expected, evt.toString());
   }
+  
+  @Test(expected = IllegalArgumentException.class)
+  public void testConstructor() {
+    new StringEvent(null);
+  }
  
   private static final class CaseInsensitiveStringEvent extends StringEvent {
 

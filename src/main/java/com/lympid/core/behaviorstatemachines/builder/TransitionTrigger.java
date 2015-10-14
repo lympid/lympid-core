@@ -18,7 +18,11 @@ package com.lympid.core.behaviorstatemachines.builder;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.basicbehaviors.RelativeTimeEvent;
 import com.lympid.core.basicbehaviors.StringEvent;
+import com.lympid.core.basicbehaviors.TimeEvent;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
 
 /**
  * Provides an interface for building an external or local transition with
@@ -65,5 +69,17 @@ public interface TransitionTrigger<V extends VertexBuilder<?, ?, C>, C, E extend
    *
    * @see RelativeTimeEvent
    */
-  TransitionGuard<V, C, RelativeTimeEvent> after(long delay, TimeUnit unit);
+  TransitionGuard<V, C, TimeEvent> after(long delay, TimeUnit unit);
+
+  /**
+   * Sets a relative time event.
+   *
+   * @param delayFunction A function that given the context of the state machine
+   * returns the {@link Duration} the the transition has to wait before getting
+   * fired.
+   * @return An interface to set the guard, effect and target of the transition.
+   *
+   * @see RelativeTimeEvent
+   */
+  TransitionGuard<V, C, TimeEvent> after(Function<C, Duration> delayFunction);
 }

@@ -15,6 +15,7 @@
  */
 package com.lympid.core.basicbehaviors;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -25,11 +26,11 @@ import org.junit.Test;
  *
  * @author Fabien Renaud 
  */
-public class RelativeTimeEventTest {
+public class FunctionRelativeTimeEventTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testConstructor() {
-    new RelativeTimeEvent(-1, TimeUnit.DAYS);
+    new FunctionRelativeTimeEvent(null);
   }
 
   /**
@@ -37,27 +38,29 @@ public class RelativeTimeEventTest {
    */
   @Test
   public void testTime() {
-    RelativeTimeEvent event = new RelativeTimeEvent(3, TimeUnit.DAYS);
-    long ms = TimeUnit.DAYS.toMillis(3);
-    assertEquals(ms, event.time(null));
-    assertEquals(ms + " ms", event.toString());
+    final long ms1 = TimeUnit.DAYS.toMillis(3);
+    FunctionRelativeTimeEvent event = new FunctionRelativeTimeEvent((c) -> Duration.ofMillis(ms1));
+    assertEquals("() ms", event.toString());
+    assertEquals(ms1, event.time(null));
+    assertEquals(ms1 + " ms", event.toString());
     
-    event = new RelativeTimeEvent(11, TimeUnit.MINUTES);
-    ms = TimeUnit.MINUTES.toMillis(11);
-    assertEquals(ms, event.time(null));
-    assertEquals(ms + " ms", event.toString());
+    final long ms2 = TimeUnit.MINUTES.toMillis(11);
+    event = new FunctionRelativeTimeEvent((c) -> Duration.ofMillis(ms2));
+    assertEquals("() ms", event.toString());
+    assertEquals(ms2, event.time(null));
+    assertEquals(ms2 + " ms", event.toString());
   }
 
   /**
-   * Test of equals method, of class RelativeTimeEvent.
+   * Test of equals method, of class FunctionRelativeTimeEvent.
    */
   @Test
   public void testEquals() {
-    RelativeTimeEvent event1 = new RelativeTimeEvent(1, TimeUnit.MILLISECONDS);
-    RelativeTimeEvent event2 = new RelativeTimeEvent(1, TimeUnit.MILLISECONDS);
+    FunctionRelativeTimeEvent event1 = new FunctionRelativeTimeEvent((c) -> Duration.ofMillis(1));
+    FunctionRelativeTimeEvent event2 = new FunctionRelativeTimeEvent((c) -> Duration.ofMillis(1));
     assertFalse(event1.equals(null));
     assertFalse(event1.equals(new StringEvent("1 ms")));
-    assertTrue(event1.equals(event2));
+    assertFalse(event1.equals(event2));
   }
 
 }

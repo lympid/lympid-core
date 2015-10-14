@@ -21,12 +21,13 @@ package com.lympid.core.basicbehaviors;
  *
  * @author Fabien Renaud
  */
-public interface TimeEvent extends Event {
+public interface TimeEvent<C> extends Event {
 
   /**
-   * A time value in milliseconds.
+   * Milliseconds till this event becomes active.
    *
-   * @return A time value in milliseconds.
+   * @param context The context of the state machine.
+   * @return The number of milliseconds till this event becomes active.
    */
-  long time();
+  long time(C context);
 }

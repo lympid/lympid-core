@@ -15,29 +15,31 @@
  */
 package com.lympid.core.basicbehaviors;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Defines a time event that happens in the future, starting from <em>now</em>.
  *
  * @author Fabien Renaud
  */
-public final class RelativeTimeEvent<C> implements TimeEvent<C> {
+public final class FunctionRelativeTimeEvent<C> implements TimeEvent<C> {
 
-  private final long delay;
+  private final Function<C, Duration> delay;
+  private transient long lastTime = -1;
 
   /**
    * Instantiates an event that will take place in the given amount of time in
    * the future.
    *
    * @param delay Time to wait before this event becomes active.
-   * @param unit The time unit for the {@code delay}.
    */
-  public RelativeTimeEvent(final long delay, final TimeUnit unit) {
-    if (delay < 0) {
-      throw new IllegalArgumentException("delay must be a positive number. Got: " + delay);
+  public FunctionRelativeTimeEvent(final Function<C, Duration> delay) {
+    if (delay == null) {
+      throw new IllegalArgumentException("The delay function is null");
     }
-    this.delay = unit.toMillis(delay);
+    this.delay = delay;
   }
 
   /**
@@ -48,13 +50,14 @@ public final class RelativeTimeEvent<C> implements TimeEvent<C> {
    */
   @Override
   public long time(final C context) {
-    return delay;
+    lastTime = delay.apply(context).toMillis();
+    return lastTime;
   }
 
   @Override
   public int hashCode() {
     int hash = 3;
-    hash = 83 * hash + (int) (this.delay ^ (this.delay >>> 32));
+    hash = 73 * hash + Objects.hashCode(this.delay);
     return hash;
   }
 
@@ -66,18 +69,20 @@ public final class RelativeTimeEvent<C> implements TimeEvent<C> {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    final RelativeTimeEvent other = (RelativeTimeEvent) obj;
-    return this.delay == other.delay;
+    final FunctionRelativeTimeEvent<?> other = (FunctionRelativeTimeEvent<?>) obj;
+    return Objects.equals(this.delay, other.delay);
   }
 
   /**
-   * Gets a string representation of the time event.
+   * Gets a string representation of the time given by the last call to #time.
+   * If #time has never been called before calling this method, it will return
+   * "() ms"
    *
    * @return A string representation of the time event.
    */
   @Override
   public String toString() {
-    return delay + " ms";
+    return lastTime == -1 ? "() ms" : (lastTime + " ms");
   }
 
 }

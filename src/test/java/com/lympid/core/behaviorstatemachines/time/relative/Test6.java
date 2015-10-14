@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lympid.core.behaviorstatemachines.time;
+package com.lympid.core.behaviorstatemachines.time.relative;
 
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;

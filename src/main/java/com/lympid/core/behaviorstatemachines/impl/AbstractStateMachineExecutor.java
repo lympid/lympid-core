@@ -275,15 +275,11 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     final long past = status.getActivationTime() - System.currentTimeMillis();
 
     for (TimeEvent timeEvent : timeEvents) {
-      if (timeEvent instanceof RelativeTimeEvent) {
-        long actualDelay = past + timeEvent.time();
-        if (actualDelay <= 0) {
-          System.err.println("The actual delay is <= 0: " + actualDelay + " State: " + state); // TODO: no stderr
-        }
-        futures.add(scheduleEvent(timeEvent, state, actualDelay));
-      } else {
-        throw new UnsupportedOperationException("Unsupported time event: " + timeEvent.getClass().getCanonicalName());
+      long actualDelay = past + timeEvent.time(context);
+      if (actualDelay <= 0) {
+        System.err.println("The actual delay is <= 0: " + actualDelay + " State: " + state); // TODO: no stderr
       }
+      futures.add(scheduleEvent(timeEvent, state, actualDelay));
     }
     status.setEventTimers(futures);
   }

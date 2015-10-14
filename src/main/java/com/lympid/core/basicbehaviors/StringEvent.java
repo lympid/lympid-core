@@ -26,7 +26,9 @@ public class StringEvent implements Event {
   private final String name;
 
   public StringEvent(String name) {
-    assert name != null : "name can not be null";
+    if (name == null) {
+      throw new IllegalArgumentException("name can not be null");
+    }
     this.name = name;
   }
 

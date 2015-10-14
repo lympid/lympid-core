@@ -22,8 +22,10 @@ import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
 import com.lympid.core.behaviorstatemachines.Transition;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.common.Trigger;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * Interface for building transitions.
@@ -61,6 +63,15 @@ public interface TransitionBuilder<V extends VertexBuilder, C> {
    * @param unit The unit of the amount time.
    */
   void setAfter(long delay, TimeUnit unit);
+
+  /**
+   * Sets a time event.
+   *
+   * @param delayFunction A function that given the context of the state machine
+   * returns the {@link Duration} the the transition has to wait before getting
+   * fired.
+   */
+  void setAfter(Function<C, Duration> delayFunction);
 
   /**
    * Sets a trigger with any {@code Event} for the transition.

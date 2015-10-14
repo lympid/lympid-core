@@ -173,10 +173,6 @@ public abstract class AbstractStringLogger implements AllListener {
     log(TRANSITION_EFFECT_AFTER_EXECUTION, format(TRANSITION_EFFECT_AFTER_EXECUTION, executor, machine, context, event, transition));
   }
 
-  private String format(ExecutorEvent tag, StateMachineExecutor executor, StateMachine machine, Object context, State state, Exception exception) {
-    return String.format("tag=\"%s\" executor=\"%s\" state=\"%s\" context=\"%s\" %s", tag, executor.getName(), VertexUtils.nameOrId(state), context, exception);
-  }
-
   private String format(ExecutorEvent tag, StateMachineExecutor executor, StateMachine machine, Object context, Event event) {
     return String.format("tag=\"%s\" executor=\"%s\" event=\"%s\" context=\"%s\"", tag, executor.getName(), event, context);
   }
