@@ -21,34 +21,37 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
- * Tests a time transition gets fired.
+ * Tests that of two concurrent time events, only one gets activated.
  * 
  * @author Fabien Renaud 
  */
-public class Test1 extends AbstractStateMachineTest {
+public class Test10 extends AbstractStateMachineTest {
 
   private static final long DELAY = 50;
-  
-  @Test(expected = RuntimeException.class)
-  public void go_fail() {
-    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder()
-      .setName(executorName())
-      .setStateMachine(topLevelStateMachine())
-      .setContext(new Context())
-      .build();
-    fsm.go();
-  }
 
   @Test
   public void run() throws InterruptedException {
+    ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(2);
+    threadPool.prestartAllCoreThreads();
+    
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    
+    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder()
+      .setName(executorName())
+      .setStateMachine(topLevelStateMachine())
+      .setConfiguration(new ExecutorConfiguration().executor(threadPool))
+      .setContext(ctx)
+      .build();
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -59,6 +62,7 @@ public class Test1 extends AbstractStateMachineTest {
 
     fsm.take(new StringEvent("end"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    assertEquals(1, ctx.counter.get());
   }
 
   @Override
@@ -74,14 +78,19 @@ public class Test1 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .transition("t1")
+          .transition("t11")
             .after(DELAY, TimeUnit.MILLISECONDS)
-            .effect((e, c) -> c.latch.countDown())
+            .effect((e,c) -> c.counter.incrementAndGet())
+            .target("B")
+          .transition("t12")
+            .after(DELAY, TimeUnit.MILLISECONDS)
+            .effect((e,c) -> c.counter.incrementAndGet())
             .target("B");
 
     builder
       .region()
         .state("B")
+          .entry((c) -> c.latch.countDown())
           .transition("t2")
             .on("end")
             .target("end");
@@ -101,15 +110,22 @@ public class Test1 extends AbstractStateMachineTest {
   private static final class Context {
 
     CountDownLatch latch = new CountDownLatch(1);
+    AtomicInteger counter = new AtomicInteger();
+    
+    @Override
+    public String toString() {
+      return "";
+    }
   }
 
-  private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +
+  private static final String STDOUT = "StateMachine: \"" + Test10.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    PseudoState: #3 kind: INITIAL\n" +
 "    State: \"A\"\n" +
 "    State: \"B\"\n" +
 "    FinalState: \"end\"\n" +
 "    Transition: \"t0\" --- #3 -> \"A\"\n" +
-"    Transition: \"t1\" --- \"A\" -> \"B\"\n" +
+"    Transition: \"t11\" --- \"A\" -> \"B\"\n" +
+"    Transition: \"t12\" --- \"A\" -> \"B\"\n" +
 "    Transition: \"t2\" --- \"B\" -> \"end\"";
 }

@@ -64,6 +64,8 @@ public interface StateMachineState {
   boolean isTerminatedOrPaused();
 
   boolean isTerminated();
+  
+  boolean isPaused();
 
   StateConfiguration<?> restore(Region r);
 
@@ -87,7 +89,7 @@ public interface StateMachineState {
 
   void resume();
 
-  void resume(StateMachineSnapshot<?> snapshot);
+  void set(StateMachineSnapshot<?> snapshot);
 
   public static class SynchronizedStateMachineState implements StateMachineState {
 
@@ -210,6 +212,15 @@ public interface StateMachineState {
     }
 
     @Override
+    public boolean isPaused() {
+      boolean out;
+      synchronized (mutex) {
+        out = inst.isPaused();
+      }
+      return out;
+    }
+
+    @Override
     public boolean joinReached(PseudoState joinVertex, Transition transition) {
       boolean out;
       synchronized (mutex) {
@@ -309,9 +320,9 @@ public interface StateMachineState {
     }
 
     @Override
-    public void resume(StateMachineSnapshot<?> snapshot) {
+    public void set(StateMachineSnapshot<?> snapshot) {
       synchronized (mutex) {
-        inst.resume(snapshot);
+        inst.set(snapshot);
       }
     }
 

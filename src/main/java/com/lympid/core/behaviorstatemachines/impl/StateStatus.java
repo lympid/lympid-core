@@ -24,7 +24,7 @@ import java.util.concurrent.locks.Lock;
  *
  * @author Fabien Renaud
  */
-class StateStatus {
+public class StateStatus {
 
   private final State state;
   private final long activationTime;

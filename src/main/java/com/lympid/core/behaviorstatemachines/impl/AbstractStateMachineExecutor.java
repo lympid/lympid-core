@@ -17,7 +17,6 @@ package com.lympid.core.behaviorstatemachines.impl;
 
 import com.lympid.core.basicbehaviors.CompletionEvent;
 import com.lympid.core.basicbehaviors.Event;
-import com.lympid.core.basicbehaviors.RelativeTimeEvent;
 import com.lympid.core.basicbehaviors.TimeEvent;
 import com.lympid.core.behaviorstatemachines.FinalState;
 import com.lympid.core.behaviorstatemachines.PseudoState;
@@ -43,7 +42,6 @@ import static com.lympid.core.behaviorstatemachines.TransitionKind.INTERNAL;
 import static com.lympid.core.behaviorstatemachines.TransitionKind.LOCAL;
 import com.lympid.core.behaviorstatemachines.Vertex;
 import com.lympid.core.behaviorstatemachines.VertexUtils;
-import com.lympid.core.common.Copyable;
 import com.lympid.core.common.TreeNode;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +66,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   private final C context;
   private final ExecutorConfiguration configuration;
   private ExecutorListener listeners = ExecutorListener.DEFAULT;
+  private boolean go;
 
   public AbstractStateMachineExecutor(
     final int id,
@@ -85,11 +84,9 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     if (snapshot == null) {
       this.context = context;
     } else {
-      this.context = snapshot.context() instanceof Copyable
-        ? ((Copyable<C>) snapshot.context()).copy()
-        : snapshot.context();
-
-      this.machineState.resume(snapshot); // TODO: make thread-safe
+      this.machineState.pause();
+      this.machineState.set(snapshot);
+      this.context = snapshot.context();
     }
   }
 
@@ -107,7 +104,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   public StateMachine stateMachine() {
     return machine;
   }
-  
+
   @Override
   public ExecutorListener listeners() {
     if (listeners == ExecutorListener.DEFAULT) {
@@ -122,13 +119,17 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
 
   @Override
   public void go() {
-    if ((machine.metadata().hasActivities() || machine.metadata().hasTimeEvents()) && configuration.executor() == null) {
+    checkConfiguration();
+    
+    if (machineState.isPaused()) {
+      internalResume();
+    } else if (go) {
       throw new RuntimeException(); // TODO: custom exception
-    }
-
-    if (configuration.autoStart()) {
+    } else if (configuration.autoStart()) {
       start();
     }
+    
+    go = true;
   }
 
   @Override
@@ -137,14 +138,19 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   }
 
   @Override
-  public StateMachineSnapshot<C> pause() {
+  public void pause() {
     machineState.pause();
-    StateMachineSnapshotImpl<C> snapshot = new StateMachineSnapshotImpl<>(machine, machineState, context);
-    return snapshot;
   }
 
   @Override
   public void resume() {
+    if (!machineState.isPaused()) {
+      throw new RuntimeException(); // TODO: custom exception
+    }
+    go();
+  }
+  
+  private void internalResume() {
     machineState.resume();
     doAllActivities();
     postFire();
@@ -153,6 +159,9 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   @Override
   public void take(final Event event) {
     if (!machineState.hasStarted()) {
+      if (!go) {
+        throw new RuntimeException(); // TODO: custom exception
+      }
       start();
     }
     if (machineState.isTerminatedOrPaused()) {
@@ -241,7 +250,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
        * hasn't changed and that firing transitions for that set of states will
        * not result in any changes in the next few iterations.
        */
-      if ((stateHashBefore == stateHashAfter && contextHashBefore == contextHashAfter) || machineState.isTerminatedOrPaused()) { // possible infinite loop detected.
+      if ((stateHashBefore == stateHashAfter && contextHashBefore == contextHashAfter) || machineState.isTerminatedOrPaused()) {
         break;
       }
     }
@@ -881,6 +890,17 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
      */
   }
 
+  private void checkConfiguration() {
+    if (configuration.executor() == null) {
+      if (machine.metadata().hasActivities()) {
+        throw new RuntimeException(); // TODO: custom exception
+      }
+      if (machine.metadata().hasTimeEvents()) {
+        throw new RuntimeException(); // TODO: custom exception
+      }
+    }
+  }
+
   private void onEventAccepted(final Event event) {
     if (listeners.hasEventAcceptedListener()) {
       listeners.onEventAccepted(this, machine, context, event);
@@ -938,11 +958,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
         takeCompletionEvent();
       }
     }
-
-    @Override
-    public String toString() {
-      return getClass().getSimpleName() + "{state=" + state + "}";
-    }
+    
   }
 
   private final class RunnableEvent implements Runnable {
@@ -959,12 +975,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     public void run() {
       take(event, state);
     }
-
-    @Override
-    public String toString() {
-      return getClass().getSimpleName() + "{state=" + state + ",event=" + event + "}";
-    }
-
+    
   }
 
   public static abstract class AbstractBuilder<C> implements StateMachineExecutor.Builder<C> {
@@ -979,7 +990,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     private StateMachineSnapshot snapshot;
 
     @Override
-    public Builder<C>setId(int id) {
+    public Builder<C> setId(int id) {
       this.id = id;
       return this;
     }
@@ -992,7 +1003,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     }
 
     @Override
-    public Builder<C>setName(String name) {
+    public Builder<C> setName(String name) {
       this.name = name;
       return this;
     }
@@ -1005,7 +1016,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     }
 
     @Override
-    public Builder<C>setStateMachine(StateMachine machine) {
+    public Builder<C> setStateMachine(StateMachine machine) {
       this.machine = machine;
       return this;
     }
@@ -1015,7 +1026,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     }
 
     @Override
-    public Builder<C>setConfiguration(final ExecutorConfiguration configuration) {
+    public Builder<C> setConfiguration(final ExecutorConfiguration configuration) {
       this.configuration = configuration;
       return this;
     }
@@ -1026,9 +1037,9 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
       }
       return configuration;
     }
-    
+
     @Override
-    public Builder<C>setContext(C context) {
+    public Builder<C> setContext(C context) {
       this.context = context;
       return this;
     }
@@ -1038,7 +1049,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     }
 
     @Override
-    public Builder<C>setSnapshot(StateMachineSnapshot<C> snapshot) {
+    public Builder<C> setSnapshot(StateMachineSnapshot<C> snapshot) {
       this.snapshot = snapshot;
       return this;
     }

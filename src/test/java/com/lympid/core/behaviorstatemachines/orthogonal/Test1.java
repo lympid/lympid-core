@@ -83,9 +83,10 @@ public class Test1 extends AbstractStateMachineTest {
     
     begin(fsm, expected);
     fireGo1(fsm, expected, "C");
-    pauseAndResume(fsm);
-    fireGo2(fsm, expected, "end1");
-    fireEnd(fsm, expected);
+    pauseAndResume(expected, fsm, (e, f) -> {
+      fireGo2(f, e, "end1");
+      fireEnd(f, e);
+    });
   }
   
   @Test
@@ -124,9 +125,10 @@ public class Test1 extends AbstractStateMachineTest {
     
     begin(fsm, expected);
     fireGo2(fsm, expected, "A");
-    pauseAndResume(fsm);
-    fireGo1(fsm, expected, "end2");
-    fireEnd(fsm, expected);
+    pauseAndResume(expected, fsm, (e, f) -> {
+      fireGo1(f, e, "end2");
+      fireEnd(f, e);
+    });
   }
 
   private void begin(StateMachineExecutor fsm, SequentialContext expected) {
@@ -159,14 +161,38 @@ public class Test1 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
   
-  private void pauseAndResume(StateMachineExecutor fsm) {
-    StateMachineSnapshot snapshot = fsm.pause();
+  private void pauseAndResume(SequentialContext expected1, StateMachineExecutor fsm1, FsmRunSequence sequence) {
+    fsm1.pause();
+    StateMachineSnapshot snapshot1 = fsm1.snapshot();
+    SequentialContext expected2 = expected1.copy();
     
-    fsm.take(new StringEvent("go1"));
-    fsm.take(new StringEvent("go2"));
-    fsm.take(new StringEvent("end"));
+    /*
+     * First state machine
+     */
+    fsm1.take(new StringEvent("go1"));
+    fsm1.take(new StringEvent("go2"));
+    fsm1.take(new StringEvent("end"));
     
-    fsm.resume();
+    fsm1.resume();
+    sequence.run(expected1, fsm1);
+
+    /*
+     * Second/cloned state machine
+     */
+    StateMachineExecutor fsm2 = fsm(snapshot1);
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.take(new StringEvent("go1"));
+    assertSnapshotEquals(snapshot1, fsm2);
+    fsm2.take(new StringEvent("go2"));
+    assertSnapshotEquals(snapshot1, fsm2);
+    fsm2.take(new StringEvent("end"));
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.resume();
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    sequence.run(expected2, fsm2);
   }
   
   @Override
@@ -248,6 +274,12 @@ public class Test1 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+  
+  private static interface FsmRunSequence {
+    
+    void run(SequentialContext expected, StateMachineExecutor fsm);
+    
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +

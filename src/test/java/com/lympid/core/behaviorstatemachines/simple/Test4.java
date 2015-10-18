@@ -23,6 +23,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import org.junit.Test;
 
 /**
@@ -53,6 +54,66 @@ public class Test4 extends AbstractStateMachineTest {
      */
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+  }
+  
+  @Test(expected = RuntimeException.class)
+  public void go_afterStarted_withAutoStart() {
+    StateMachineExecutor fsm = fsm();
+    fsm.go();
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
+    
+    fsm.go();
+  }
+  
+  @Test(expected = RuntimeException.class)
+  public void go_afterStarted_withoutAutoStart() {
+    StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
+    fsm.go();
+    fsm.take(new StringEvent("blah"));
+    fsm.go();
+  }
+  
+  @Test(expected = RuntimeException.class)
+  public void go_afterTerminated_withAutoStart() {
+    StateMachineExecutor fsm = fsm();
+    fsm.go();
+    fsm.take(new StringEvent("go"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    
+    fsm.go();
+  }
+  
+  @Test(expected = RuntimeException.class)
+  public void go_afterTerminated_withoutAutoStart() {
+    StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
+    fsm.go();
+    fsm.take(new StringEvent("go"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+    
+    fsm.go();
+  }
+  
+  @Test(expected = RuntimeException.class)
+  public void noGo_take_withAutoStart() {
+    StateMachineExecutor fsm = fsm();
+    fsm.take(new StringEvent("go"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+  }
+  
+  @Test(expected = RuntimeException.class)
+  public void noGo_take_withoutAutoStart() {
+    StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
+    fsm.take(new StringEvent("go"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
+  }
+  
+  @Test(expected = RuntimeException.class)
+  public void noPause_resume() {
+    StateMachineExecutor fsm = fsm();
+    fsm.go();
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
+    
+    fsm.resume();
   }
 
   @Override

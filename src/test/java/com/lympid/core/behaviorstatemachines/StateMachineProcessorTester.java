@@ -28,26 +28,25 @@ import static org.junit.Assert.assertTrue;
  * @author Fabien Renaud
  */
 public final class StateMachineProcessorTester {
-  
-  
+
   public static void assertSnapshotHistoryEquals(final StateMachineExecutor fsm, final String region, final ActiveStateTree expected) {
     StateMachineSnapshot<?> snapshot = fsm.snapshot();
     assertEquals(fsm.stateMachine().getId(), snapshot.stateMachine());
-    
+
     final String regionId = region.charAt(0) == '#'
       ? region.substring(1)
       : region; // note: names are not supported
     assertSnapshotHistoryEquals(snapshot, regionId, expected.tree());
   }
-  
+
   private static void assertSnapshotHistoryEquals(final StateMachineSnapshot<?> snapshot, final String regionId, final TreeNode<String> expected) {
     assert regionId != null;
-    
+
     assertNotNull(snapshot);
     assertNotNull(snapshot.history());
     StringTree history = snapshot.history().get(regionId);
     assertNotNull(history);
-    
+
     assertStateConfigurationEquals(expected, history);
   }
 
@@ -61,6 +60,14 @@ public final class StateMachineProcessorTester {
     assertSnapshotEquals(snapshot, expected.tree());
   }
 
+  public static void assertSnapshotEquals(final StateMachineSnapshot expected, final StateMachineExecutor fsm) {
+    assertSnapshotEquals(expected, fsm.snapshot());
+  }
+
+  public static void assertSnapshotEquals(final StateMachineSnapshot expected, final StateMachineSnapshot actual) {
+    assertEquals(expected.stateConfiguration(), actual.stateConfiguration());
+  }
+
   private static void assertSnapshotEquals(final StateMachineSnapshot<?> snapshot, final TreeNode<String> expected) {
     assertNotNull(snapshot);
     assertStateConfigurationEquals(expected, snapshot.stateConfiguration());
@@ -71,7 +78,7 @@ public final class StateMachineProcessorTester {
       assertFinalIsTerminated(snapshot);
     }
   }
-  
+
   private static void assertStateConfigurationEquals(final TreeNode<String> expected, final StringTree actual) {
     if (actual == null) {
       assertNull(expected.content());
@@ -87,13 +94,13 @@ public final class StateMachineProcessorTester {
         assertEquals(expected.content(), wActual);
       }
     } else {
-        assertEquals(expected.content(), actual.state());
+      assertEquals(expected.content(), actual.state());
     }
     if (actual.children() == null) {
       assertTrue(expected.children().isEmpty());
       return;
     }
-    
+
     assertEquals(expected.children().size(), actual.children().size());
     expected.children().sort(ACTIVATE_STATE_COMPARATOR);
     actual.children().sort(STATE_COMPARATOR);
@@ -109,14 +116,14 @@ public final class StateMachineProcessorTester {
 
   private static void assertFinalIsTerminated(final StateMachineSnapshot<?> snapshot) {
     assertNotNull(snapshot.stateConfiguration());
-    
+
     assertNotNull(snapshot.stateConfiguration());
     assertNull(snapshot.stateConfiguration().children());
 //    if (tree.state() instanceof FinalState) {
       /*
-       * The final state of the top level state machine has been reached. Make
-       * sure it has been terminated.
-       */
+     * The final state of the top level state machine has been reached. Make
+     * sure it has been terminated.
+     */
 //      assertTrue("State machine is on its top level final state but has not been terminated!", snapshot.isTerminated());
 //    }
   }

@@ -141,7 +141,8 @@ public class Test17 extends AbstractStateMachineTest {
     ActiveStateTree active = new ActiveStateTree(this).branch("A");
     assertSnapshotEquals(fsm, active);
     
-    StateMachineSnapshot snapshot = fsm.pause();
+    fsm.pause();
+    StateMachineSnapshot snapshot = fsm.snapshot();
     
     /*
      * All events are denied.
@@ -181,7 +182,10 @@ public class Test17 extends AbstractStateMachineTest {
     ActiveStateTree active = new ActiveStateTree(this).branch("A");
     assertSnapshotEquals(fsm, active);
     
-    StateMachineSnapshot snapshot = fsm.pause();
+    fsm.pause();
+    StateMachineSnapshot snapshot1 = fsm.snapshot();
+    StateMachineSnapshot snapshot2 = fsm.snapshot();
+    StateMachineSnapshot snapshot3 = fsm.snapshot();
     
     /*
      * All events are denied.
@@ -196,9 +200,9 @@ public class Test17 extends AbstractStateMachineTest {
     /*
      * Resuming
      */
-    StateMachineExecutor fork1 = fsm(snapshot);    
-    StateMachineExecutor fork2 = fsm(snapshot);
-    StateMachineExecutor fork3 = fsm(snapshot);
+    StateMachineExecutor fork1 = fsm(snapshot1);    
+    StateMachineExecutor fork2 = fsm(snapshot2);
+    StateMachineExecutor fork3 = fsm(snapshot3);
     
     fork1.resume();
     fork2.resume();

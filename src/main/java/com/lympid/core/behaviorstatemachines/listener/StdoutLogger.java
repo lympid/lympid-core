@@ -16,6 +16,7 @@
 package com.lympid.core.behaviorstatemachines.listener;
 
 import com.lympid.core.behaviorstatemachines.impl.ExecutorEvent;
+import java.time.Instant;
 
 /**
  *
@@ -25,22 +26,22 @@ public final class StdoutLogger extends AbstractStringLogger {
 
   @Override
   protected void log(ExecutorEvent tag, String s) {
-    System.out.println(s);
+    System.out.println(Instant.now() + " " + s);
   }
 
   @Override
   protected void log(ExecutorEvent tag, String s, Exception exception) {
-    System.out.println(s + " " + exception);
+    System.out.println(Instant.now() + " " + s + " " + exception);
   }
 
   @Override
   protected void logActivity(ExecutorEvent tag, String s) {
-    System.out.println(s);
+    System.out.println(Instant.now() + " " + s);
   }
 
   @Override
   protected void logActivity(ExecutorEvent tag, String s, Exception exception) {
-    System.out.println(s + " " + exception);
+    System.out.println(Instant.now() + " " + s + " " + exception);
   }
 
 }

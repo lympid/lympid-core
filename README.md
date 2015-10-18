@@ -26,7 +26,7 @@ Other features include, but not only:
   * prioritized transitions: when more than one transition is enabled for a (pseudo) state, only one will be fired. You can define which it will be.
   * configurable state machine executor: auto start, thread pool for asynchronous events and activities, ...
 
-It is heavily **tested with more than 120 state machines and more than 700 unit tests**. Code and branch coverage is above 90%.
+It is heavily **tested with more than 120 state machines and more than 800 unit tests**. Code and branch coverage is above 90%.
 
 This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -146,4 +146,4 @@ And that's it!
 
 ## More tutorials to come...
 
-Meanwhile, you can the hundred of test state machines this project has
+Meanwhile, you can take a look at the hundred of test state machines this project has...

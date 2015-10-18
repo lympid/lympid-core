@@ -58,7 +58,8 @@ public class Test1 extends AbstractStateMachineTest {
     assertFalse(ctx.exitedSubMachine);
     
     if (pause) {
-      StateMachineSnapshot snapshot = fsm.pause();
+      fsm.pause();
+      StateMachineSnapshot snapshot = fsm.snapshot();
       
       fsm.take(new StringEvent("go"));
       assertSnapshotEquals(fsm, active);

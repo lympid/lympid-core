@@ -83,8 +83,7 @@ public class PoolStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
 
   @Override
   public void resume() {
-    throw new UnsupportedOperationException("This implementation is unstable for now and can not be trusted.");
-//    pool.resume(this);
+    pool.resume(this);
   }
 
   void doResume() {
@@ -92,22 +91,12 @@ public class PoolStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
   }
 
   @Override
-  public StateMachineSnapshot<C> pause() {
-    throw new UnsupportedOperationException("This implementation is unstable for now and can not be trusted.");
-//    try {
-//      return asyncPause().get();
-//    } catch (InterruptedException | ExecutionException ex) {
-//      ex.printStackTrace(); // FIXME
-//    }
-//    return null;
+  public void pause() {
+    pool.pause(this);
   }
 
-  private Future<StateMachineSnapshot<C>> asyncPause() {
-    return pool.pause(this);
-  }
-
-  StateMachineSnapshot<C> doPause() {
-    return super.pause();
+  void doPause() {
+    super.pause();
   }
 
   @Override

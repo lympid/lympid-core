@@ -98,10 +98,10 @@ public class LockStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
   }
 
   @Override
-  public StateMachineSnapshot<C> pause() {
+  public void pause() {
     lock.writeLock().lock();
     try {
-      return super.pause();
+      super.pause();
     } finally {
       lock.writeLock().unlock();
     }

@@ -56,7 +56,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   }
   
   @Test(expected = RuntimeException.class)
-  public void go_fail() {
+  public void go_noExecutor() {
     StateMachineExecutor fsm = new LockStateMachineExecutor.Builder()
       .setStateMachine(topLevelStateMachine())
       .setContext(new Context())
@@ -64,57 +64,102 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     fsm.go();
   }
   
-  private void run(final int id, final boolean pause) throws InterruptedException {
-    SequentialContext expected = new SequentialContext();
-    Context ctx = new Context();
-    
+  private StateMachineExecutor<Context> fsm(final int id, final Context ctx) {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .executor(AbstractStateMachineTest.THREAD_POOL);
     
-    StateMachineExecutor<Context> fsm = new LockStateMachineExecutor.Builder()
+    return new LockStateMachineExecutor.Builder()
       .setId(id)
       .setStateMachine(topLevelStateMachine())
       .setContext(ctx)
       .setConfiguration(config)
       .build();
+  }
+  
+  private StateMachineExecutor<Context> fsm(final int id, final StateMachineSnapshot snapshot) {
+    ExecutorConfiguration config = new ExecutorConfiguration()
+      .executor(AbstractStateMachineTest.THREAD_POOL);
+    
+    return new LockStateMachineExecutor.Builder()
+      .setId(id)
+      .setStateMachine(topLevelStateMachine())
+      .setSnapshot(snapshot)
+      .setConfiguration(config)
+      .build();
+  }
+  
+  private void run(final int id, final boolean pause) throws InterruptedException {
+    SequentialContext expected = new SequentialContext();
+    Context ctx = new Context();
+    
+    StateMachineExecutor<Context> fsm = fsm(id, ctx);
     fsm.go();
     
     expected.effect("t0").enter("A");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
     
-    pauseAndResume(fsm, pause);
-    ctx = fsm.snapshot().context();
-    
+    pauseAndResume(expected, fsm, ctx, pause, this::runPart2);
+  }
+  
+  private void runPart2(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final Context ctx, final boolean pause) throws InterruptedException {
     ctx.latch1.await(10 * DELAY, TimeUnit.MILLISECONDS);
     Thread.sleep(DELAY);
     expected.exit("A").effect("t1").enter("B");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
     
-    pauseAndResume(fsm, pause);
-    ctx = fsm.snapshot().context();
-    
+    pauseAndResume(expected, fsm, ctx, pause, this::runPart3);
+  }
+  
+  private void runPart3(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final Context ctx, final boolean pause) throws InterruptedException {
     ctx.latch2.countDown();
     Thread.sleep(DELAY);
     expected.exit("B").effect("t2").enter("C");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("C"));
     
-    pauseAndResume(fsm, pause);
-    
+    pauseAndResume(expected, fsm, ctx, pause, this::runPart4);
+  }
+  
+  
+  private void runPart4(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final Context ctx, final boolean pause) throws InterruptedException {
     fsm.take(new StringEvent("go"));
     expected.exit("C").effect("t3");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
-  private void pauseAndResume(final StateMachineExecutor fsm, final boolean pause) {
-    if (pause) {
-      StateMachineSnapshot snapshot = fsm.pause();
-      fsm.take(new StringEvent("go"));
-      fsm.resume();
+  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor fsm1, final Context ctx, final boolean pause, final FsmRunSequence sequence) throws InterruptedException {
+    if (!pause) {
+      sequence.run(expected1, fsm1, ctx, pause);
+      return;
     }
+    
+    fsm1.pause();
+    StateMachineSnapshot<Context> snapshot1 = fsm1.snapshot();
+    SequentialContext expected2 = expected1.copy();
+    
+    /*
+     * First state machine
+     */
+    fsm1.take(new StringEvent("go"));
+    fsm1.resume();
+    sequence.run(expected1, fsm1, ctx, pause);
+
+    /*
+     * Second/cloned state machine
+     */
+    StateMachineExecutor fsm2 = fsm(fsm1.getId(), snapshot1);
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.take(new StringEvent("go"));
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.resume();
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    sequence.run(expected2, fsm2, snapshot1.context(), pause);
   }
 
   @Override
@@ -172,6 +217,12 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     return builder;
   }
   
+  private static interface FsmRunSequence {
+    
+    void run(SequentialContext expected, StateMachineExecutor fsm, Context ctx, boolean pause) throws InterruptedException;
+    
+  }
+  
   private static final class Context extends SequentialContext {
     
     final CountDownLatch latch1;
@@ -180,13 +231,12 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     public Context() {
       this.latch1 = new CountDownLatch(1);
       this.latch2 = new CountDownLatch(1);
-    
     }
     
     public Context(final Context inst) {
       super(inst);
-      this.latch1 = inst.latch1;
-      this.latch2 = inst.latch2;
+      this.latch1 = new CountDownLatch((int) inst.latch1.getCount());
+      this.latch2 = new CountDownLatch((int) inst.latch2.getCount());
     }
     
     @Override

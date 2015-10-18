@@ -85,11 +85,8 @@ public interface StateMachineExecutor<C> {
    * Any new incoming events will be dropped and processing will only resume
    * after {@link #resume} has been invoked.
    * </p>
-   *
-   * @return The snapshot of the state machine when it was paused. This snapshot
-   * can be used to resume the state machine.
    */
-  StateMachineSnapshot<C> pause();
+  void pause();
 
   /**
    * Resumes a state machine with the specified active state configuration and

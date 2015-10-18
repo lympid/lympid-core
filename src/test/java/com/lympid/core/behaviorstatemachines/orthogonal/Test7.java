@@ -60,14 +60,15 @@ public class Test7 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, active);
     
     if (pause) {
-      StateMachineSnapshot snapshot = fsm.pause();
+      fsm.pause();
+      StateMachineSnapshot snapshot = fsm.snapshot();
+      SequentialContext expected2 = expected.copy();
       
       fsm.take(new StringEvent("go2"));
       assertSnapshotEquals(fsm, active);
     
-      // FIXME: fsm.resume(); bug!
       resume(fsm, expected);
-//      resume(snapshot, expected); // FIXME: bug!!!
+      resume(snapshot, expected2);
     } else {
       go2End(fsm, expected);
     }

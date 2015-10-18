@@ -198,10 +198,8 @@ public final class StateMachineShardPoolExecutor<C> {
     queue(executor).add(new StateMachineResumeRunnable(executor));
   }
 
-  Future<StateMachineSnapshot<C>> pause(final PoolStateMachineExecutor<C> executor) {
-    StateMachinePauseRunnable<C> runnable = new StateMachinePauseRunnable<>(executor);
-    queue(executor).addFirst(runnable);
-    return runnable;
+  void pause(final PoolStateMachineExecutor<C> executor) {
+    queue(executor).addFirst(new StateMachinePauseRunnable(executor));
   }
 
   Future<StateMachineSnapshot<C>> snapshot(final PoolStateMachineExecutor<C> executor) {
@@ -276,6 +274,21 @@ public final class StateMachineShardPoolExecutor<C> {
 
   }
 
+  private static final class StateMachinePauseRunnable<C> implements Runnable {
+
+    private final PoolStateMachineExecutor<C> executor;
+
+    public StateMachinePauseRunnable(final PoolStateMachineExecutor<C> executor) {
+      this.executor = executor;
+    }
+
+    @Override
+    public void run() {
+      executor.doPause();
+    }
+
+  }
+
   private static final class StateMachineResumeRunnable<C> implements Runnable {
 
     private final PoolStateMachineExecutor<C> executor;
@@ -337,21 +350,6 @@ public final class StateMachineShardPoolExecutor<C> {
     }
 
     abstract StateMachineSnapshot<C> snapshot();
-
-  }
-
-  private static final class StateMachinePauseRunnable<C> extends StateMachineSnapshotFuture {
-
-    private final PoolStateMachineExecutor<C> executor;
-
-    public StateMachinePauseRunnable(final PoolStateMachineExecutor<C> executor) {
-      this.executor = executor;
-    }
-
-    @Override
-    StateMachineSnapshot<C> snapshot() {
-      return executor.doPause();
-    }
 
   }
 

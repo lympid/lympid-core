@@ -59,6 +59,11 @@ abstract class ResumableStateMachineState implements StateMachineState {
   }
 
   @Override
+  public boolean isPaused() {
+    return paused;
+  }
+
+  @Override
   public boolean isTerminatedOrPaused() {
     return terminated || paused;
   }
@@ -74,7 +79,7 @@ abstract class ResumableStateMachineState implements StateMachineState {
   }
 
   @Override
-  public void resume(final StateMachineSnapshot<?> snapshot) {
+  public void set(final StateMachineSnapshot<?> snapshot) {
     this.started = snapshot.isStarted();
     this.terminated = snapshot.isTerminated();
 
@@ -84,7 +89,6 @@ abstract class ResumableStateMachineState implements StateMachineState {
     if (!snapshot.history().isEmpty()) {
       learnHistory(snapshot.history());
     }
-    resume();
   }
 
   private void reactivate(final StringTree active) {

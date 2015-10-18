@@ -50,21 +50,50 @@ public class Test4 extends AbstractStateMachineTest {
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(fsm, pause, this::runPart2);
+  }
+  
+  private void runPart2(StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A"));
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(fsm, pause, this::runPart3);
+  }
+  
+  private void runPart3(StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
-  private void pauseAndResume(StateMachineExecutor fsm, boolean pause) {
-    if (pause) {
-      StateMachineSnapshot snapshot = fsm.pause();
-      fsm.take(new StringEvent("go"));
-      fsm.resume();
+  private void pauseAndResume(StateMachineExecutor fsm1, boolean pause, FsmRunSequence sequence) {
+    if (!pause) {
+      sequence.run(fsm1, pause);
+      return;
     }
+    
+    fsm1.pause();
+    StateMachineSnapshot snapshot1 = fsm1.snapshot();
+
+    /*
+     * First state machine
+     */
+    fsm1.take(new StringEvent("go"));
+    fsm1.resume();
+    sequence.run(fsm1, pause);
+
+    /*
+     * Second/cloned state machine
+     */
+    StateMachineExecutor fsm2 = fsm(snapshot1);
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.take(new StringEvent("go"));
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.resume();
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    sequence.run(fsm2, pause);
   }
 
   @Override
@@ -127,6 +156,12 @@ public class Test4 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+  
+  private static interface FsmRunSequence {
+    
+    void run(StateMachineExecutor fsm, boolean pause);
+    
   }
   
   private static final class Context {

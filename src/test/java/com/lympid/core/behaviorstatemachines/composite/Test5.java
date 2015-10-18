@@ -109,7 +109,8 @@ public class Test5 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, active);
     
     if (pause) {
-      StateMachineSnapshot snapshot = fsm.pause();
+      fsm.pause();
+      StateMachineSnapshot snapshot = fsm.snapshot();
 
       fsm.take(new StringEvent("finishIt"));
       assertSnapshotEquals(fsm, active);

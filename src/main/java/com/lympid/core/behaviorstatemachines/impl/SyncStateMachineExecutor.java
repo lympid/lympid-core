@@ -69,8 +69,8 @@ public class SyncStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
   }
 
   @Override
-  public synchronized StateMachineSnapshot<C> pause() {
-    return super.pause();
+  public synchronized void pause() {
+    super.pause();
   }
 
   @Override

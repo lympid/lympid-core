@@ -64,7 +64,10 @@ public class Test3 extends AbstractStateMachineTest {
     
     begin(fsm, expected);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part2);
+  }
+  
+  private void run_e_f_b_c_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -75,33 +78,42 @@ public class Test3 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part3);
+  }
+  
+  private void run_e_f_b_c_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "C");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part4);
+  }
+  
+  private void run_e_f_b_c_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "endB")
       .branch("ortho", "A", "C");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part5);
+  }
+  
+  private void run_e_f_b_c_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree(this).branch("end");
+    ActiveStateTree tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
   }
@@ -123,7 +135,10 @@ public class Test3 extends AbstractStateMachineTest {
     
     begin(fsm, expected);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part2);
+  }
+  
+  private void run_f_e_b_c_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -134,33 +149,42 @@ public class Test3 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part3);
+  }
+  
+  private void run_f_e_b_c_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "C");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part4);
+  }
+  
+  private void run_f_e_b_c_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "endB")
       .branch("ortho", "A", "C");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part5);
+  }
+  
+  private void run_f_e_b_c_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree(this).branch("end");
+    ActiveStateTree tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
   }
@@ -182,7 +206,10 @@ public class Test3 extends AbstractStateMachineTest {
     
     begin(fsm, expected);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part2);
+  }
+  
+  private void run_e_f_c_b_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -193,33 +220,42 @@ public class Test3 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part3);
+  }
+  
+  private void run_e_f_c_b_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "C");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part4);
+  }
+  
+  private void run_e_f_c_b_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "B")
       .branch("ortho", "A", "endC");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part5);
+  }
+  
+  private void run_e_f_c_b_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree(this).branch("end");
+    ActiveStateTree tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
   }
@@ -241,7 +277,10 @@ public class Test3 extends AbstractStateMachineTest {
     
     begin(fsm, expected);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part2);
+  }
+  
+  private void run_e_b_f_c_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -252,10 +291,13 @@ public class Test3 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part3);
+  }
+  
+  private void run_e_b_f_c_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "D", "endE")
       .branch("ortho", "D", "F")
       .branch("ortho", "A", "endB")
@@ -263,23 +305,29 @@ public class Test3 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part4);
+  }
+  
+  private void run_e_b_f_c_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
-    tree = new ActiveStateTree(this)
+    ActiveStateTree tree = new ActiveStateTree(this)
       .branch("ortho", "endD")
       .branch("ortho", "A", "endB")
       .branch("ortho", "A", "C");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
     
-    pauseAndResume(fsm, pause);
+    pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part5);
+  }
+  
+  private void run_e_b_f_c_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
       .exit("ortho").effect("t13");
-    tree = new ActiveStateTree(this).branch("end");
+    ActiveStateTree tree = new ActiveStateTree(this).branch("end");
     assertSequentialContextEquals(expected, fsm);
     assertSnapshotEquals(fsm, tree);
   }
@@ -302,17 +350,45 @@ public class Test3 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, tree);
   }
   
-  private void pauseAndResume(final StateMachineExecutor fsm, final boolean pause) {
-    if (pause) {
-      StateMachineSnapshot snapshot = fsm.pause();
-
-      fsm.take(new StringEvent("goB"));
-      fsm.take(new StringEvent("goC"));
-      fsm.take(new StringEvent("goE"));
-      fsm.take(new StringEvent("goF"));
-
-      fsm.resume();
+  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor fsm1, final boolean pause, final FsmRunSequence sequence) {
+    if (!pause) {
+      sequence.run(expected1, fsm1, pause);
+      return;
     }
+    
+    fsm1.pause();
+    StateMachineSnapshot snapshot1 = fsm1.snapshot();
+    SequentialContext expected2 = expected1.copy();
+
+    /*
+     * First state machine
+     */
+    fsm1.take(new StringEvent("goB"));
+    fsm1.take(new StringEvent("goC"));
+    fsm1.take(new StringEvent("goE"));
+    fsm1.take(new StringEvent("goF"));
+    fsm1.resume();
+    sequence.run(expected1, fsm1, pause);
+
+    /*
+     * Second/cloned state machine
+     */
+    StateMachineExecutor fsm2 = fsm(snapshot1);
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.take(new StringEvent("goB"));
+    assertSnapshotEquals(snapshot1, fsm2);
+    fsm2.take(new StringEvent("goC"));
+    assertSnapshotEquals(snapshot1, fsm2);
+    fsm2.take(new StringEvent("goE"));
+    assertSnapshotEquals(snapshot1, fsm2);
+    fsm2.take(new StringEvent("goF"));
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    fsm2.resume();
+    assertSnapshotEquals(snapshot1, fsm2);
+
+    sequence.run(expected2, fsm2, pause);
   }
   
   @Override
@@ -383,6 +459,12 @@ public class Test3 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+  
+  private static interface FsmRunSequence {
+    
+    void run(SequentialContext expected, StateMachineExecutor fsm, boolean pause);
+    
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test3.class.getSimpleName() + "\"\n" +

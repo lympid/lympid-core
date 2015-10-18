@@ -17,6 +17,7 @@ package com.lympid.core.common;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -42,17 +43,40 @@ public class StringTree implements Serializable {
   public void setChildren(final List<StringTree> children) {
     this.children = children;
   }
-  
+
+  @Override
+  public int hashCode() {
+    int hash = 7;
+    hash = 41 * hash + Objects.hashCode(this.value);
+    hash = 41 * hash + Objects.hashCode(this.children);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final StringTree other = (StringTree) obj;
+    if (!Objects.equals(this.value, other.value)) {
+      return false;
+    }
+    return Objects.equals(this.children, other.children);
+  }
+
   @Override
   public String toString() {
-      if (value == null) {
-          return "";
-      }
-      
-      if (children == null) {
-          return value;
-      }
-      
-      return value + " " + children;
+    if (value == null) {
+      return "";
+    }
+
+    if (children == null) {
+      return value;
+    }
+
+    return value + " " + children;
   }
 }
