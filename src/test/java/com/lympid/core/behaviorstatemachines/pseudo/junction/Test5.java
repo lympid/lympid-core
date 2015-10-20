@@ -22,6 +22,7 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
 import org.junit.Test;
 
 /**
@@ -73,22 +74,22 @@ public class Test5 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void invalid_neg1() {
     invalidRun(-1);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void invalid_0() {
     invalidRun(0);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void invalid_1() {
     invalidRun(1);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void invalid_2() {
     invalidRun(2);
   }

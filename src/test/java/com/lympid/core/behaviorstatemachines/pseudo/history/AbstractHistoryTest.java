@@ -34,7 +34,7 @@ abstract class AbstractHistoryTest<C> extends AbstractStateMachineTest {
 
   protected AbstractHistoryTest(final PseudoStateKind historyKind) {
     if (historyKind != PseudoStateKind.SHALLOW_HISTORY && historyKind != PseudoStateKind.DEEP_HISTORY) {
-      throw new RuntimeException(); // TODO: custom exception
+      throw new RuntimeException("Invalid pseudo state history kind. Expects " + PseudoStateKind.SHALLOW_HISTORY + " or " + PseudoStateKind.DEEP_HISTORY + " but got: " + historyKind);
     }
     this.historyKind = historyKind;
   }

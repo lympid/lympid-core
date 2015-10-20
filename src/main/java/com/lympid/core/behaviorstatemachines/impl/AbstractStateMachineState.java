@@ -229,7 +229,9 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
   @Override
   public void saveDeepHistory(final Region region) {
     MutableStateConfiguration stateConfig = nodesByRegion.get(region);
-    if (stateConfig == null || stateConfig.state() instanceof FinalState) {
+    assert stateConfig != null;
+    
+    if (stateConfig.state() instanceof FinalState) {
       histories.remove(region);
     } else {
       saveHistory(region, stateConfig.copy());
@@ -239,7 +241,9 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
   @Override
   public void saveShallowHistory(final Region region) {
     StateConfiguration stateConfig = nodesByRegion.get(region);
-    if (stateConfig == null || stateConfig.state() instanceof FinalState) {
+    assert stateConfig != null;
+    
+    if (stateConfig.state() instanceof FinalState) {
       histories.remove(region);
     } else {
       saveHistory(region, new SimpleStateConfiguration(stateConfig.state()));
@@ -254,11 +258,7 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
   private void clearActivity(final StateStatus status) {
     Future f = status.getActivity();
     if (f != null && !f.isDone()) {
-      if (f.cancel(true)) {
-        // TODO
-      } else {
-        // TODO
-      }
+      f.cancel(true);
     }
     status.setActivity(null);
   }
@@ -267,11 +267,7 @@ abstract class AbstractStateMachineState extends ResumableStateMachineState {
     if (status.hasEventTimers()) {
       for (Future f : status.getEventTimers()) {
         if (!f.isDone()) {
-          if (f.cancel(false)) {
-            // TODO
-          } else {
-            // TODO
-          }
+          f.cancel(true);
         }
       }
       status.setEventTimers(null);

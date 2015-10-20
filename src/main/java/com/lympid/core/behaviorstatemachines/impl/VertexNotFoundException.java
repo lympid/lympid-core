@@ -21,29 +21,29 @@ import com.lympid.core.common.UmlElementNotFoundException;
  *
  * @author Fabien Renaud
  */
-public class RegionNotFoundException extends UmlElementNotFoundException {
+public class VertexNotFoundException extends UmlElementNotFoundException {
 
-  public RegionNotFoundException(String id) {
+  public VertexNotFoundException(String id) {
     super(id);
   }
-  
-  public RegionNotFoundException(String id, String name) {
+
+  public VertexNotFoundException(String id, String name) {
     super(id, name);
   }
 
-  public RegionNotFoundException(String id, String name, String message) {
+  public VertexNotFoundException(String id, String name, String message) {
     super(id, name, message);
   }
 
-  public RegionNotFoundException(String id, String name, String message, Throwable cause) {
+  public VertexNotFoundException(String id, String name, String message, Throwable cause) {
     super(id, name, message, cause);
   }
 
-  public RegionNotFoundException(String id, String name, Throwable cause) {
+  public VertexNotFoundException(String id, String name, Throwable cause) {
     super(id, name, cause);
   }
 
-  public RegionNotFoundException(String id, String name, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+  public VertexNotFoundException(String id, String name, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
     super(id, name, message, cause, enableSuppression, writableStackTrace);
   }
 

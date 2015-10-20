@@ -55,7 +55,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     run(12, false);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = BadConfigurationException.class)
   public void go_noExecutor() {
     StateMachineExecutor fsm = new LockStateMachineExecutor.Builder()
       .setStateMachine(topLevelStateMachine())
@@ -165,7 +165,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   @Override
   public StateMachine topLevelStateMachine() {
     if (machine == null) {
-      machine = topLevelMachineBuilder().newInstance();
+      machine = topLevelMachineBuilder().instance();
     }
     return machine;
   }

@@ -16,19 +16,28 @@
 package com.lympid.core.behaviorstatemachines.builder;
 
 import com.lympid.core.behaviorstatemachines.impl.MutableState;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
  *
- * @author Fabien Renaud 
+ * @author Fabien Renaud
  */
 public class VertexBuilderTest {
 
-  @Test(expected = IllegalStateException.class)
+  @Test(expected = TransitionCreationException.class)
   public void connect_noSource() {
     SimpleStateBuilder builder = new SimpleStateBuilder("A");
-    builder.connect(new VertexSet());
+    builder.setId("897234");
+    try {
+      builder.connect(new VertexSet());
+    } catch (TransitionCreationException ex) {
+      assertEquals("#897234", ex.getSource());
+      assertNull(ex.getTarget());
+      throw ex;
+    }
   }
 
   @Test(expected = RuntimeException.class)

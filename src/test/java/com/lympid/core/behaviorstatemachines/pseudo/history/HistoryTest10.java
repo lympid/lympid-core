@@ -34,23 +34,23 @@ import com.lympid.core.behaviorstatemachines.Vertex;
 import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import com.lympid.core.behaviorstatemachines.impl.DefaultHistoryEntryException;
+import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
- * Tests a shallow/deep history pseudo state with no outgoing transition.
- * The test attempts to restore the composite state after it had reached its
- * final state. Because the history pseudo state has no outgoing transition,
- * this is expected to fail.
+ * Tests a shallow/deep history pseudo state can be entered when a composite
+ * does not have any initial pseudo state nor any transition activating any of
+ * its states but the transition outgoing the history pseudo state.
+ * This test uses the 'none' default entry rule.
  *
  * @author Fabien Renaud 
  */
-public abstract class HistoryTest5 extends AbstractHistoryTest {
+public abstract class HistoryTest10 extends AbstractHistoryTest {
   
   private String stdout;
   
-  protected HistoryTest5(final PseudoStateKind historyKind) {
+  protected HistoryTest10(final PseudoStateKind historyKind) {
     super(historyKind);
     setStdOut(historyKind);
   }
@@ -68,45 +68,54 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
         new FinalStateTest("end")
       },
       new TransitionTest[]{
-        new TransitionTest("#5", "#4", "A"),
-        new TransitionTest("#7", "compo", "end"),
-        new TransitionTest("#8", "compo", "P"),
-        new TransitionTest("#19", "P", "history")
+        new TransitionTest("#5", "#4", "compo"),
+        new TransitionTest("#7", "compo", "P"),
+        new TransitionTest("#16", "C", "end"),
+        new TransitionTest("#18", "P", "history")
       }
     );
   }
   
   private void verifyCompo(Vertex v) {
     State s = StateMachineTester.assertComposite(v);
-    StateMachineTester.assertRegions(s.region(), 1, new RegionTest("9", null, 5, 3,
+    StateMachineTester.assertRegions(s.region(), 1, new RegionTest("8", null, 4, 3,
       new VertexTest[]{
         new SimpleStateTest("A"),
         new SimpleStateTest("B"),
         new SimpleStateTest("C"),
-        historyVertexTest("history"),
-        new FinalStateTest("rend")
+        historyVertexTest("history")
       },
       new TransitionTest[]{
+        new TransitionTest("#10", "history", "A"),
         new TransitionTest("#12", "A", "B"),
-        new TransitionTest("#14", "B", "C"),
-        new TransitionTest("#16", "C", "rend")
+        new TransitionTest("#14", "B", "C")
       }
     ));
   }
   
   @Test
-  public void run_a_b_c_rend_end() {
+  public void run_P_a_b_c_end() {
     SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo").enter("A")
-      .exit("A").effect("t1").enter("B")
-      .exit("B").effect("t2").enter("C")
-      .exit("C").effect("t3")
-      .exit("compo").effect("t4");
+      .effect("t0").enter("compo")
+      .exit("compo").effect("t5").enter("P")
+      .exit("P").effect("t6").enter("compo").effect("t1").enter("A")
+      .exit("A").effect("t2").enter("B")
+      .exit("B").effect("t3").enter("C")
+      .exit("C").exit("compo").effect("t4");
+    
+    ExecutorConfiguration configuration = new ExecutorConfiguration()
+      .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
     SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor fsm = fsm(ctx, configuration);
     fsm.go();
     
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
+    
+    fsm.take(new StringEvent("pause"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    
+    fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
@@ -115,30 +124,37 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     fsm.take(new StringEvent("toC"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
-    fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
-    
-    fsm.take(new StringEvent("end"));
+    fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
     assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
-  public void run_a_P_a_b_c_rend_end() {
+  public void run_P_a_P_a_b_c_end() {
     SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo").enter("A")
+      .effect("t0").enter("compo")
+      .exit("compo").effect("t5").enter("P")
+      .exit("P").effect("t6").enter("compo").effect("t1").enter("A")
       .exit("A").exit("compo").effect("t5").enter("P")
       .exit("P").effect("t6").enter("compo").enter("A")
-      .exit("A").effect("t1").enter("B")
-      .exit("B").effect("t2").enter("C")
-      .exit("C").effect("t3")
-      .exit("compo").effect("t4");
+      .exit("A").effect("t2").enter("B")
+      .exit("B").effect("t3").enter("C")
+      .exit("C").exit("compo").effect("t4");
+    
+    ExecutorConfiguration configuration = new ExecutorConfiguration()
+      .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
     SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor fsm = fsm(ctx, configuration);
     fsm.go();
     
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
+    
+    fsm.take(new StringEvent("pause"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    
+    fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("pause"));
@@ -153,30 +169,37 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     fsm.take(new StringEvent("toC"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
-    fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
-    
-    fsm.take(new StringEvent("end"));
+    fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
     assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
-  public void run_a_b_P_b_c_rend_end() {
+  public void run_P_a_b_P_b_c_end() {
     SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo").enter("A")
-      .exit("A").effect("t1").enter("B")
+      .effect("t0").enter("compo")
+      .exit("compo").effect("t5").enter("P")
+      .exit("P").effect("t6").enter("compo").effect("t1").enter("A")
+      .exit("A").effect("t2").enter("B")
       .exit("B").exit("compo").effect("t5").enter("P")
       .exit("P").effect("t6").enter("compo").enter("B")
-      .exit("B").effect("t2").enter("C")
-      .exit("C").effect("t3")
-      .exit("compo").effect("t4");
+      .exit("B").effect("t3").enter("C")
+      .exit("C").exit("compo").effect("t4");
+    
+    ExecutorConfiguration configuration = new ExecutorConfiguration()
+      .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
     SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor fsm = fsm(ctx, configuration);
     fsm.go();
     
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
+    
+    fsm.take(new StringEvent("pause"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    
+    fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
@@ -191,30 +214,37 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     fsm.take(new StringEvent("toC"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
-    fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
-    
-    fsm.take(new StringEvent("end"));
+    fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
     assertSequentialContextEquals(expected, fsm);
   }
   
   @Test
-  public void run_a_b_c_P_c_rend_end() {
+  public void run_P_a_b_c_P_c_end() {
     SequentialContext expected = new SequentialContext()
-      .effect("t0").enter("compo").enter("A")
-      .exit("A").effect("t1").enter("B")
-      .exit("B").effect("t2").enter("C")
+      .effect("t0").enter("compo")
+      .exit("compo").effect("t5").enter("P")
+      .exit("P").effect("t6").enter("compo").effect("t1").enter("A")
+      .exit("A").effect("t2").enter("B")
+      .exit("B").effect("t3").enter("C")
       .exit("C").exit("compo").effect("t5").enter("P")
       .exit("P").effect("t6").enter("compo").enter("C")
-      .exit("C").effect("t3")
-      .exit("compo").effect("t4");
+      .exit("C").exit("compo").effect("t4");
+    
+    ExecutorConfiguration configuration = new ExecutorConfiguration()
+      .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
     SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor fsm = fsm(ctx, configuration);
     fsm.go();
     
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
+    
+    fsm.take(new StringEvent("pause"));
+    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
+    
+    fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     fsm.take(new StringEvent("toB"));
@@ -229,41 +259,15 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
-    fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
-    
-    fsm.take(new StringEvent("end"));
+    fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
     assertSequentialContextEquals(expected, fsm);
-  }
-  
-  @Test(expected = DefaultHistoryEntryException.class)
-  public void run_a_b_c_rend_P() {
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
-    fsm.go();
-    
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
-    
-    fsm.take(new StringEvent("toB"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
-    
-    fsm.take(new StringEvent("toC"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
-    
-    fsm.take(new StringEvent("toE"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "rend"));
-    
-    fsm.take(new StringEvent("pause"));
-    assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
-    
-    fsm.take(new StringEvent("resume"));
   }
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder(name());
 
     builder
       .region()
@@ -273,18 +277,15 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
       .region()
         .initial()
           .transition("t0")
-            .target("A");
+            .target("compo");
     
     builder
       .region()
-        .state(composite(builder, "compo"))
-          .transition("t4")
-            .on("end")
-            .target("end")
+        .state(composite("compo"))
           .transition("t5")
             .on("pause")
             .target("P");
-    
+
     builder
       .region()
         .state("P")
@@ -295,35 +296,31 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
     return builder;
   }
   
-  private CompositeStateBuilder<Object> composite(final StateMachineBuilder<Object> b, final String name) {
-    CompositeStateBuilder<Object> builder = new CompositeStateBuilder(name);
-  
-    history(builder, "history");
+  private CompositeStateBuilder composite(final String name) {
+    CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    
+    historyTransitionTo(builder, "A", "history", "t1");
     
     builder
       .region()
         .state("A")
-          .transition("t1")
+          .transition("t2")
             .on("toB")
             .target("B");
   
     builder
       .region()
         .state("B")
-          .transition("t2")
+          .transition("t3")
             .on("toC")
             .target("C");
   
     builder
       .region()
         .state("C")
-          .transition("t3")
-            .on("toE")
-            .target("rend");
-    
-    builder
-      .region()
-        .finalState("rend");
+          .transition("t4")
+            .on("toEnd")
+            .target("end");
     
     return builder;
   }
@@ -340,20 +337,18 @@ public abstract class HistoryTest5 extends AbstractHistoryTest {
 "    FinalState: \"end\"\n" +
 "    PseudoState: #4 kind: INITIAL\n" +
 "    State: \"compo\"\n" +
-"      Region: #9\n" +
+"      Region: #8\n" +
 "        State: \"A\"\n" +
 "        State: \"B\"\n" +
 "        State: \"C\"\n" +
-"        FinalState: \"rend\"\n" +
-"        PseudoState: \"history\" kind: " +  historyKind + "\n" +
-"        Transition: \"t1\" --- \"A\" -> \"B\"\n" +
-"        Transition: \"t2\" --- \"B\" -> \"C\"\n" +
-"        Transition: \"t3\" --- \"C\" -> \"rend\"\n" +
+"        PseudoState: \"history\" kind: " + historyKind + "\n" +
+"        Transition: \"t1\" --- \"history\" -> \"A\"\n" +
+"        Transition: \"t2\" --- \"A\" -> \"B\"\n" +
+"        Transition: \"t3\" --- \"B\" -> \"C\"\n" +
 "    State: \"P\"\n" +
-"    Transition: \"t0\" --- #4 -> \"A\"\n" +
-"    Transition: \"t4\" --- \"compo\" -> \"end\"\n" +
+"    Transition: \"t0\" --- #4 -> \"compo\"\n" +
 "    Transition: \"t5\" --- \"compo\" -> \"P\"\n" +
+"    Transition: \"t4\" --- \"C\" -> \"end\"\n" +
 "    Transition: \"t6\" --- \"P\" -> \"history\"";
   }
-
 }

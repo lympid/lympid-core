@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class ResumableStateMachineStateTest {
 
-  @Test(expected = StateNotFoundException.class)
+  @Test(expected = VertexNotFoundException.class)
   public void testStateNotFound() {
     MutableStateMachineSnapshot snapshot = new MutableStateMachineSnapshot();
     StringTree tree = new StringTree("100");
@@ -41,8 +41,8 @@ public class ResumableStateMachineStateTest {
     StateMachineExecutor fsm = fsm(snapshot);
     try {
       fsm.resume();
-    } catch (StateNotFoundException ex) {
-      assertEquals("100", ex.getElementId());
+    } catch (VertexNotFoundException ex) {
+      assertEquals("100", ex.getId());
       throw ex;
     }
   }
@@ -56,12 +56,12 @@ public class ResumableStateMachineStateTest {
     try {
       fsm.resume();
     } catch (RegionNotFoundException ex) {
-      assertEquals("1", ex.getElementId());
+      assertEquals("1", ex.getId());
       throw ex;
     }
   }
 
-  @Test(expected = StateNotFoundException.class)
+  @Test(expected = VertexNotFoundException.class)
   public void testHistoryStateNotFound() {
     MutableStateMachineSnapshot<?> snapshot = new MutableStateMachineSnapshot();
     snapshot.history().put("2", new StringTree("4"));
@@ -70,12 +70,12 @@ public class ResumableStateMachineStateTest {
     try {
       fsm.resume();
     } catch (RegionNotFoundException ex) {
-      assertEquals("4", ex.getElementId());
+      assertEquals("4", ex.getId());
       throw ex;
     }
   }
 
-  @Test(expected = StateNotFoundException.class)
+  @Test(expected = VertexNotFoundException.class)
   public void testHistoryChildStateNotFound() {
     MutableStateMachineSnapshot<?> snapshot = new MutableStateMachineSnapshot();
     StringTree history = new StringTree("5");
@@ -85,8 +85,8 @@ public class ResumableStateMachineStateTest {
     StateMachineExecutor fsm = fsm(snapshot);
     try {
       fsm.resume();
-    } catch (StateNotFoundException ex) {
-      assertEquals("9", ex.getElementId());
+    } catch (VertexNotFoundException ex) {
+      assertEquals("9", ex.getId());
       throw ex;
     }
   }

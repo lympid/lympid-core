@@ -49,6 +49,6 @@ public final class StateMachineStateFactory {
       return new SimpleStateMachineState(meta);
     }
 
-    return new SimpleStateMachineState(meta); // TODO?
+    return new SimpleStateMachineState(meta);
   }
 }

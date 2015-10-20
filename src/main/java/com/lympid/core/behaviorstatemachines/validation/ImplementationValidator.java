@@ -30,9 +30,6 @@ import java.util.Iterator;
 /**
  * Constraints due to implementation limitations or specificities.
  *
- * TODO: a transition can not have more than 1 time event TODO: a transition
- * with a time event can only have a state as source
- *
  * @author Fabien Renaud
  */
 public final class ImplementationValidator {

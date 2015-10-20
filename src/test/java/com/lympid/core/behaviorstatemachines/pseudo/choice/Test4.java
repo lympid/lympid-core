@@ -25,6 +25,7 @@ import com.lympid.core.behaviorstatemachines.TransitionBehavior;
 import com.lympid.core.behaviorstatemachines.builder.ChoiceBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
 import org.junit.Test;
 
 /**
@@ -104,7 +105,7 @@ public class Test4 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
     
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_noStart() {
     newValueForC = 4;
     
@@ -122,7 +123,6 @@ public class Test4 extends AbstractStateMachineTest {
   public StateMachineBuilder topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    // TODO: figure out why <Context> is needed for those and fix it!
     VertexBuilderReference<Context> end1 = builder
       .region()
         .finalState("end1");

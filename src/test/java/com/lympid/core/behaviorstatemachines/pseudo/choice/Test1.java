@@ -24,6 +24,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.ChoiceBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
 import org.junit.Test;
 
 /**
@@ -80,8 +81,8 @@ public class Test1 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end3"));
     assertSequentialContextEquals(expected, fsm);
   }
-    
-  @Test(expected = RuntimeException.class)
+  
+  @Test(expected = IllStateMachineException.class)
   public void run_noStart() {
     Context ctx = new Context();
     ctx.c = 4;

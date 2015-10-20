@@ -21,11 +21,12 @@ import com.lympid.core.behaviorstatemachines.impl.MutableStateMachine;
 import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
  *
- * @author Fabien Renaud 
+ * @author Fabien Renaud
  */
 public class VertexSetTest {
 
@@ -374,7 +375,7 @@ public class VertexSetTest {
     MutableState vertex2 = new MutableState(id);
     VertexSet vertices = new VertexSet();
     vertices.add(vertex1);
-    
+
     try {
       vertices.add(vertex2);
     } catch (DuplicateVertexNameException ex) {
@@ -463,5 +464,17 @@ public class VertexSetTest {
       assertEquals(state2, ex.getSecond());
       throw ex;
     }
+  }
+
+  @Test
+  public void testAddRegistry() {
+    MutableState state1 = new MutableState(id());
+
+    VertexSet vertices = new VertexSet();
+    MutableState v1 = vertices.add(state1);
+    MutableState v2 = vertices.add(state1);
+    
+    assertTrue(state1 == v1);
+    assertTrue(v1 == v2);
   }
 }

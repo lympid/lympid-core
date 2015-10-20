@@ -49,7 +49,7 @@ public abstract class AbstractStateMachineTest implements StateMachineTest {
       if (sequentialContextInjection()) {
         b.accept(new SequentialContextInjector());
       }
-      MACHINES.put(getClass(), b.newInstance());
+      MACHINES.put(getClass(), b.instance());
     }
   }
 

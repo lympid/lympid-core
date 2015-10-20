@@ -15,16 +15,14 @@
  */
 package com.lympid.core.behaviorstatemachines.impl;
 
-import com.lympid.core.common.UmlElementNotFoundException;
-
 /**
  *
  * @author Fabien Renaud
  */
-public class StateNotFoundException extends UmlElementNotFoundException {
+public class BadConfigurationException extends RuntimeException {
 
-  public StateNotFoundException(final String id) {
-    super(id);
+  public BadConfigurationException(String message) {
+    super(message);
   }
-  
+
 }

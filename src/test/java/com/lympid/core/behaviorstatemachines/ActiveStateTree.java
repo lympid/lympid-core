@@ -63,9 +63,7 @@ public final class ActiveStateTree {
       createRoot(id);
     }
 
-    if (!tree.content().equals(id)) {
-      throw new RuntimeException(); // TODO: custom exception
-    }
+    assert tree.content().equals(id) : "tree.content=" + tree.content() + " expected: " + id;
     return rootBranch;
   }
 

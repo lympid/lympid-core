@@ -21,6 +21,7 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.impl.BadConfigurationException;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +36,7 @@ public class Test1 extends AbstractStateMachineTest {
 
   private static final long DELAY = 50;
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = BadConfigurationException.class)
   public void go_fail() {
     StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder()
       .setName(executorName())

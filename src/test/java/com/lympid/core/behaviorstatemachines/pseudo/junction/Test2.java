@@ -26,6 +26,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.TransitionConstraint;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.TransitionEffectInjector;
+import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -60,13 +61,13 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t1_t4_t10_t18() {
     StateMachineExecutor fsm = fsm(new Context(0, 1, 3));
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t1_t4() {
     StateMachineExecutor fsm = fsm(new Context(0, 0, 2));
     fsm.go();
@@ -93,13 +94,13 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t1_t5_t11_t18() {
     StateMachineExecutor fsm = fsm(new Context(3, 1, 3));
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t1_t5() {
     StateMachineExecutor fsm = fsm(new Context(3, 2, 2));
     fsm.go();
@@ -126,7 +127,7 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t2_t6_t12_t18() {
     StateMachineExecutor fsm = fsm(new Context(4, 1, 0));
     fsm.go();
@@ -152,7 +153,7 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t2_t6_t13() {
     StateMachineExecutor fsm = fsm(new Context(1, 1, 3));
     fsm.go();
@@ -178,7 +179,7 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t2_t7_t14() {
     StateMachineExecutor fsm = fsm(new Context(4, 2, 0));
     fsm.go();
@@ -205,13 +206,13 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t2_t7_t15_t19() {
     StateMachineExecutor fsm = fsm(new Context(1, 2, 0));
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t2() {
     StateMachineExecutor fsm = fsm(new Context(4, 0, 0));
     fsm.go();
@@ -238,13 +239,13 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t3_t8_t16_t19() {
     StateMachineExecutor fsm = fsm(new Context(2, 1, -1));
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t3_t8() {
     StateMachineExecutor fsm = fsm(new Context(2, 0, 2));
     fsm.go();
@@ -271,13 +272,13 @@ public class Test2 extends AbstractStateMachineTest {
     assertEquals(expectedCtx, ctx);
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t3_t9_t17_t19() {
     StateMachineExecutor fsm = fsm(new Context(5, 1, -1));
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_t3_t9() {
     StateMachineExecutor fsm = fsm(new Context(5, 0, 2));
     fsm.go();

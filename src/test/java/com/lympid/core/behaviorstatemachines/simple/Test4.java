@@ -24,6 +24,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
+import com.lympid.core.behaviorstatemachines.impl.IllegalStartException;
 import org.junit.Test;
 
 /**
@@ -56,7 +57,7 @@ public class Test4 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalStartException.class)
   public void go_afterStarted_withAutoStart() {
     StateMachineExecutor fsm = fsm();
     fsm.go();
@@ -65,7 +66,7 @@ public class Test4 extends AbstractStateMachineTest {
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalStartException.class)
   public void go_afterStarted_withoutAutoStart() {
     StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
     fsm.go();
@@ -73,7 +74,7 @@ public class Test4 extends AbstractStateMachineTest {
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalStartException.class)
   public void go_afterTerminated_withAutoStart() {
     StateMachineExecutor fsm = fsm();
     fsm.go();
@@ -83,7 +84,7 @@ public class Test4 extends AbstractStateMachineTest {
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalStartException.class)
   public void go_afterTerminated_withoutAutoStart() {
     StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
     fsm.go();
@@ -93,21 +94,21 @@ public class Test4 extends AbstractStateMachineTest {
     fsm.go();
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalStartException.class)
   public void noGo_take_withAutoStart() {
     StateMachineExecutor fsm = fsm();
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalStartException.class)
   public void noGo_take_withoutAutoStart() {
     StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalStartException.class)
   public void noPause_resume() {
     StateMachineExecutor fsm = fsm();
     fsm.go();

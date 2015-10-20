@@ -165,11 +165,7 @@ public class SimpleStateMachineState extends ResumableStateMachineState {
   private void clearActivity() {
     Future f = status.getActivity();
     if (f != null && !f.isDone()) {
-      if (f.cancel(true)) {
-        // TODO
-      } else {
-        // TODO
-      }
+      f.cancel(true);
     }
     status.setActivity(null);
   }
@@ -178,11 +174,7 @@ public class SimpleStateMachineState extends ResumableStateMachineState {
     if (status.hasEventTimers()) {
       for (Future f : status.getEventTimers()) {
         if (!f.isDone()) {
-          if (f.cancel(false)) {
-            // TODO
-          } else {
-            // TODO
-          }
+          f.cancel(true);
         }
       }
       status.setEventTimers(null);

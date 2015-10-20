@@ -53,6 +53,11 @@ public final class FunctionRelativeTimeEvent<C> implements TimeEvent<C> {
     lastTime = delay.apply(context).toMillis();
     return lastTime;
   }
+  
+  @Override
+  public boolean isRelative() {
+    return true;
+  }
 
   @Override
   public int hashCode() {
@@ -76,7 +81,7 @@ public final class FunctionRelativeTimeEvent<C> implements TimeEvent<C> {
   /**
    * Gets a string representation of the time given by the last call to #time.
    * If #time has never been called before calling this method, it will return
-   * "() ms"
+   * "()ms"
    *
    * @return A string representation of the time event.
    */

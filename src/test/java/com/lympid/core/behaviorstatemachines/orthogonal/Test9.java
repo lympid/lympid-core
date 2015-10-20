@@ -37,7 +37,7 @@ public class Test9  {
   @Test(expected = UnsupportedOperationException.class)
   public void unsupportedTransition() {
     try {
-      topLevelMachineBuilder().newInstance();
+      topLevelMachineBuilder().instance();
     } catch (UnsupportedOperationException ex) {
       assertEquals(EXCEPTION_MESSAGE, ex.getMessage());
       throw ex;

@@ -136,7 +136,7 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
   void connect(final VertexSet vertices) {
     MutableVertex source = vertices.getVertex(this);
     if (source == null) {
-      throw new IllegalStateException("Vertex not found. Id: " + getId() + " Name: " + getName()); // TODO: custom exception
+      throw new TransitionCreationException("#" + id, null, "Can not find this vertex in the vertices's set.");
     }
 
     final List<Transition> transitions = new LinkedList<>();
@@ -158,7 +158,7 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
       }
 
       if (target == null) {
-        throw new RuntimeException("Unregistered target. source=" + source + " target=" + originalTarget); // TODO: custom exception
+        throw new TransitionCreationException(String.valueOf(source), String.valueOf(originalTarget), "Can not find the target vertex in the vertices' set.");
       }
 
       StandardValidator.validate(t.getKind(), source, target);
@@ -167,7 +167,7 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
       try {
         region = (MutableRegion) determineRegion(vertices, source, target, t.getKind());
       } catch (CommonAncestorException ex) {
-        throw new RuntimeException("No region found. source=" + source + " target=" + originalTarget, ex); // TODO: custom exception
+        throw new TransitionCreationException(String.valueOf(source), String.valueOf(originalTarget), "No region found.", ex);
       }
 
       MutableTransition transition = new MutableTransition(region, source, target, t.getGuard(), t.getEffect(), t.getKind(), t.getId());
@@ -206,84 +206,92 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
   private Region determineRegion(final VertexSet vertices, final Vertex source, final Vertex target, final TransitionKind kind) throws CommonAncestorException {
     switch (kind) {
       case EXTERNAL:
-        /*
-         * In case the target is an exit point, it might be an external
-         * transition coming from a substate of the composite state. If it is
-         * the case, the region of the transition is the first region of the
-         * composite state.
-         */
-        if (VertexUtils.exitPoint(target)) {
-          PseudoState pseudoTarget = (PseudoState) target;
-          State composite = pseudoTarget.state();
-          if (composite == null) {
-            /*
-             * Case when the exit point is one of a state machine. The source of
-             * the transition can not be the state machine itself and the state
-             * machine is always the ancestor of the source. There, the
-             * transition belongs to the first region of the state machine.
-             */
-            return pseudoTarget.stateMachine().region().get(0);
-          }
-
-          if (source == composite) {
-            return composite.container();
-          }
-          if (VertexUtils.ancestor(composite, source)) {
-            return composite.region().get(0);
-          }
-        }
-
-        Vertex nSource = VertexUtils.exitPoint(source)
-                ? ((PseudoState) source).state()
-                : source;
-        Vertex nTarget = VertexUtils.connectionPoint(target)
-                ? ((PseudoState) target).state()
-                : target;
-        return vertices.leastCommonAncestor(nSource, nTarget);
+        return determineRegionForExternalTransition(vertices, source, target);
       case INTERNAL:
         return source.container();
       case LOCAL:
-        /*
-         * The standard validator -- and UML specfication -- guarantees that
-         * either the source is a composite state or an entry point.
-         */
-        final RegionOwner sourceRegionOwner;
-        if (source instanceof State) { // composite state
-          sourceRegionOwner = (RegionOwner) source;
-        } else {
-          PseudoState ps = (PseudoState) source;
-          sourceRegionOwner = ps.stateMachine() == null ? ps.state() : ps.stateMachine();
-        }
-        final List<? extends Region> sourceRegions = sourceRegionOwner.region();
-
-        /*
-         * The transition always belongs to the region of the source composite
-         * state. When multiple regions, the transition belongs to the region of
-         * the target vertex.
-         */
-        if (sourceRegions.size() == 1) {
-          return sourceRegions.get(0);
-        }
-
-        /*
-         * Orthogonal state case
-         */
-        final State targetState = target instanceof State
-                ? (State) target
-                : (State) ((PseudoState) target).state();
-        if (sourceRegionOwner == targetState) {
-          throw new UnsupportedOperationException("Local transitions which source and target are the same orthogonal state are not supported yet.");
-          // TODO: Should the transition belong to the orthogonal state itself (and not one of its regions)?
-        }
-        State orthogonalSource = (State) sourceRegionOwner;
-        Region candidate = targetState.container();
-        while (candidate.state() != orthogonalSource) {
-          candidate = candidate.state().container();
-        }
-        return candidate;
+        return determineRegionForLocalTransition(source, target);
       default:
         throw new UnsupportedOperationException("Unknown transition kind: " + kind);
     }
+  }
+
+  private Region determineRegionForExternalTransition(final VertexSet vertices, final Vertex source, final Vertex target) throws CommonAncestorException {
+      /*
+       * In case the target is an exit point, it might be an external
+       * transition coming from a substate of the composite state. If it is
+       * the case, the region of the transition is the first region of the
+       * composite state.
+       */
+      if (VertexUtils.exitPoint(target)) {
+          PseudoState pseudoTarget = (PseudoState) target;
+          State composite = pseudoTarget.state();
+          if (composite == null) {
+              /*
+               * Case when the exit point is one of a state machine. The source of
+               * the transition can not be the state machine itself and the state
+               * machine is always the ancestor of the source. There, the
+               * transition belongs to the first region of the state machine.
+               */
+              return pseudoTarget.stateMachine().region().get(0);
+          }
+          
+          if (source == composite) {
+              return composite.container();
+          }
+          if (VertexUtils.ancestor(composite, source)) {
+              return composite.region().get(0);
+          }
+      }
+      
+      Vertex nSource = VertexUtils.exitPoint(source)
+          ? ((PseudoState) source).state()
+          : source;
+      Vertex nTarget = VertexUtils.connectionPoint(target)
+          ? ((PseudoState) target).state()
+          : target;
+      return vertices.leastCommonAncestor(nSource, nTarget);
+  }
+  
+  private Region determineRegionForLocalTransition(final Vertex source, final Vertex target) {
+    /*
+     * The standard validator -- and UML specfication -- guarantees that
+     * either the source is a composite state or an entry point.
+     */
+    final RegionOwner sourceRegionOwner;
+    if (source instanceof State) { // composite state
+      sourceRegionOwner = (RegionOwner) source;
+    } else {
+      PseudoState ps = (PseudoState) source;
+      sourceRegionOwner = ps.stateMachine() == null ? ps.state() : ps.stateMachine();
+    }
+    final List<? extends Region> sourceRegions = sourceRegionOwner.region();
+
+    /*
+     * The transition always belongs to the region of the source composite
+     * state. When multiple regions, the transition belongs to the region of
+     * the target vertex.
+     */
+    if (sourceRegions.size() == 1) {
+      return sourceRegions.get(0);
+    }
+
+    /*
+     * Orthogonal state case
+     */
+    final State targetState = target instanceof State
+            ? (State) target
+            : (State) ((PseudoState) target).state();
+    if (sourceRegionOwner == targetState) {
+      throw new UnsupportedOperationException("Local transitions which source and target are the same orthogonal state are not supported yet.");
+      // TODO: Should the transition belong to the orthogonal state itself (and not one of its regions)?
+    }
+    State orthogonalSource = (State) sourceRegionOwner;
+    Region candidate = targetState.container();
+    while (candidate.state() != orthogonalSource) {
+      candidate = candidate.state().container();
+    }
+    return candidate;
   }
 
   @Override

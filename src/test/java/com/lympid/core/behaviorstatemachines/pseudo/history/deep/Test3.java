@@ -21,6 +21,7 @@ import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
 import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest3;
 import org.junit.Test;
 
@@ -34,7 +35,7 @@ public class Test3 extends HistoryTest3 {
     super(PseudoStateKind.DEEP_HISTORY);
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_P_Aend() {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
@@ -48,7 +49,7 @@ public class Test3 extends HistoryTest3 {
     toP(fsm, expected, "A", "compo");
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_P_Bend() {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
@@ -66,7 +67,7 @@ public class Test3 extends HistoryTest3 {
     toP(fsm, expected, "B", "compo");
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllStateMachineException.class)
   public void run_P_Cend() {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");

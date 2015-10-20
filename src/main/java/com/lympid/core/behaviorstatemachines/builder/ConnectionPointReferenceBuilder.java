@@ -29,7 +29,7 @@ import java.util.Map.Entry;
 public class ConnectionPointReferenceBuilder<C> implements Visitable {
 
   private final String namePrefix;
-  private final Map< String, ExitPointBuilder<C>> exitPoints = new HashMap<>();
+  private final Map<String, ExitPointBuilder<C>> exitPoints = new HashMap<>();
   private String id;
 
   public ConnectionPointReferenceBuilder(final String stateName) {
@@ -65,7 +65,7 @@ public class ConnectionPointReferenceBuilder<C> implements Visitable {
         return;
       }
     }
-    throw new RuntimeException("The exit point of the sub state machine has not been defined in the sub machine state."); // TODO: custom exception
+    throw new ConnectionPointBindingException(exitPoint.getName(), exitPoints.keySet(), "The exit point of the sub state machine has not been defined in the sub machine state.");
   }
 
   void connect(final VertexSet vertices) {

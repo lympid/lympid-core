@@ -156,7 +156,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   @Override
   public StateMachine topLevelStateMachine() {
     if (machine == null) {
-      machine = topLevelMachineBuilder().newInstance();
+      machine = topLevelMachineBuilder().instance();
     }
     return machine;
   }

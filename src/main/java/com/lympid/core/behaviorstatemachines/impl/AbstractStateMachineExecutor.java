@@ -124,7 +124,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     if (machineState.isPaused()) {
       internalResume();
     } else if (go) {
-      throw new RuntimeException(); // TODO: custom exception
+      throw new IllegalStartException("go() has already been invoked and may only be invoked again to resume a paused state machine executor.");
     } else if (configuration.autoStart()) {
       start();
     }
@@ -145,7 +145,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   @Override
   public void resume() {
     if (!machineState.isPaused()) {
-      throw new RuntimeException(); // TODO: custom exception
+      throw new IllegalStartException("resume() can only be invoked to resume a paused state machine executor.");
     }
     go();
   }
@@ -160,7 +160,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   public void take(final Event event) {
     if (!machineState.hasStarted()) {
       if (!go) {
-        throw new RuntimeException(); // TODO: custom exception
+        throw new IllegalStartException("go() must be invoked before the state machine executor can process any events.");
       }
       start();
     }
@@ -201,7 +201,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     PseudoState initial = machine.region().get(0).initial();
     TreeNode<Transition> path = transitionPath(CompletionEvent.INSTANCE, initial);
     if (path.children().isEmpty()) {
-      throw new RuntimeException(); // TODO: custom exception
+      throw new IllStateMachineException("There are no transitions that can be fired out of the initial pseudo state of the state machine.");
     }
 
     machineState.start();
@@ -285,10 +285,9 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
 
     for (TimeEvent timeEvent : timeEvents) {
       long actualDelay = past + timeEvent.time(context);
-      if (actualDelay <= 0) {
-        System.err.println("The actual delay is <= 0: " + actualDelay + " State: " + state); // TODO: no stderr
+      if (timeEvent.isRelative() || actualDelay > 0) {
+        futures.add(scheduleEvent(timeEvent, state, actualDelay));
       }
-      futures.add(scheduleEvent(timeEvent, state, actualDelay));
     }
     status.setEventTimers(futures);
   }
@@ -471,7 +470,19 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   private void enterHistory(final StateConfiguration<?> stateConfig) {
     assert stateConfig.state() != null;
     if (stateConfig.state() instanceof FinalState) {
-      throw new RuntimeException(); // TODO: custom exception
+      /*
+       * Section 15.3.11 State, #Semantics, Composite state
+       *
+       * If the transition terminates on a shallow history pseudostate, the 
+       * active substate becomes the most recently active substate prior to this
+       * entry, unless the most recently active substate is the final state or
+       * if this is the first entry into this state. In the latter two cases,
+       * the default history state is entered. This is the substate that is
+       * target of the transition originating from the history pseudostate. 
+       * (If no such transition is specified, the situation is ill-defined and 
+       * its handling is not defined.)
+       */
+      throw new IllStateMachineException("The most recently active substate is a final state and the 'default entry rule' can not be applied because the pseudo state history does not possess an outgoing transition.");
     }
 
     entry(stateConfig.state());
@@ -622,7 +633,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
          */
         TreeNode<Transition> newPath = transitionPath(CompletionEvent.INSTANCE, pseudoState);
         if (newPath.isLeaf()) {
-          throw new RuntimeException(); // TODO: custom exception
+          throw new IllStateMachineException("There are no transitions that can be activated out of a choice pseudo state.");
         }
         fire(CompletionEvent.INSTANCE, newPath.children().get(0));
         break;
@@ -763,12 +774,14 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
               found = paths.add(tn);
               break;
             /*
-             * For history vertices, either: - an history does not exist in
-             * which case the outgoing transition of the history vertex will be
-             * fired; if such\ transition does not exist, the transition might
-             * not be enabled or the code may throw an exception depending on
-             * the running configuration. - an history exists in which case we
-             * want to reach directly that history pseudo vertex.
+             * For history vertices, either:
+             *  - an history does not exist in which case the outgoing
+             * transition of the history vertex will be fired; if such
+             * transition does not exist, the transition might not be enabled or
+             * the code may throw an exception depending on the running
+             * configuration.
+             * - an history exists in which case we want to reach directly that
+             * history pseudo vertex.
              */
             case SHALLOW_HISTORY:
             case DEEP_HISTORY:
@@ -893,10 +906,10 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   private void checkConfiguration() {
     if (configuration.executor() == null) {
       if (machine.metadata().hasActivities()) {
-        throw new RuntimeException(); // TODO: custom exception
+        throw new BadConfigurationException("The state machine has activities but its executor's configuration does not have any thread pool executors to run them.");
       }
       if (machine.metadata().hasTimeEvents()) {
-        throw new RuntimeException(); // TODO: custom exception
+        throw new BadConfigurationException("The state machine has time events but its executor's configuration does not have any thread pool executors to schedule them.");
       }
     }
   }

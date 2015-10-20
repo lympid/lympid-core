@@ -117,6 +117,8 @@ public class VertexUtilsTest {
     r2.setState(state1);
     r3.setState(state2);
     r4.setState(state2);
+    assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r1)));
+    assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r2)));
     assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r1, r2)));
     assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r2, r1)));
     assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r3, r4)));

@@ -18,6 +18,7 @@ package com.lympid.core.behaviorstatemachines;
 import com.lympid.core.common.UmlElement;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -70,18 +71,19 @@ public final class VertexUtils {
       return false;
     }
 
-    State s = null;
-    for (Region r : regions) {
-      if (s == null) {
-        s = r.state();
-        if (!orthogonalState(s)) {
-          return false;
-        }
-      } else if (s != r.state()) {
+    Iterator<Region> it = regions.iterator();
+    State s = it.next().state();
+    if (!orthogonalState(s)) {
+      return false;
+    }
+    
+    while (it.hasNext()) {
+      if (it.next().state() != s) {
         return false;
       }
     }
-    return regions.size() == s.region().size();
+    
+    return true;
   }
 
   /**

@@ -19,15 +19,49 @@ package com.lympid.core.common;
  *
  * @author Fabien Renaud
  */
-public class UmlElementNotFoundException extends RuntimeException {
-  
+public abstract class UmlElementNotFoundException extends RuntimeException {
+
   private final String id;
-  
-  public UmlElementNotFoundException(final String id) {
-    this.id = id;
+  private final String name;
+
+  public UmlElementNotFoundException(String id) {
+    this(id, null);
   }
-  
-  public String getElementId() {
+
+  public UmlElementNotFoundException(String id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
+  public UmlElementNotFoundException(String id, String name, String message) {
+    super(message);
+    this.id = id;
+    this.name = name;
+  }
+
+  public UmlElementNotFoundException(String id, String name, String message, Throwable cause) {
+    super(message, cause);
+    this.id = id;
+    this.name = name;
+  }
+
+  public UmlElementNotFoundException(String id, String name, Throwable cause) {
+    super(cause);
+    this.id = id;
+    this.name = name;
+  }
+
+  public UmlElementNotFoundException(String id, String name, String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+    this.id = id;
+    this.name = name;
+  }
+
+  public String getId() {
     return id;
+  }
+
+  public String getName() {
+    return name;
   }
 }

@@ -30,4 +30,13 @@ public interface TimeEvent<C> extends Event {
    * @return The number of milliseconds till this event becomes active.
    */
   long time(C context);
+  
+  /**
+   * Gets whether this time event is relative to the activation time of a state
+   * or whether it is absolute.
+   * 
+   * @return true if this time event is relative to the activation time of a
+   * state, false otherwise.
+   */
+  boolean isRelative();
 }

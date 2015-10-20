@@ -50,6 +50,11 @@ public final class RelativeTimeEvent<C> implements TimeEvent<C> {
   public long time(final C context) {
     return delay;
   }
+  
+  @Override
+  public boolean isRelative() {
+    return true;
+  }
 
   @Override
   public int hashCode() {

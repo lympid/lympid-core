@@ -85,7 +85,7 @@ final class VertexSet {
    */
   <T extends Vertex> T add(final String name, final T vertex) {
     if (vertex.getId() == null) {
-      throw new IllegalArgumentException("A vertex must have an id/");
+      throw new IllegalArgumentException("A vertex must have an id.");
     }
 
     Vertex v = byVertex.get(vertex);

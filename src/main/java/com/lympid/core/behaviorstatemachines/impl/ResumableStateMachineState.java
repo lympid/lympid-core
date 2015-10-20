@@ -94,7 +94,7 @@ abstract class ResumableStateMachineState implements StateMachineState {
   private void reactivate(final StringTree active) {
     State state = metadata.state(active.state());
     if (state == null) {
-      throw new StateNotFoundException(active.state());
+      throw new VertexNotFoundException(active.state());
     }
     activate(state);
 
@@ -123,7 +123,7 @@ abstract class ResumableStateMachineState implements StateMachineState {
   private MutableStateConfiguration learnHistory(final StringTree tree) {
     State state = metadata.state(tree.state());
     if (state == null) {
-      throw new StateNotFoundException(tree.state());
+      throw new VertexNotFoundException(tree.state());
     }
 
     if (tree.children() == null || tree.children().isEmpty()) {
@@ -145,7 +145,7 @@ abstract class ResumableStateMachineState implements StateMachineState {
   private void learnHistoryNode(final MutableStateConfiguration config, final StringTree node) {
     State childState = metadata.state(node.state());
     if (childState == null) {
-      throw new StateNotFoundException(node.state());
+      throw new VertexNotFoundException(node.state());
     }
 
     MutableStateConfiguration childConfig = config.addChild(childState);

@@ -112,7 +112,6 @@ public class Test10 extends AbstractStateMachineTest {
     return builder;
   }
   
-  // TODO: figure out why <Object> is necessary and fix it.
   private CompositeStateBuilder<SequentialContext> compositeA() {
     CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder();
     

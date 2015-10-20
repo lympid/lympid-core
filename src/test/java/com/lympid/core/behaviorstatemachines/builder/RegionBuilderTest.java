@@ -51,6 +51,15 @@ public class RegionBuilderTest {
   }
   
   @Test
+  public void vertexRegistry() {
+    SimpleStateBuilder stateBuilder1 = new SimpleStateBuilder("B");
+    SimpleStateBuilder stateBuilder2 = region.state(stateBuilder1);
+    SimpleStateBuilder stateBuilder3 = region.state(stateBuilder1);
+    assertTrue(stateBuilder1 == stateBuilder2);
+    assertTrue(stateBuilder1 == stateBuilder3);
+  }
+  
+  @Test
   public void singletonByName_simple() {
     singletonByName(region::state);
   }
