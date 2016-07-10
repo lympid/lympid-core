@@ -5,6 +5,7 @@
 
 # Building
 /target
+/build
 
 # NetBeans
 nb-configuration.xml
@@ -18,4 +19,4 @@ nb-configuration.xml
 *.iml
 *.ipr
 *.iws
-
+.idea/
