@@ -1,7 +1,7 @@
 # Overview
 
 This project is a Java implementation of the **UML state machine** specification as
-described in [UML superstructure 2.4.1](http://fabienrenaud.github.io/lympid/lympid-core/docs/UML superstructure 2.4.1.pdf).
+described in [UML superstructure 2.4.1](http://www.omg.org/spec/UML/2.4.1/Superstructure/PDF).
 It is implemented with **Java 8** and packaged as a valid **OSGi bundle**.
 
 The implementation supports nearly every single feature of behavioral state machines:
@@ -26,7 +26,7 @@ Other features include, but not only:
   * prioritized transitions: when more than one transition is enabled for a (pseudo) state, only one will be fired. You can define which it will be.
   * configurable state machine executor: auto start, thread pool for asynchronous events and activities, ...
 
-It is heavily **tested with more than 120 state machines and more than 800 unit tests**. Code and branch coverage is above 90%.
+It is heavily **tested with more than [120 state machines](https://github.com/lympid/lympid-core/tree/master/docs/tests) and more than [800 unit tests](https://github.com/lympid/lympid-core/tree/master/src/test/java/com/lympid/core)**. Code and branch coverage is above 90%.
 
 This project is licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -124,7 +124,7 @@ fsm.go();
 
 When `go` is invoked, the state machine auto starts by default and the initial transition is fired.
 Therefore, the state machine is now on state "off", waiting for either event "ON" or event "KILL".
-You can see so by takign a snapshot of the state machine and looking at its active state configuration:
+You can see so by taking a snapshot of the state machine and looking at its active state configuration:
 
 ```java
 System.out.println(fsm.snapshot().activateStates()); // outputs off
@@ -144,6 +144,3 @@ System.out.println(fsm.snapshot().activateStates()); // outputs end
 ```
 And that's it!
 
-## More tutorials to come...
-
-Meanwhile, you can take a look at the hundred of test state machines this project has...
