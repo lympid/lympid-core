@@ -30,6 +30,7 @@ import com.lympid.core.common.Trigger;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static com.lympid.core.common.TestUtils.randomPseudoState;
 import static org.junit.Assert.assertEquals;
@@ -362,7 +363,7 @@ public class TransitionConstraintsTest {
 
       MutableTransition t = new MutableTransition(null, ps, null, null, null, TransitionKind.EXTERNAL);
       t.triggers().add(new Trigger(null));
-      ps.setOutgoing(Arrays.asList(t));
+      ps.setOutgoing(Collections.singletonList(t));
       try {
         test(ps);
         fail();

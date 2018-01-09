@@ -18,11 +18,11 @@ package com.lympid.core.behaviorstatemachines.builder;
 import com.lympid.core.behaviorstatemachines.impl.MutableRegion;
 import com.lympid.core.behaviorstatemachines.impl.MutableState;
 import com.lympid.core.behaviorstatemachines.impl.MutableStateMachine;
-import java.util.Arrays;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+
+import java.util.Collections;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -105,7 +105,7 @@ public class VertexSetTest {
     region.addVertex(state0);
     region.addVertex(compositeState);
 
-    compositeState.setRegions(Arrays.asList(compositeRegion));
+    compositeState.setRegions(Collections.singletonList(compositeRegion));
     compositeRegion.setState(compositeState);
     compositeRegion.addVertex(state1);
     compositeRegion.addVertex(state2);
@@ -154,12 +154,12 @@ public class VertexSetTest {
     mainRegion.addVertex(state0);
     mainRegion.addVertex(orthogonalState);
 
-    orthogonalState.setRegions(Arrays.asList(region1));
+    orthogonalState.setRegions(Collections.singletonList(region1));
     region1.setState(orthogonalState);
     region1.addVertex(state11);
     region1.addVertex(state12);
 
-    orthogonalState.setRegions(Arrays.asList(region2));
+    orthogonalState.setRegions(Collections.singletonList(region2));
     region2.setState(orthogonalState);
     region2.addVertex(state21);
     region2.addVertex(state22);
@@ -226,7 +226,7 @@ public class VertexSetTest {
     mainRegion.addVertex(compositeState);
     mainRegion.addVertex(stateForSubMachine);
 
-    compositeState.setRegions(Arrays.asList(compositeRegion));
+    compositeState.setRegions(Collections.singletonList(compositeRegion));
     compositeRegion.setState(compositeState);
     compositeRegion.addVertex(state11);
     compositeRegion.addVertex(state12);
@@ -297,7 +297,7 @@ public class VertexSetTest {
     mainRegion.addVertex(state0);
     mainRegion.addVertex(compositeState);
 
-    compositeState.setRegions(Arrays.asList(compositeRegion));
+    compositeState.setRegions(Collections.singletonList(compositeRegion));
     compositeRegion.setState(compositeState);
     compositeRegion.addVertex(state11);
     compositeRegion.addVertex(state12);

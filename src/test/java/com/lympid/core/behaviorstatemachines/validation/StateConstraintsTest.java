@@ -25,6 +25,7 @@ import com.lympid.core.behaviorstatemachines.impl.MutableStateMachine;
 import static com.lympid.core.common.TestUtils.randomPseudoStateBut;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import static org.junit.Assert.assertEquals;
@@ -82,7 +83,7 @@ public class StateConstraintsTest {
 
     MutableState state = new MutableState("a");
     state.connection(cpr);
-    state.setRegions(Arrays.asList(new MutableRegion("r1")));
+    state.setRegions(Collections.singletonList(new MutableRegion("r1")));
 
     assertTrue(state.isComposite());
     StandardValidator.validate(state);
@@ -203,7 +204,7 @@ public class StateConstraintsTest {
   @Test(expected = StateConstraintException.class)
   public void constraint4_fail() {
     FreeMutableState state = new FreeMutableState(true, false, false, false);
-    state.setRegions(Arrays.asList(new MutableRegion()));
+    state.setRegions(Collections.singletonList(new MutableRegion()));
     StandardValidator.validate(state);
   }
 
@@ -222,7 +223,7 @@ public class StateConstraintsTest {
   @Test(expected = StateConstraintException.class)
   public void constraint6_fail() {
     FreeMutableState state = new FreeMutableState(false, true, true, false);
-    state.setRegions(Arrays.asList(new MutableRegion()));
+    state.setRegions(Collections.singletonList(new MutableRegion()));
     StandardValidator.validate(state);
   }
 
@@ -304,7 +305,7 @@ public class StateConstraintsTest {
     MutableState state = new MutableState();
     MutablePseudoState entryPoint = randomPseudoStateBut(PseudoStateKind.ENTRY_POINT, PseudoStateKind.EXIT_POINT);
     entryPoint.setName("dd");
-    state.setRegions(Arrays.asList(new MutableRegion()));
+    state.setRegions(Collections.singletonList(new MutableRegion()));
     state.connectionPoint().add(entryPoint);
     StandardValidator.validate(state);
   }
@@ -313,7 +314,7 @@ public class StateConstraintsTest {
   public void connectionPoints_nullName() {
     MutableState state = new MutableState();
     MutablePseudoState entryPoint = new MutablePseudoState(PseudoStateKind.ENTRY_POINT);
-    state.setRegions(Arrays.asList(new MutableRegion()));
+    state.setRegions(Collections.singletonList(new MutableRegion()));
     state.connectionPoint().add(entryPoint);
     StandardValidator.validate(state);
   }
@@ -327,7 +328,7 @@ public class StateConstraintsTest {
     MutablePseudoState exitPoint = new MutablePseudoState(PseudoStateKind.ENTRY_POINT);
     exitPoint.setName("EP");
 
-    state.setRegions(Arrays.asList(new MutableRegion()));
+    state.setRegions(Collections.singletonList(new MutableRegion()));
     state.connectionPoint().add(entryPoint);
     state.connectionPoint().add(exitPoint);
 

@@ -22,14 +22,14 @@ import com.lympid.core.behaviorstatemachines.impl.MutablePseudoState;
 import com.lympid.core.behaviorstatemachines.impl.MutableRegion;
 import com.lympid.core.behaviorstatemachines.impl.MutableState;
 import com.lympid.core.behaviorstatemachines.impl.MutableStateMachine;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+
 import static com.lympid.core.common.TestUtils.randomPseudoState;
 import static com.lympid.core.common.TestUtils.randomPseudoStateBut;
-import java.util.Arrays;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -44,7 +44,7 @@ public class TransitionKindConstraintsTest {
   @Test
   public void constraint1_success_composite() {
     MutableState state = new MutableState();
-    state.setRegions(Arrays.asList(
+    state.setRegions(Collections.singletonList(
       new MutableRegion()
     ));
     assertTrue(state.isComposite());
@@ -212,7 +212,7 @@ public class TransitionKindConstraintsTest {
 
   private MutableState compositeState() {
     MutableState state = new MutableState();
-    state.setRegions(Arrays.asList(new MutableRegion()));
+    state.setRegions(Collections.singletonList(new MutableRegion()));
     return state;
   }
 

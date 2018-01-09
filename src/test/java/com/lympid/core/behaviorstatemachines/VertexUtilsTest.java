@@ -22,6 +22,7 @@ import com.lympid.core.behaviorstatemachines.impl.MutableStateMachine;
 import com.lympid.core.common.TestUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,7 +65,7 @@ public class VertexUtilsTest {
     assertTrue(VertexUtils.ancestor(state1, state1));
 
     MutableRegion region1 = new MutableRegion();
-    state1.setRegions(Arrays.asList(region1));
+    state1.setRegions(Collections.singletonList(region1));
     region1.setState(state1);
     MutableState state11 = new MutableState();
     MutableState state12 = new MutableState();
@@ -97,7 +98,7 @@ public class VertexUtilsTest {
     MutableRegion r4 = new MutableRegion();
     MutableRegion r5 = new MutableRegion();
 
-    state1.setRegions(Arrays.asList(r1));
+    state1.setRegions(Collections.singletonList(r1));
     r1.setState(state1);
     assertFalse(VertexUtils.allRegionsOfOrthogonalState(state1.region()));
 
@@ -117,8 +118,8 @@ public class VertexUtilsTest {
     r2.setState(state1);
     r3.setState(state2);
     r4.setState(state2);
-    assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r1)));
-    assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r2)));
+    assertTrue(VertexUtils.allRegionsOfOrthogonalState(Collections.singletonList(r1)));
+    assertTrue(VertexUtils.allRegionsOfOrthogonalState(Collections.singletonList(r2)));
     assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r1, r2)));
     assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r2, r1)));
     assertTrue(VertexUtils.allRegionsOfOrthogonalState(Arrays.asList(r3, r4)));

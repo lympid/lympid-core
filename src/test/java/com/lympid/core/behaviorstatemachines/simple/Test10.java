@@ -69,7 +69,7 @@ public class Test10 extends AbstractStateMachineTest<Context> {
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
-  private StateMachineExecutor commonTest() {
+  private StateMachineExecutor<Context> commonTest() {
     StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     

@@ -114,7 +114,7 @@ abstract class StateBuilder<B extends StateBuilder, C> extends VertexBuilder<B, 
   /**
    * Adds an exit behavior to the state when the given condition is satisfied.
    *
-   * @param entry The exit behavior to execute every time the state is exited.
+   * @param exit The exit behavior to execute every time the state is exited.
    * @param condition The predicate that must be satisfied for adding the exit
    * behavior. The predicate evaluates a collection of objects that are a mixed
    * values of {@code StateBehavior} instances and types.

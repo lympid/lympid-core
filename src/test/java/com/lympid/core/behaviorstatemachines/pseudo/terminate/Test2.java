@@ -62,7 +62,7 @@ public class Test2 extends AbstractStateMachineTest<Context> {
       .region()
         .terminate();
         
-    VertexBuilderReference terminate = builder
+    VertexBuilderReference<Context> terminate = builder
       .region()
         .terminate(); // double-call to increase coverage
     

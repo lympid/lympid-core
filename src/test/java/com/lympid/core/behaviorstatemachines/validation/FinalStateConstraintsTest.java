@@ -24,6 +24,8 @@ import com.lympid.core.behaviorstatemachines.impl.MutableState;
 import com.lympid.core.behaviorstatemachines.impl.MutableStateMachine;
 import com.lympid.core.behaviorstatemachines.impl.MutableTransition;
 import java.util.Arrays;
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -51,7 +53,7 @@ public class FinalStateConstraintsTest {
   @Test(expected = FinalStateConstraintException.class)
   public void constraint1_fail() {
     FreeFinalState ffs = new FreeFinalState();
-    ffs.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    ffs.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
 
     try {
       StandardValidator.validate(ffs);
@@ -67,7 +69,7 @@ public class FinalStateConstraintsTest {
   @Test(expected = FinalStateConstraintException.class)
   public void constraint2_fail() {
     FreeFinalState ffs = new FreeFinalState();
-    ffs.setRegions(Arrays.asList(new MutableRegion()));
+    ffs.setRegions(Collections.singletonList(new MutableRegion()));
     StandardValidator.validate(ffs);
   }
 
@@ -87,7 +89,7 @@ public class FinalStateConstraintsTest {
   @Test(expected = FinalStateConstraintException.class)
   public void constraint4_fail() {
     FreeFinalState ffs = new FreeFinalState();
-    ffs.setEntry(Arrays.asList(EMPTY_BEHAVIOR));
+    ffs.setEntry(Collections.singletonList(EMPTY_BEHAVIOR));
     StandardValidator.validate(ffs);
   }
 
@@ -97,7 +99,7 @@ public class FinalStateConstraintsTest {
   @Test(expected = FinalStateConstraintException.class)
   public void constraint5_fail() {
     FreeFinalState ffs = new FreeFinalState();
-    ffs.setExit(Arrays.asList(EMPTY_BEHAVIOR));
+    ffs.setExit(Collections.singletonList(EMPTY_BEHAVIOR));
     StandardValidator.validate(ffs);
   }
 

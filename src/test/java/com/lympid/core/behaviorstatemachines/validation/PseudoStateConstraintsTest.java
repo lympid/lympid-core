@@ -29,6 +29,7 @@ import com.lympid.core.behaviorstatemachines.impl.MutableTransition;
 import com.lympid.core.common.Trigger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class PseudoStateConstraintsTest {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.INITIAL);
     StandardValidator.validate(mps);
 
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
   }
 
@@ -78,7 +79,7 @@ public class PseudoStateConstraintsTest {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.SHALLOW_HISTORY);
     StandardValidator.validate(mps);
 
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
   }
 
@@ -103,7 +104,7 @@ public class PseudoStateConstraintsTest {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.DEEP_HISTORY);
     StandardValidator.validate(mps);
 
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
   }
 
@@ -129,7 +130,7 @@ public class PseudoStateConstraintsTest {
   @Test
   public void constraint3and4_success() {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.JOIN);
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
 
     MutableState orthogonalState = new MutableState();
 
@@ -166,7 +167,7 @@ public class PseudoStateConstraintsTest {
   @Test(expected = PseudoStateConstraintException.class)
   public void constraint3_fail_1() {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.JOIN);
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
 
     MutableState orthogonalState = new MutableState();
 
@@ -266,7 +267,7 @@ public class PseudoStateConstraintsTest {
   @Test(expected = PseudoStateConstraintException.class)
   public void constraint4_fail() {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.JOIN);
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
 
     MutableState orthogonalState = new MutableState();
 
@@ -499,11 +500,11 @@ public class PseudoStateConstraintsTest {
   public void constraint7_success() {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.JUNCTION);
     mps.incoming().add(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL));
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
 
     for (int i = 0; i < 3; i++) {
-      mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+      mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
       StandardValidator.validate(mps);
     }
 
@@ -522,7 +523,7 @@ public class PseudoStateConstraintsTest {
   @Test(expected = PseudoStateConstraintException.class)
   public void constraint7_fail_1() {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.JUNCTION);
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
   }
 
@@ -559,11 +560,11 @@ public class PseudoStateConstraintsTest {
   public void constraint8_success() {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.CHOICE);
     mps.incoming().add(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL));
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
 
     for (int i = 0; i < 3; i++) {
-      mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+      mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
       StandardValidator.validate(mps);
     }
 
@@ -582,7 +583,7 @@ public class PseudoStateConstraintsTest {
   @Test(expected = PseudoStateConstraintException.class)
   public void constraint8_fail_1() {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.CHOICE);
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, null, null, null, null, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
   }
 
@@ -620,7 +621,7 @@ public class PseudoStateConstraintsTest {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.INITIAL);
     StandardValidator.validate(mps);
 
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, mps, null, null, EMPTY_BEHAVIOR, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, mps, null, null, EMPTY_BEHAVIOR, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
   }
 
@@ -635,7 +636,7 @@ public class PseudoStateConstraintsTest {
     MutablePseudoState mps = new MutablePseudoState(PseudoStateKind.INITIAL);
     StandardValidator.validate(mps);
 
-    mps.setOutgoing(Arrays.asList(new MutableTransition(null, mps, null, EMPTY_GUARD, EMPTY_BEHAVIOR, TransitionKind.EXTERNAL)));
+    mps.setOutgoing(Collections.singletonList(new MutableTransition(null, mps, null, EMPTY_GUARD, EMPTY_BEHAVIOR, TransitionKind.EXTERNAL)));
     StandardValidator.validate(mps);
   }
 
@@ -652,7 +653,7 @@ public class PseudoStateConstraintsTest {
 
     MutableTransition transition = new MutableTransition(null, mps, null, null, EMPTY_BEHAVIOR, TransitionKind.EXTERNAL);
     transition.triggers().add(new Trigger(new StringEvent("hi")));
-    mps.setOutgoing(Arrays.asList(transition));
+    mps.setOutgoing(Collections.singletonList(transition));
     StandardValidator.validate(mps);
   }
 
@@ -670,7 +671,7 @@ public class PseudoStateConstraintsTest {
 
     MutableTransition transition = new MutableTransition(null, mps, null, EMPTY_GUARD, EMPTY_BEHAVIOR, TransitionKind.EXTERNAL);
     transition.triggers().add(new Trigger(new StringEvent("hi")));
-    mps.setOutgoing(Arrays.asList(transition));
+    mps.setOutgoing(Collections.singletonList(transition));
     StandardValidator.validate(mps);
   }
 

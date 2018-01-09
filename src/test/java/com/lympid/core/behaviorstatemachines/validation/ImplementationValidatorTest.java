@@ -22,8 +22,10 @@ import com.lympid.core.behaviorstatemachines.impl.MutableRegion;
 import com.lympid.core.behaviorstatemachines.impl.MutableState;
 import com.lympid.core.behaviorstatemachines.impl.MutableStateMachine;
 import com.lympid.core.common.TestUtils;
-import java.util.Arrays;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  *
@@ -105,13 +107,13 @@ public class ImplementationValidatorTest {
   public void testLocalTransition_sourceState_success() {
     MutableStateMachine machine = new MutableStateMachine();
     MutableRegion machineRegion = new MutableRegion();
-    machine.setRegions(Arrays.asList(machineRegion));
+    machine.setRegions(Collections.singletonList(machineRegion));
     machineRegion.setStateMachine(machine);
     
     MutableState composite = new MutableState();
     machineRegion.addVertex(composite);
     MutableRegion compositeRegion = new MutableRegion();
-    composite.setRegions(Arrays.asList(compositeRegion));
+    composite.setRegions(Collections.singletonList(compositeRegion));
     compositeRegion.setState(composite);
     
     MutableState child = new MutableState();
@@ -124,13 +126,13 @@ public class ImplementationValidatorTest {
   public void testLocalTransition_sourceState_fail() {
     MutableStateMachine machine = new MutableStateMachine();
     MutableRegion machineRegion = new MutableRegion();
-    machine.setRegions(Arrays.asList(machineRegion));
+    machine.setRegions(Collections.singletonList(machineRegion));
     machineRegion.setStateMachine(machine);
     
     MutableState composite = new MutableState();
     machineRegion.addVertex(composite);
     MutableRegion compositeRegion = new MutableRegion();
-    composite.setRegions(Arrays.asList(compositeRegion));
+    composite.setRegions(Collections.singletonList(compositeRegion));
     compositeRegion.setState(composite);
     
     MutableState state = new MutableState();
@@ -143,13 +145,13 @@ public class ImplementationValidatorTest {
   public void testLocalTransition_sourceEntryPoint_success() {
     MutableStateMachine machine = new MutableStateMachine();
     MutableRegion machineRegion = new MutableRegion();
-    machine.setRegions(Arrays.asList(machineRegion));
+    machine.setRegions(Collections.singletonList(machineRegion));
     machineRegion.setStateMachine(machine);
     
     MutableState composite = new MutableState();
     machineRegion.addVertex(composite);
     MutableRegion compositeRegion = new MutableRegion();
-    composite.setRegions(Arrays.asList(compositeRegion));
+    composite.setRegions(Collections.singletonList(compositeRegion));
     compositeRegion.setState(composite);
     
     MutablePseudoState entryPoint = new MutablePseudoState(PseudoStateKind.ENTRY_POINT);
@@ -166,13 +168,13 @@ public class ImplementationValidatorTest {
   public void testLocalTransition_sourceEntryPoint_fail() {
     MutableStateMachine machine = new MutableStateMachine();
     MutableRegion machineRegion = new MutableRegion();
-    machine.setRegions(Arrays.asList(machineRegion));
+    machine.setRegions(Collections.singletonList(machineRegion));
     machineRegion.setStateMachine(machine);
     
     MutableState composite = new MutableState();
     machineRegion.addVertex(composite);
     MutableRegion compositeRegion = new MutableRegion();
-    composite.setRegions(Arrays.asList(compositeRegion));
+    composite.setRegions(Collections.singletonList(compositeRegion));
     compositeRegion.setState(composite);
     
     MutablePseudoState entryPoint = new MutablePseudoState(PseudoStateKind.ENTRY_POINT);
