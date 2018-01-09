@@ -20,16 +20,6 @@ import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.basicbehaviors.TimeEvent;
 import com.lympid.core.behaviorstatemachines.FinalState;
 import com.lympid.core.behaviorstatemachines.PseudoState;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.CHOICE;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.DEEP_HISTORY;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.ENTRY_POINT;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.EXIT_POINT;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.FORK;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.INITIAL;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.JOIN;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.JUNCTION;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.SHALLOW_HISTORY;
-import static com.lympid.core.behaviorstatemachines.PseudoStateKind.TERMINATE;
 import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
@@ -37,12 +27,10 @@ import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.Transition;
-import static com.lympid.core.behaviorstatemachines.TransitionKind.EXTERNAL;
-import static com.lympid.core.behaviorstatemachines.TransitionKind.INTERNAL;
-import static com.lympid.core.behaviorstatemachines.TransitionKind.LOCAL;
 import com.lympid.core.behaviorstatemachines.Vertex;
 import com.lympid.core.behaviorstatemachines.VertexUtils;
 import com.lympid.core.common.TreeNode;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -119,6 +107,10 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
 
   @Override
   public void go() {
+    internalGo();
+  }
+
+  private void internalGo() {
     checkConfiguration();
     
     if (machineState.isPaused()) {
@@ -147,7 +139,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     if (!machineState.isPaused()) {
       throw new IllegalStartException("resume() can only be invoked to resume a paused state machine executor.");
     }
-    go();
+    internalGo();
   }
   
   private void internalResume() {
@@ -197,7 +189,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     return configuration.executor().schedule(new RunnableEvent(event, state), delay, TimeUnit.MILLISECONDS);
   }
 
-  protected void start() {
+  private void start() {
     PseudoState initial = machine.region().get(0).initial();
     TreeNode<Transition> path = transitionPath(CompletionEvent.INSTANCE, initial);
     if (path.children().isEmpty()) {
@@ -1000,7 +992,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
     private StateMachine machine;
     private C context;
     private ExecutorConfiguration configuration;
-    private StateMachineSnapshot snapshot;
+    private StateMachineSnapshot<C> snapshot;
 
     @Override
     public Builder<C> setId(int id) {
@@ -1067,7 +1059,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
       return this;
     }
 
-    StateMachineSnapshot getSnapshot() {
+    StateMachineSnapshot<C> getSnapshot() {
       return snapshot;
     }
 

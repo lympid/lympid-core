@@ -20,16 +20,18 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.StateMachineTest;
 import com.lympid.core.behaviorstatemachines.builder.SequentialContextInjector;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static com.lympid.core.common.TestUtils.assertSequentialContextEquals;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static com.lympid.core.common.TestUtils.assertSequentialContextEquals;
 
 /**
  *
@@ -38,12 +40,12 @@ import org.junit.Test;
 public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   private static final long DELAY = 50;
-  private StateMachineShardPoolExecutor pool;
+  private StateMachineShardPoolExecutor<Context> pool;
   private StateMachine machine;
   
   @Before
   public void setUp() {
-    pool = new StateMachineShardPoolExecutor(1);
+    pool = new StateMachineShardPoolExecutor<>(1);
   }
 
   @Test
@@ -62,7 +64,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   }
   
   private StateMachineExecutor<Context> fsm(final int id, final Context ctx) {
-    return new PoolStateMachineExecutor.Builder(pool)
+    return new PoolStateMachineExecutor.Builder<>(pool)
       .setId(id)
       .setStateMachine(topLevelStateMachine())
       .setContext(ctx)
@@ -70,8 +72,8 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
       .build();
   }
   
-  private StateMachineExecutor<Context> fsm(final int id, final StateMachineSnapshot snapshot) {
-    return new PoolStateMachineExecutor.Builder(pool)
+  private StateMachineExecutor<Context> fsm(final int id, final StateMachineSnapshot<Context> snapshot) {
+    return new PoolStateMachineExecutor.Builder<>(pool)
       .setId(id)
       .setStateMachine(topLevelStateMachine())
       .setSnapshot(snapshot)
@@ -163,7 +165,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder("noname");
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>("noname");
     
     builder
       .region()
@@ -212,7 +214,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
     return builder;
   }
   
-  private static interface FsmRunSequence {
+  private interface FsmRunSequence {
     
     void run(SequentialContext expected, StateMachineExecutor fsm, Context ctx, boolean pause) throws InterruptedException;
     

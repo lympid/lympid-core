@@ -48,10 +48,10 @@ public class LockStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
   }
 
   @Override
-  protected void start() {
+  public void go() {
     lock.writeLock().lock();
     try {
-      super.start();
+      super.go();
     } finally {
       lock.writeLock().unlock();
     }
@@ -121,7 +121,7 @@ public class LockStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
 
     @Override
     public StateMachineExecutor<C> build() {
-      return new LockStateMachineExecutor<>(
+      return new LockStateMachineExecutor<C>(
         getId(),
         getName(),
         getMachine(),

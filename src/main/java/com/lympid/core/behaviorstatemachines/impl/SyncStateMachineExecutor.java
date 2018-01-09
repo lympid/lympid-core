@@ -44,8 +44,8 @@ public class SyncStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
   }
 
   @Override
-  protected synchronized void start() {
-    super.start();
+  public synchronized void go() {
+    super.go();
   }
 
   @Override

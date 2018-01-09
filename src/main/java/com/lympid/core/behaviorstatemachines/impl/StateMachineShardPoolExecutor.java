@@ -173,7 +173,7 @@ public final class StateMachineShardPoolExecutor<C> {
     }
   }
 
-  void start(final PoolStateMachineExecutor<C> executor) {
+  void go(final PoolStateMachineExecutor<C> executor) {
     queue(executor).add(new StateMachineStart<>(executor));
   }
 
@@ -218,7 +218,7 @@ public final class StateMachineShardPoolExecutor<C> {
 
     @Override
     public void run() {
-      executor.doStart();
+      executor.doGo();
     }
 
   }

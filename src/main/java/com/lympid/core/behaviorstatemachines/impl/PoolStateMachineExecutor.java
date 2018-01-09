@@ -46,12 +46,12 @@ public class PoolStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
   }
 
   @Override
-  protected void start() {
-    pool.start(this);
+  public void go() {
+    pool.go(this);
   }
 
-  void doStart() {
-    super.start();
+  void doGo() {
+    super.go();
   }
 
   @Override
@@ -127,7 +127,7 @@ public class PoolStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
     
     @Override
     public StateMachineExecutor<C> build() {
-      return new PoolStateMachineExecutor<>(
+      return new PoolStateMachineExecutor<C>(
         getId(),
         getName(),
         getMachine(),
