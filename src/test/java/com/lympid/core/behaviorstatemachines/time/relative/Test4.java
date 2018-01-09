@@ -21,21 +21,24 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.time.relative.Test4.Context;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import org.junit.Test;
 
 /**
  * Tests a time transition is NOT canceled  when an internal transition is fired.
  * 
  * @author Fabien Renaud 
  */
-public class Test4 extends AbstractStateMachineTest {
+public class Test4 extends AbstractStateMachineTest<Context> {
 
   private static final long DELAY = 50;
   
@@ -47,10 +50,10 @@ public class Test4 extends AbstractStateMachineTest {
     Event incEvent = new StringEvent("inc");
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
-    StateMachineSnapshot snapshot = fsm.snapshot();
+    StateMachineSnapshot<Context> snapshot = fsm.snapshot();
     if (ctx.latch.getCount() > 0) {
         assertSnapshotEquals(snapshot, new ActiveStateTree(this).branch("A"));
     }
@@ -83,7 +86,7 @@ public class Test4 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -123,7 +126,7 @@ public class Test4 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     CountDownLatch latch = new CountDownLatch(1);
     volatile int c;
   }

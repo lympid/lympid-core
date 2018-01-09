@@ -19,27 +19,29 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.orthogonal.Test6.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests an entry point can be connect to a sub exit point
  * 
  * @author Fabien Renaud 
  */
-public class Test6 extends AbstractStateMachineTest {
+public class Test6 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
     SequentialContext expected = new SequentialContext();
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
   
     expected
@@ -52,8 +54,8 @@ public class Test6 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -74,12 +76,12 @@ public class Test6 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
+  private OrthogonalStateBuilder<Context> ortho(final String name) {
+    OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder<>(name);
     
     builder
       .connectionPoint()
-        .entryPoint(new EntryPointBuilder<>("entryPoint1")
+        .entryPoint(new EntryPointBuilder<Context>("entryPoint1")
           .transition("t1")
             .target("exitPoint2")
         );
@@ -99,12 +101,12 @@ public class Test6 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder compo(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> compo(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .connectionPoint()
-        .exitPoint(new ExitPointBuilder<>("exitPoint2")
+        .exitPoint(new ExitPointBuilder<Context>("exitPoint2")
           .transition("t2")
             .target("end2")
         );
@@ -115,6 +117,9 @@ public class Test6 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test6.class.getSimpleName() + "\"\n" +

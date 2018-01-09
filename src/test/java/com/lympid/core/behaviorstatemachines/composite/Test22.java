@@ -27,7 +27,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -37,15 +36,18 @@ import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.composite.Test22.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests entry/exit points with simple states.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test22 extends AbstractStateMachineTest {
+public class Test22 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void model() {
@@ -125,7 +127,7 @@ public class Test22 extends AbstractStateMachineTest {
       .effect("t0").enter("A");
     
     Context ctx = new Context(c);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     if (ctx.c >= 0) {
@@ -179,7 +181,7 @@ public class Test22 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -199,7 +201,7 @@ public class Test22 extends AbstractStateMachineTest {
             .target("B_entryPoint")
           .transition("t7")
             .on("dec")
-            .effect((e, c) -> { c.c--; })
+            .effect((e, c) -> c.c--)
             .target("A");
     
     builder
@@ -215,7 +217,7 @@ public class Test22 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder composite() {
+  private CompositeStateBuilder<Context> composite() {
     CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>();
     
     builder
@@ -226,13 +228,13 @@ public class Test22 extends AbstractStateMachineTest {
       .connectionPoint()
         .entryPoint(new EntryPointBuilder<Context>("B_entryPoint")
           .transition()
-            .guard((c) -> { return c.c < 0; })
-            .effect((c) -> { c.effect("t2"); })
+            .guard(c -> c.c < 0)
+            .effect(c -> c.effect("t2"))
             .target("Ba"))
         .exitPoint(new ExitPointBuilder<Context>("B_exitPoint")
           .transition()
-            .guard((c) -> { return c.c > 0; })
-            .effect((c) -> { c.effect("t4"); })
+            .guard(c -> c.c > 0)
+            .effect(c -> c.effect("t4"))
             .target("C"));
     
     builder
@@ -243,7 +245,7 @@ public class Test22 extends AbstractStateMachineTest {
             .target("B_exitPoint")
           .transition("t6")
             .on("inc")
-            .effect((e, c) -> { c.c++; })
+            .effect((e, c) -> c.c++)
             .target("Ba")
           .selfTransition()
             .on("dec")
@@ -258,7 +260,7 @@ public class Test22 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     int c;
     
     Context(final int c) {

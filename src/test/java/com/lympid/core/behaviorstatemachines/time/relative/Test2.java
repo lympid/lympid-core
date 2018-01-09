@@ -20,19 +20,22 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.time.relative.Test2.Context;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertFalse;
-import org.junit.Test;
 
 /**
  * Tests a time transition gets canceled.
  * 
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test2 extends AbstractStateMachineTest<Context> {
 
   private static final long DELAY = 50;
 
@@ -44,7 +47,7 @@ public class Test2 extends AbstractStateMachineTest {
       .exit("B").effect("t3");
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -62,7 +65,7 @@ public class Test2 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -101,7 +104,7 @@ public class Test2 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     CountDownLatch latch = new CountDownLatch(1);
     volatile boolean fired;
   }

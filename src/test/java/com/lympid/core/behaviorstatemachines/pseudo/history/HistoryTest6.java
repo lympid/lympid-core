@@ -27,7 +27,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
 import com.lympid.core.behaviorstatemachines.Vertex;
@@ -35,8 +34,11 @@ import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest6.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests a shallow/deep history pseudo state with an outgoing transition.
@@ -46,7 +48,7 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext> {
+public abstract class HistoryTest6 extends AbstractHistoryTest<Context> {
   
   private String stdout;
   
@@ -104,8 +106,8 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
       .exit("C").effect("t3")
       .exit("compo").effect("t4");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -136,8 +138,8 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
       .exit("C").effect("t3")
       .exit("compo").effect("t4");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -174,8 +176,8 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
       .exit("C").effect("t3")
       .exit("compo").effect("t4");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -212,8 +214,8 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
       .exit("C").effect("t3")
       .exit("compo").effect("t4");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -252,8 +254,8 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
       .exit("C").effect("t3")
       .exit("compo").effect("t4");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -286,8 +288,8 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -299,7 +301,7 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
           .transition("t0")
             .target("A");
     
-    CompositeStateBuilder<SequentialContext> compo = builder
+    CompositeStateBuilder<Context> compo = builder
       .region()
         .state(composite("compo"))
           .transition("t4")
@@ -309,7 +311,7 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
             .on("pause")
             .target("P");
     
-    VertexBuilderReference historyVertex =
+    VertexBuilderReference<Context> historyVertex =
       historyTransitionTo(compo, "B", (c) -> c.effect("t7"));
     
     builder
@@ -323,8 +325,8 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
     return builder;
   }
   
-  private CompositeStateBuilder<SequentialContext> composite(final String name) {
-    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> composite(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
   
     history(builder);
     
@@ -359,6 +361,9 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
   @Override
   public String stdOut() {
     return stdout;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 
   @Override

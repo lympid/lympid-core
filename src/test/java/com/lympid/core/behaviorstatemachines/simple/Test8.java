@@ -20,27 +20,28 @@ import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
-import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.simple.Test8.Context;
+import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
  * Tests an external transition with 1 trigger, 1 effect but no guard.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test8 extends AbstractStateMachineTest {
+public class Test8 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
     Context context = new Context();
     assertFalse(context.fired);
-    StateMachineExecutor fsm = fsm(context);
+    StateMachineExecutor<Context> fsm = fsm(context);
     fsm.go();
     
     /*
@@ -61,10 +62,10 @@ public class Test8 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -79,7 +80,7 @@ public class Test8 extends AbstractStateMachineTest {
         .state("A")
           .transition()
             .on("go")
-            .effect((BiTransitionBehavior<Event, Context>)(e, c) -> { c.fired = true; })
+            .effect((e, c) -> c.fired = true)
             .target(end);
     
     return builder;
@@ -90,7 +91,7 @@ public class Test8 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     boolean fired;
   }
   

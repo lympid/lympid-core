@@ -26,7 +26,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -36,15 +35,18 @@ import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.composite.Test10.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests a local transition going from an entry point to an exit point.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test10 extends AbstractStateMachineTest {
+public class Test10 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void model() {
@@ -82,8 +84,8 @@ public class Test10 extends AbstractStateMachineTest {
       .effect("t1").exit("A")
       .effect("t2");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#5"));
@@ -92,8 +94,8 @@ public class Test10 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -112,8 +114,8 @@ public class Test10 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder<SequentialContext> compositeA() {
-    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder<>();
+  private CompositeStateBuilder<Context> compositeA() {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>();
     
     builder
       .entry(EntryABehavior.class)
@@ -121,10 +123,10 @@ public class Test10 extends AbstractStateMachineTest {
         
     builder
       .connectionPoint()
-        .entryPoint(new EntryPointBuilder<SequentialContext>("A_entryPoint")
+        .entryPoint(new EntryPointBuilder<Context>("A_entryPoint")
           .transition("t1")
             .target("A_exitPoint"))
-        .exitPoint(new ExitPointBuilder<SequentialContext>("A_exitPoint")
+        .exitPoint(new ExitPointBuilder<Context>("A_exitPoint")
           .transition("t2")
             .target("end"));
     
@@ -136,19 +138,22 @@ public class Test10 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  public static final class EntryABehavior implements StateBehavior<SequentialContext> {
+  public static final class Context extends SequentialContext {
+  }
+
+  public static final class EntryABehavior implements StateBehavior<Context> {
 
     @Override
-    public void accept(SequentialContext t) {
+    public void accept(Context t) {
       t.enter("A");
     }
     
   }
 
-  public static final class ExitABehavior implements StateBehavior<SequentialContext> {
+  public static final class ExitABehavior implements StateBehavior<Context> {
 
     @Override
-    public void accept(SequentialContext t) {
+    public void accept(Context t) {
       t.exit("A");
     }
     

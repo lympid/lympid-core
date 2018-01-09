@@ -23,6 +23,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.SubStateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.submachine.Test4.Context;
 import org.junit.Test;
 
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
@@ -32,7 +33,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
  * 
  * @author Fabien Renaud 
  */
-public class Test4 extends AbstractStateMachineTest {
+public class Test4 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
@@ -46,7 +47,7 @@ public class Test4 extends AbstractStateMachineTest {
   
   private void run(final boolean pause) {
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);    
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
@@ -54,26 +55,26 @@ public class Test4 extends AbstractStateMachineTest {
     pauseAndResume(fsm, pause, this::runPart2);
   }
   
-  private void runPart2(StateMachineExecutor fsm, boolean pause) {
+  private void runPart2(StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub2", "A"));
     
     pauseAndResume(fsm, pause, this::runPart3);
   }
   
-  private void runPart3(StateMachineExecutor fsm, boolean pause) {
+  private void runPart3(StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
-  private void pauseAndResume(StateMachineExecutor fsm1, boolean pause, FsmRunSequence sequence) {
+  private void pauseAndResume(StateMachineExecutor<Context> fsm1, boolean pause, FsmRunSequence sequence) {
     if (!pause) {
       sequence.run(fsm1, pause);
       return;
     }
     
     fsm1.pause();
-    StateMachineSnapshot snapshot1 = fsm1.snapshot();
+    StateMachineSnapshot<Context> snapshot1 = fsm1.snapshot();
 
     /*
      * First state machine
@@ -85,7 +86,7 @@ public class Test4 extends AbstractStateMachineTest {
     /*
      * Second/cloned state machine
      */
-    StateMachineExecutor fsm2 = fsm(snapshot1);
+    StateMachineExecutor<Context> fsm2 = fsm(snapshot1);
     assertSnapshotEquals(snapshot1, fsm2);
 
     fsm2.take(new StringEvent("go"));
@@ -98,7 +99,7 @@ public class Test4 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -161,11 +162,11 @@ public class Test4 extends AbstractStateMachineTest {
   
   private interface FsmRunSequence {
     
-    void run(StateMachineExecutor fsm, boolean pause);
+    void run(StateMachineExecutor<Context> fsm, boolean pause);
     
   }
   
-  private static final class Context {
+  public static final class Context {
     int c;
   }
   

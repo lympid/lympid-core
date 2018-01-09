@@ -16,29 +16,29 @@
 
 package com.lympid.core.behaviorstatemachines.simple;
 
-import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
-import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.simple.Test6.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the effect of an external transition with no trigger and no guard.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test6 extends AbstractStateMachineTest {
+public class Test6 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_DefaultBadContext() {
     Context context = new Context();
     assertEquals(0, context.counter);
-    StateMachineExecutor fsm = fsm(context);
+    StateMachineExecutor<Context> fsm = fsm(context);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -46,10 +46,10 @@ public class Test6 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -63,7 +63,7 @@ public class Test6 extends AbstractStateMachineTest {
       .region()
         .state("A")
           .transition()
-            .effect((BiTransitionBehavior<Event, Context>)(e, c) -> { c.counter++; })
+            .effect((e, c) -> c.counter++)
             .target(end);
     
     return builder;
@@ -74,7 +74,7 @@ public class Test6 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     int counter;
   }
   

@@ -21,18 +21,20 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest9.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  *
  * @author Fabien Renaud 
  */
-public abstract class HistoryTest9 extends AbstractHistoryTest {
+public abstract class HistoryTest9 extends AbstractHistoryTest<Context> {
   
   private String stdout;
   private boolean pause;
@@ -56,8 +58,8 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     this.pause = pause;
     SequentialContext expected = new SequentialContext();
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     
@@ -69,7 +71,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part2);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part2(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go"));
     expected
       .exit("A").effect("t1").enter("B")
@@ -86,7 +88,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part3);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part3(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go1"));
     expected.exit("B1A").exit("B1").effect("t5");
     assertSnapshotEquals(fsm, new ActiveStateTree(this)
@@ -99,7 +101,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part4);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part4(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go21"));
     expected
       .exit("B2A").effect("t7").enter("B2B");
@@ -113,7 +115,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part5);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part5(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part5(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("zEnd"));
     expected
       .exit("Z").effect("t1");
@@ -127,7 +129,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part6);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part6(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part6(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go31"));
     expected
       .exit("sub1").effect("t10").enter("sub2")
@@ -142,7 +144,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part7);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part7(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part7(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go22"));
     expected
       .exit("B2B").effect("t8");
@@ -156,7 +158,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part8);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part8(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part8(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("zEnd"));
     expected
       .exit("Z").effect("t1");
@@ -170,7 +172,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part9);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part9(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part9(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go32"));
     expected
       .exit("sub2").effect("t11")
@@ -181,7 +183,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_end1_B2B_sub2_end2_c_end_Part10);
   }
   
-  private void run_a_b_end1_B2B_sub2_end2_c_end_Part10(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_end1_B2B_sub2_end2_c_end_Part10(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("end"));
     expected
       .exit("C").exit("compo").effect("t3");
@@ -203,8 +205,8 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     this.pause = pause;
     SequentialContext expected = new SequentialContext();
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     
@@ -216,7 +218,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part2);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part2(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go"));
     expected
       .exit("A").effect("t1").enter("B")
@@ -233,7 +235,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part3);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part3(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     /*
      * Pause
      */
@@ -251,7 +253,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part4);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part4(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     /*
      * Back to normal
      */
@@ -267,7 +269,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part5);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part5(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part5(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go21"));
     expected
       .exit("B2A").effect("t7").enter("B2B");
@@ -281,7 +283,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part6);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part6(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part6(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("zEnd"));
     expected
       .exit("Z").effect("t1");
@@ -295,7 +297,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part7);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part7(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part7(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go31"));
     expected
       .exit("sub1").effect("t10").enter("sub2")
@@ -310,7 +312,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part8);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part8(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part8(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go22"));
     expected
       .exit("B2B").effect("t8");
@@ -324,7 +326,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part9);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part9(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part9(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("zEnd"));
     expected
       .exit("Z").effect("t1");
@@ -338,7 +340,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part10);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part10(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part10(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("go32"));
     expected
       .exit("sub2").effect("t11")
@@ -349,7 +351,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, this::run_a_b_P_end1_B2B_sub2_end2_c_end_Part11);
   }
   
-  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part11(final SequentialContext expected, final StateMachineExecutor fsm) {
+  private void run_a_b_P_end1_B2B_sub2_end2_c_end_Part11(final SequentialContext expected, final StateMachineExecutor<Context> fsm) {
     fsm.take(new StringEvent("end"));
     expected
       .exit("C").exit("compo").effect("t3");
@@ -357,14 +359,14 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor fsm1, final FsmRunSequence sequence) {
+  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor<Context> fsm1, final FsmRunSequence sequence) {
     if (!pause) {
       sequence.run(expected1, fsm1);
       return;
     }
     
     fsm1.pause();
-    StateMachineSnapshot snapshot1 = fsm1.snapshot();
+    StateMachineSnapshot<Context> snapshot1 = fsm1.snapshot();
     SequentialContext expected2 = expected1.copy();
 
     /*
@@ -386,7 +388,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     /*
      * Second/cloned state machine
      */
-    StateMachineExecutor fsm2 = fsm(snapshot1);
+    StateMachineExecutor<Context> fsm2 = fsm(snapshot1);
     assertSnapshotEquals(snapshot1, fsm2);
     
     fsm2.take(new StringEvent("go"));
@@ -416,11 +418,11 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     sequence.run(expected2, fsm2);
   }
   
-  protected abstract void resume_B1A_B2A_sub1(StateMachineExecutor fsm, SequentialContext expected);
+  protected abstract void resume_B1A_B2A_sub1(StateMachineExecutor<Context> fsm, SequentialContext expected);
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -449,8 +451,8 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     return builder;
   }
   
-  private CompositeStateBuilder compo(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> compo(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -477,8 +479,8 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     return builder;
   }
 
-  private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
+  private OrthogonalStateBuilder<Context> ortho(final String name) {
+    OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder<>(name);
     
     /*
      * Region 1
@@ -536,7 +538,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
           .transition("t9")
             .target("sub1");
     
-    StateMachineBuilder sub = submachine("sub");
+    StateMachineBuilder<Context> sub = submachine("sub");
     
     builder
       .region("r3")
@@ -559,8 +561,8 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     return builder;
   }
 
-  private CompositeStateBuilder compositeB1(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> compositeB1(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -572,8 +574,8 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     return builder;
   }
   
-  private StateMachineBuilder submachine(final String name) {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name);
+  private StateMachineBuilder<Context> submachine(final String name) {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name);
     
     builder
       .region()
@@ -600,9 +602,12 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
     return stdout;
   }
   
+  public static final class Context extends SequentialContext {
+  }
+  
   private interface FsmRunSequence {
     
-    void run(SequentialContext expected, StateMachineExecutor fsm);
+    void run(SequentialContext expected, StateMachineExecutor<Context> fsm);
     
   }
   

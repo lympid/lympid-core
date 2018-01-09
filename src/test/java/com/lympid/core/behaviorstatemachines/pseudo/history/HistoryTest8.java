@@ -29,7 +29,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -40,16 +39,19 @@ import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.DefaultHistoryEntryException;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultHistoryFailover;
+import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest8.Context;
+import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
 
 /**
  * Tests the default history entry of shallow and deep history vertices.
  *
  * @author Fabien Renaud 
  */
-public abstract class HistoryTest8 extends AbstractHistoryTest {
+public abstract class HistoryTest8 extends AbstractHistoryTest<Context> {
   
   private String stdout;
   
@@ -103,7 +105,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
   @Test
   public void runNormal() {
     Context ctx = new Context(false);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     SequentialContext expected = new SequentialContext();
@@ -114,7 +116,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
   @Test(expected = DefaultHistoryEntryException.class)
   public void runHistory_failOverException() {
     Context ctx = new Context(true);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     
     try {
       fsm.go();
@@ -132,7 +134,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
       .defaultHistoryFailover(DefaultHistoryFailover.DISABLE_TRANSITION);
     
     Context ctx = new Context(true);
-    StateMachineExecutor fsm = fsm(ctx, config);
+    StateMachineExecutor<Context> fsm = fsm(ctx, config);
     fsm.go();
     
     SequentialContext expected = new SequentialContext();
@@ -144,7 +146,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
     run(fsm, ctx, expected);
   }
   
-  private void run(StateMachineExecutor fsm, Context ctx, SequentialContext expected) {   
+  private void run(StateMachineExecutor<Context> fsm, Context ctx, SequentialContext expected) {
     expected.exit("T").effect("t1").enter("A");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     assertSequentialContextEquals(expected, fsm);
@@ -176,7 +178,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -254,7 +256,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
     return stdout;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     boolean immediateHistory;
 
     public Context(boolean immediateHistory) {

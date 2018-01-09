@@ -20,19 +20,22 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import com.lympid.core.behaviorstatemachines.activity.Test2.Context;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import org.junit.Test;
 
 /**
  * Tests the state activity is canceled when an outgoing transition is fired.
  * 
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test2 extends AbstractStateMachineTest<Context> {
   
   private static final long WAIT_TIME = 1000;
   private static final int EXPECTED_C = 10;
@@ -40,7 +43,7 @@ public class Test2 extends AbstractStateMachineTest {
   @Test
   public void run() throws InterruptedException {
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -57,7 +60,7 @@ public class Test2 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -86,7 +89,7 @@ public class Test2 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  private static final class Context {
+  public static final class Context {
     volatile int c;
     CountDownLatch latchStarted = new CountDownLatch(1);
     CountDownLatch latchInterrupted = new CountDownLatch(1);

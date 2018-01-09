@@ -21,17 +21,19 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.simple.Test18.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests multiple outgoing guarded transitions can be executed from a simple state.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test18 extends AbstractStateMachineTest {
+public class Test18 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_NoWhere() {
@@ -40,7 +42,7 @@ public class Test18 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 0;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -55,7 +57,7 @@ public class Test18 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 1;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
@@ -73,7 +75,7 @@ public class Test18 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 2;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
@@ -91,7 +93,7 @@ public class Test18 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 3;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("B"));
@@ -102,10 +104,10 @@ public class Test18 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -119,17 +121,17 @@ public class Test18 extends AbstractStateMachineTest {
       .region()
         .state("A")
           .transition("t1")
-            .guard((e, c) -> { return c.c == 1; })
+            .guard((e, c) -> c.c == 1)
             .target("B");
     
     builder
       .region()
         .state("A")
           .transition("t2")
-            .guard((e, c) -> { return c.c == 2; })
+            .guard((e, c) -> c.c == 2)
             .target("B")
           .transition("t3")
-            .guard((e, c) -> { return c.c == 3; })
+            .guard((e, c) -> c.c == 3)
             .target("B");
     
     builder
@@ -147,7 +149,7 @@ public class Test18 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     
     int c;
     

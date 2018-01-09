@@ -21,24 +21,26 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.pseudo.terminate.Test3.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests a terminate pseudo state in a composite state.
  * @author Fabien Renaud 
  */
-public class Test3 extends AbstractStateMachineTest {
+public class Test3 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("A");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -50,8 +52,8 @@ public class Test3 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -73,8 +75,8 @@ public class Test3 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder compositeA(final String name) {
-    final CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> compositeA(final String name) {
+    final CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -87,7 +89,10 @@ public class Test3 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context extends SequentialContext {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test3.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    PseudoState: #3 kind: INITIAL\n" +

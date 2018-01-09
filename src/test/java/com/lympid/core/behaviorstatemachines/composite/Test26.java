@@ -19,18 +19,20 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.composite.Test26.Context;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultEntryRule;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * 
  * @author Fabien Renaud 
  */
-public class Test26 extends AbstractStateMachineTest {
+public class Test26 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
@@ -39,7 +41,7 @@ public class Test26 extends AbstractStateMachineTest {
       .defaultEntryRule(DefaultEntryRule.NONE);
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx, config);
+    StateMachineExecutor<Context> fsm = fsm(ctx, config);
     fsm.go();
     
     expected
@@ -52,7 +54,7 @@ public class Test26 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -100,7 +102,7 @@ public class Test26 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     int c;
   }
   

@@ -20,55 +20,57 @@ import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.simple.Test10.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests an external transition with 5 triggers can be executed with any of the fives.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test10 extends AbstractStateMachineTest {
+public class Test10 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_go() {
-    StateMachineExecutor fsm = commonTest();
+    StateMachineExecutor<Context> fsm = commonTest();
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_a() {
-    StateMachineExecutor fsm = commonTest();
+    StateMachineExecutor<Context> fsm = commonTest();
     fsm.take(new StringEvent("a"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_finish() {
-    StateMachineExecutor fsm = commonTest();
+    StateMachineExecutor<Context> fsm = commonTest();
     fsm.take(new StringEvent("finish"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_end() {
-    StateMachineExecutor fsm = commonTest();
+    StateMachineExecutor<Context> fsm = commonTest();
     fsm.take(new StringEvent("end"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test
   public void run_foo() {
-    StateMachineExecutor fsm = commonTest();
+    StateMachineExecutor<Context> fsm = commonTest();
     fsm.take(new StringEvent("foo"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   private StateMachineExecutor commonTest() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     
     /*
@@ -86,10 +88,10 @@ public class Test10 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -117,7 +119,10 @@ public class Test10 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test10.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    FinalState: \"end\"\n" +

@@ -27,7 +27,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
 import com.lympid.core.behaviorstatemachines.Vertex;
@@ -36,8 +35,11 @@ import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.composite.Test13.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests an external transition starting off the edge of the composite state and
@@ -45,7 +47,7 @@ import org.junit.Test;
  *
  * @author Fabien Renaud 
  */
-public class Test13 extends AbstractStateMachineTest {
+public class Test13 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void model() {
@@ -90,9 +92,9 @@ public class Test13 extends AbstractStateMachineTest {
       .effect("t1").enter("Aa")
       .exit("Aa").exit("A").effect("t3").enter("A")
       .exit("A").effect("t4");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa"));
@@ -104,8 +106,8 @@ public class Test13 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -124,10 +126,10 @@ public class Test13 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder compositeA(final String name) {
-    CompositeStateBuilder<Object> builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> compositeA(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
-    VertexBuilderReference rend = builder
+    VertexBuilderReference<Context> rend = builder
       .region()
         .finalState();
     
@@ -151,7 +153,7 @@ public class Test13 extends AbstractStateMachineTest {
     
     builder
       .connectionPoint()
-        .exitPoint(new ExitPointBuilder<>("A_exitPoint")
+        .exitPoint(new ExitPointBuilder<Context>("A_exitPoint")
           .transition("t4")
             .target("end")
         );
@@ -162,6 +164,9 @@ public class Test13 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test13.class.getSimpleName() + "\"\n" +

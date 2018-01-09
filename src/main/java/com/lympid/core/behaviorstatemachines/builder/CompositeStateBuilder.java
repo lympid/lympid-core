@@ -22,8 +22,9 @@ import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.behaviorstatemachines.impl.MutablePseudoState;
 import com.lympid.core.behaviorstatemachines.impl.MutableRegion;
 import com.lympid.core.behaviorstatemachines.impl.MutableState;
-import java.util.Arrays;
+
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Builder for a composite state.
@@ -113,7 +114,7 @@ public final class CompositeStateBuilder<C> extends StateBuilder<CompositeStateB
    * @return An interface to build the transition.
    */
   private TransitionTrigger<CompositeStateBuilder<C>, C, CompletionEvent> transition(final String name, final TransitionKind kind) {
-    ErnalTransitionBuilder transition = new ErnalTransitionBuilder(kind, name, this);
+    ErnalTransitionBuilder transition = new ErnalTransitionBuilder<>(kind, name, this);
     outgoing().add(transition);
     return transition;
   }
@@ -140,7 +141,7 @@ public final class CompositeStateBuilder<C> extends StateBuilder<CompositeStateB
 
   @Override
   public SelfTransitionTrigger<CompositeStateBuilder<C>, C, CompletionEvent> selfTransition(String name) {
-    SelfTransitionBuilder transition = new SelfTransitionBuilder(TransitionKind.INTERNAL, name, this);
+    SelfTransitionBuilder transition = new SelfTransitionBuilder<>(TransitionKind.INTERNAL, name, this);
     outgoing().add(transition);
     return transition;
   }
@@ -164,7 +165,7 @@ public final class CompositeStateBuilder<C> extends StateBuilder<CompositeStateB
     final MutableState vertex = super.vertex(vertices);
 
     MutableRegion region = regionBuilder.region(vertices);
-    vertex.setRegions(Arrays.asList(region));
+    vertex.setRegions(Collections.singletonList(region));
     region.setState(vertex);
 
     Collection<MutablePseudoState> connectionPoints = connectionPointBuilder.vertex(vertices);

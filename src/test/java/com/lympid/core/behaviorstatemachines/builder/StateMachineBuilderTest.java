@@ -16,9 +16,10 @@
 package com.lympid.core.behaviorstatemachines.builder;
 
 import com.lympid.core.behaviorstatemachines.StateMachine;
+import org.junit.Test;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
  *
@@ -28,7 +29,7 @@ public class StateMachineBuilderTest {
   
   @Test
   public void testInstance() {
-    StateMachineBuilder builder = new StateMachineBuilder<>("testInstance");
+    StateMachineBuilder<Object> builder = new StateMachineBuilder<>("testInstance");
     
     builder
       .region()

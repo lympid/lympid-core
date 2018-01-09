@@ -27,7 +27,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
@@ -38,8 +37,11 @@ import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.composite.Test20.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests a local transition which has the same composite state as a source
@@ -47,7 +49,7 @@ import org.junit.Test;
  *
  * @author Fabien Renaud 
  */
-public class Test20 extends AbstractStateMachineTest {
+public class Test20 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void model() {
@@ -102,9 +104,9 @@ public class Test20 extends AbstractStateMachineTest {
       .effect("t1").enter("Aa")
       .exit("Aa").effect("t3")
       .exit("A").effect("t4");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor<SequentialContext> fsm = fsm(ctx);
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     ActiveStateTree active = new ActiveStateTree(this).branch("A", "Aa");
@@ -112,7 +114,7 @@ public class Test20 extends AbstractStateMachineTest {
     
     if (pause) {
       fsm.pause();
-      StateMachineSnapshot snapshot = fsm.snapshot();
+      StateMachineSnapshot<Context> snapshot = fsm.snapshot();
       
       fsm.take(new StringEvent("let"));
       assertSnapshotEquals(fsm, active);
@@ -124,16 +126,16 @@ public class Test20 extends AbstractStateMachineTest {
     }
   }
   
-  private void resume(final StateMachineExecutor<SequentialContext> fsm, final SequentialContext expected) {
+  private void resume(final StateMachineExecutor<Context> fsm, final SequentialContext expected) {
     fsm.resume();
     letEnd(fsm, expected);
   }
   
-  private void resume(final StateMachineSnapshot snapshot, final SequentialContext expected) {
+  private void resume(final StateMachineSnapshot<Context> snapshot, final SequentialContext expected) {
     resume(fsm(snapshot), expected);
   }
 
-  private void letEnd(StateMachineExecutor<SequentialContext> fsm, SequentialContext expected) {
+  private void letEnd(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("let"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
 
@@ -147,9 +149,9 @@ public class Test20 extends AbstractStateMachineTest {
       .effect("t1").enter("Aa")
       .exit("Aa").effect("t2")
       .exit("A").effect("t5");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa"));
@@ -171,9 +173,9 @@ public class Test20 extends AbstractStateMachineTest {
       .exit("Aa").effect("t2")
       .effect("t3")
       .exit("A").effect("t4");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa"));
@@ -185,8 +187,8 @@ public class Test20 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -211,10 +213,10 @@ public class Test20 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder<Object> compositeA(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> compositeA(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
-    VertexBuilderReference rend = builder
+    VertexBuilderReference<Context> rend = builder
       .region()
         .finalState();
     
@@ -233,7 +235,7 @@ public class Test20 extends AbstractStateMachineTest {
     
     builder
       .connectionPoint()
-        .exitPoint(new ExitPointBuilder<>("A_exitPoint")
+        .exitPoint(new ExitPointBuilder<Context>("A_exitPoint")
           .transition("t4")
             .target("end")
         );
@@ -244,6 +246,9 @@ public class Test20 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test20.class.getSimpleName() + "\"\n" +

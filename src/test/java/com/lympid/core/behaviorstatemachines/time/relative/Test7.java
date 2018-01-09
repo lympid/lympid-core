@@ -18,20 +18,23 @@ package com.lympid.core.behaviorstatemachines.time.relative;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.listener.StringBufferLogger;
+import com.lympid.core.behaviorstatemachines.time.relative.Test7.Context;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 /**
  * Tests an internal transition can be fired by a time event.
  * 
  * @author Fabien Renaud 
  */
-public class Test7 extends AbstractStateMachineTest {
+public class Test7 extends AbstractStateMachineTest<Context> {
 
   private static final long SHORT_DELAY = 50;
   private static final long LONG_DELAY = 200;
@@ -41,7 +44,7 @@ public class Test7 extends AbstractStateMachineTest {
     final StringBufferLogger log = new StringBufferLogger();
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.listeners().add(log);
     fsm.go();
     
@@ -57,7 +60,7 @@ public class Test7 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -95,7 +98,7 @@ public class Test7 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  private static final class Context {
+  public static final class Context {
     CountDownLatch latch = new CountDownLatch(1);
     volatile int local;
     

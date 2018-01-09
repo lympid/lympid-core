@@ -19,26 +19,29 @@ package com.lympid.core.behaviorstatemachines.simple;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import java.util.concurrent.CountDownLatch;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.simple.Test11.Context;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Entering a simple state executes its activity.
  * 
  * @author Fabien Renaud 
  */
-public class Test11 extends AbstractStateMachineTest {
+public class Test11 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() throws InterruptedException {
     Context ctx = new Context();
     assertEquals(0, ctx.hash);
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
   
     ctx.latch.await();
@@ -49,10 +52,10 @@ public class Test11 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -65,7 +68,7 @@ public class Test11 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .activity((c) -> c.hash = c.hashCode())
+          .activity(c -> c.hash = c.hashCode())
           .transition()
             .effect((e, c) -> c.latch.countDown())
             .target(end);
@@ -78,7 +81,7 @@ public class Test11 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     CountDownLatch latch = new CountDownLatch(1);
     int hash;
   }

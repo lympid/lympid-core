@@ -21,11 +21,13 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.orthogonal.Test4.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests an orthogonal state with:
@@ -36,13 +38,13 @@ import org.junit.Test;
  *  - unamed external transition
  * @author Fabien Renaud 
  */
-public class Test4 extends AbstractStateMachineTest {
+public class Test4 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_end() {
     SequentialContext expected = new SequentialContext();    
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -55,7 +57,7 @@ public class Test4 extends AbstractStateMachineTest {
   public void run_go1_end() {
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -69,7 +71,7 @@ public class Test4 extends AbstractStateMachineTest {
   public void run_go1_go2_end() {
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -82,7 +84,7 @@ public class Test4 extends AbstractStateMachineTest {
   public void run_go2_end() {
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -96,7 +98,7 @@ public class Test4 extends AbstractStateMachineTest {
   public void run_go2_go1_end() {
     SequentialContext expected = new SequentialContext();    
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -105,7 +107,7 @@ public class Test4 extends AbstractStateMachineTest {
     fireEnd(fsm, expected);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
+  private void begin(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho")
       .effect("t5").enter("C")
@@ -114,7 +116,7 @@ public class Test4 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGoB(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
+  private void fireGoB(StateMachineExecutor<Context> fsm, SequentialContext expected, String otherRegionState) {
     ActiveStateTree active = new ActiveStateTree(this).branch("#6", "end1").branch("#6", otherRegionState);
     
     fsm.take(new StringEvent("goB"));
@@ -133,7 +135,7 @@ public class Test4 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGoD(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
+  private void fireGoD(StateMachineExecutor<Context> fsm, SequentialContext expected, String otherRegionState) {
     ActiveStateTree active = new ActiveStateTree(this).branch("#6", otherRegionState).branch("#6", "end2");
     
     fsm.take(new StringEvent("goD"));
@@ -152,7 +154,7 @@ public class Test4 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireEnd(StateMachineExecutor fsm, SequentialContext expected) {
+  private void fireEnd(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t9");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -160,10 +162,10 @@ public class Test4 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -263,7 +265,7 @@ public class Test4 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test4.class.getSimpleName() + "\"\n" +

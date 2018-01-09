@@ -20,23 +20,25 @@ import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.IllegalStartException;
+import com.lympid.core.behaviorstatemachines.simple.Test4.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests an external transition with 1 trigger can execute upon a given event.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test4 extends AbstractStateMachineTest {
+public class Test4 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     
     /*
@@ -59,7 +61,7 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test(expected = IllegalStartException.class)
   public void go_afterStarted_withAutoStart() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
     
@@ -68,7 +70,7 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test(expected = IllegalStartException.class)
   public void go_afterStarted_withoutAutoStart() {
-    StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
+    StateMachineExecutor<Context> fsm = fsm(new ExecutorConfiguration().autoStart(false));
     fsm.go();
     fsm.take(new StringEvent("blah"));
     fsm.go();
@@ -76,7 +78,7 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test(expected = IllegalStartException.class)
   public void go_afterTerminated_withAutoStart() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -86,7 +88,7 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test(expected = IllegalStartException.class)
   public void go_afterTerminated_withoutAutoStart() {
-    StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
+    StateMachineExecutor<Context> fsm = fsm(new ExecutorConfiguration().autoStart(false));
     fsm.go();
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -96,21 +98,21 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test(expected = IllegalStartException.class)
   public void noGo_take_withAutoStart() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test(expected = IllegalStartException.class)
   public void noGo_take_withoutAutoStart() {
-    StateMachineExecutor fsm = fsm(new ExecutorConfiguration().autoStart(false));
+    StateMachineExecutor<Context> fsm = fsm(new ExecutorConfiguration().autoStart(false));
     fsm.take(new StringEvent("go"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
   @Test(expected = IllegalStartException.class)
   public void noPause_resume() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
     
@@ -118,10 +120,10 @@ public class Test4 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -145,7 +147,10 @@ public class Test4 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test4.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    FinalState: \"end\"\n" +

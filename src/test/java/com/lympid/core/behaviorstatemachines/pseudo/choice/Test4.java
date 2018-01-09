@@ -20,13 +20,15 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.TransitionBehavior;
 import com.lympid.core.behaviorstatemachines.builder.ChoiceBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
+import com.lympid.core.behaviorstatemachines.pseudo.choice.Test4.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests the choice pseudo state realizes dynamic conditional branching. 
@@ -35,7 +37,7 @@ import org.junit.Test;
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test4 extends AbstractStateMachineTest {
+public class Test4 extends AbstractStateMachineTest<Context> {
 
   private static int newValueForC;
   
@@ -53,7 +55,7 @@ public class Test4 extends AbstractStateMachineTest {
      * If the conditional branching is not dynamic, this test will therefore fail.
      */
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end1"));
@@ -74,7 +76,7 @@ public class Test4 extends AbstractStateMachineTest {
      * If the conditional branching is not dynamic, this test will therefore fail.
      */
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end2"));
@@ -95,7 +97,7 @@ public class Test4 extends AbstractStateMachineTest {
      * If the conditional branching is not dynamic, this test will therefore fail.
      */
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     /*
@@ -115,12 +117,12 @@ public class Test4 extends AbstractStateMachineTest {
      * If the conditional branching is not dynamic, this test will therefore fail.
      */
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     VertexBuilderReference<Context> end1 = builder
@@ -139,16 +141,16 @@ public class Test4 extends AbstractStateMachineTest {
       .region()
         .initial()
           .transition("t0")
-            .effect((c) -> { c.c = newValueForC; })
+            .effect(c -> c.c = newValueForC)
             .target(new ChoiceBuilder<Context>()
               .transition("t1")
-                .guard((c) -> { return c.c == 1; })
+                .guard(c -> c.c == 1)
                 .target(end1)
               .transition("t2")
-                .guard((c) -> { return c.c == 2; })
+                .guard(c -> c.c == 2)
                 .target(end2)
               .transition()
-                .guard((c) -> { return c.c == 3; })
+                .guard(c -> c.c == 3)
                 .effect(Transition3Effect.class)
                 .target(end3)
             );

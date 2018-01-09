@@ -21,12 +21,14 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.ForkBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.pseudo.fork.Test4.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests a fork vertex belonging to one of the regions of the orthogonal state.
@@ -34,13 +36,13 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public class Test4 extends AbstractStateMachineTest {
+public class Test4 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_end() {
     SequentialContext expected = new SequentialContext();
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -51,9 +53,9 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test
   public void run_go1_end() {
-    SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    SequentialContext expected = new SequentialContext();
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -65,9 +67,9 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test
   public void run_go1_go2_end() {
-    SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    SequentialContext expected = new SequentialContext();
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -78,9 +80,9 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test
   public void run_go2_end() {
-    SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    SequentialContext expected = new SequentialContext();
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -92,9 +94,9 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Test
   public void run_go2_go1_end() {
-    SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    SequentialContext expected = new SequentialContext();
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -103,7 +105,7 @@ public class Test4 extends AbstractStateMachineTest {
     fireEnd(fsm, expected);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
+  private void begin(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho").enter("E");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "E"));
@@ -118,21 +120,21 @@ public class Test4 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGo1(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
+  private void fireGo1(StateMachineExecutor<Context> fsm, SequentialContext expected, String otherRegionState) {
     fsm.take(new StringEvent("go1"));
     expected.exit("A").effect("t2").enter("B").exit("B").effect("t3");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState));
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireGo2(StateMachineExecutor fsm, SequentialContext expected, String otherRegionState) {
+  private void fireGo2(StateMachineExecutor<Context> fsm, SequentialContext expected, String otherRegionState) {
     fsm.take(new StringEvent("go2"));
     expected.exit("C").effect("t5").enter("D").exit("D").effect("t6");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2"));
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireEnd(StateMachineExecutor fsm, SequentialContext expected) {
+  private void fireEnd(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t7");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -140,10 +142,10 @@ public class Test4 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
 
@@ -163,8 +165,8 @@ public class Test4 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private OrthogonalStateBuilder orthogonal(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
+  private OrthogonalStateBuilder<Context> orthogonal(final String name) {
+    OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder<>(name);
     
     builder
       .region("r1")
@@ -192,7 +194,7 @@ public class Test4 extends AbstractStateMachineTest {
         .state("E")
           .transition("tE")
             .on("doFork")
-            .target(new ForkBuilder<>("myFork")
+            .target(new ForkBuilder<Context>("myFork")
               .transition("t1")
                 .target("A")
               .transition("t4")
@@ -218,6 +220,9 @@ public class Test4 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test4.class.getSimpleName() + "\"\n" +

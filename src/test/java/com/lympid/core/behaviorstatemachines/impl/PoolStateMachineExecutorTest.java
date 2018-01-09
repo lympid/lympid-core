@@ -143,7 +143,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
     /*
      * Second/cloned state machine
      */
-    StateMachineExecutor fsm2 = fsm(fsm1.getId(), snapshot1);
+    StateMachineExecutor<Context> fsm2 = fsm(fsm1.getId(), snapshot1);
     assertSnapshotEquals(snapshot1, fsm2);
 
     fsm2.take(new StringEvent("go"));
@@ -164,7 +164,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>("noname");
     
     builder
@@ -216,7 +216,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   private interface FsmRunSequence {
     
-    void run(SequentialContext expected, StateMachineExecutor fsm, Context ctx, boolean pause) throws InterruptedException;
+    void run(SequentialContext expected, StateMachineExecutor<Context> fsm, Context ctx, boolean pause) throws InterruptedException;
     
   }
   

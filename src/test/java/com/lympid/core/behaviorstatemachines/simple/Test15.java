@@ -21,16 +21,18 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.simple.Test15.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Entering a simple state executes all its exit actions in the default order.
  * @author Fabien Renaud 
  */
-public class Test15 extends AbstractStateMachineTest {
+public class Test15 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
@@ -41,8 +43,8 @@ public class Test15 extends AbstractStateMachineTest {
       .exit("bar")
       .exit("dir");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -51,10 +53,10 @@ public class Test15 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -67,10 +69,10 @@ public class Test15 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .exit((c) -> { c.exit("foo"); })
-          .exit((c) -> { c.exit("iak"); })
+          .exit(c -> c.exit("foo"))
+          .exit(c -> c.exit("iak"))
           .exit(BarExitBehavior.class)
-          .exit((c) -> { c.exit("dir"); })
+          .exit(c -> c.exit("dir"))
           .transition()
             .target(end);
     
@@ -86,11 +88,14 @@ public class Test15 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
-  public static final class BarExitBehavior implements StateBehavior<SequentialContext> {
+
+  public static final class Context extends SequentialContext {
+  }
+
+  public static final class BarExitBehavior implements StateBehavior<Context> {
 
     @Override
-    public void accept(SequentialContext c) {
+    public void accept(Context c) {
       c.exit("bar");
     }
     

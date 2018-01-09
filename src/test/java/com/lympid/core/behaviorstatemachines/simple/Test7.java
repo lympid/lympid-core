@@ -20,24 +20,25 @@ import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
-import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.simple.Test7.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests an external transition with 1 trigger and 1 guard but no effect.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test7 extends AbstractStateMachineTest {
+public class Test7 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_DefaultBadContext() {
     Context context = new Context();
-    StateMachineExecutor fsm = fsm(context);
+    StateMachineExecutor<Context> fsm = fsm(context);
     fsm.go();
     
     /*
@@ -61,7 +62,7 @@ public class Test7 extends AbstractStateMachineTest {
     Context context = new Context();
     context.counter = 1;
     
-    StateMachineExecutor fsm = fsm(context);
+    StateMachineExecutor<Context> fsm = fsm(context);
     fsm.go();
     
     /*
@@ -75,10 +76,10 @@ public class Test7 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -93,7 +94,7 @@ public class Test7 extends AbstractStateMachineTest {
         .state("A")
           .transition()
             .on("go")
-            .guard((BiTransitionConstraint<Event, Context>)(e, c) -> { return c.counter > 0; })
+            .guard((e, c) -> c.counter > 0)
             .target(end);
     
     return builder;
@@ -104,7 +105,7 @@ public class Test7 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     int counter;
   }
   

@@ -21,16 +21,18 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.simple.Test14.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Entering a simple state executes all its entry actions in the default order.
  * @author Fabien Renaud 
  */
-public class Test14 extends AbstractStateMachineTest {
+public class Test14 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
@@ -40,9 +42,9 @@ public class Test14 extends AbstractStateMachineTest {
       .enter("bar")
       .enter("iak")
       .enter("dir");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -51,10 +53,10 @@ public class Test14 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -67,10 +69,10 @@ public class Test14 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .entry((c) -> { c.enter("foo"); })
+          .entry(c -> c.enter("foo"))
           .entry(BarEntryBehavior.class)
-          .entry((c) -> { c.enter("iak"); })
-          .entry((c) -> { c.enter("dir"); })
+          .entry(c -> c.enter("iak"))
+          .entry(c -> c.enter("dir"))
           .transition()
             .target(end);
     
@@ -86,11 +88,14 @@ public class Test14 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
-  public static final class BarEntryBehavior implements StateBehavior<SequentialContext> {
+
+  public static final class Context extends SequentialContext {
+  }
+
+  public static final class BarEntryBehavior implements StateBehavior<Context> {
 
     @Override
-    public void accept(SequentialContext c) {
+    public void accept(Context c) {
       c.enter("bar");
     }
     

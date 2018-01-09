@@ -15,11 +15,11 @@
  */
 package com.lympid.core.behaviorstatemachines.orthogonal;
 
-import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Local transitions outgoing an orthogonal state and targeting the same
@@ -41,8 +41,8 @@ public class Test11 {
     }
   }
 
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(Test11.class.getSimpleName());
+  public StateMachineBuilder<Object> topLevelMachineBuilder() {
+    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(Test11.class.getSimpleName());
 
     builder
       .region()
@@ -61,8 +61,8 @@ public class Test11 {
     return builder;
   }
 
-  private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
+  private OrthogonalStateBuilder<Object> ortho(final String name) {
+    OrthogonalStateBuilder<Object> builder = new OrthogonalStateBuilder<>(name);
 
     builder
       .localTransition("t1")

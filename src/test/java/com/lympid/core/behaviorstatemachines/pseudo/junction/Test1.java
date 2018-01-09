@@ -20,13 +20,15 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.JunctionBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.junction.Test1.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the junction pseudo state realizes static conditional branching. 
@@ -36,7 +38,7 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public class Test1 extends AbstractStateMachineTest {
+public class Test1 extends AbstractStateMachineTest<Context> {
 
   private static int newValueForC;
   
@@ -55,7 +57,7 @@ public class Test1 extends AbstractStateMachineTest {
      */
     Context ctx = new Context();
     ctx.c = 1;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end1"));
@@ -78,7 +80,7 @@ public class Test1 extends AbstractStateMachineTest {
      */
     Context ctx = new Context();
     ctx.c = 2;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end2"));
@@ -101,7 +103,7 @@ public class Test1 extends AbstractStateMachineTest {
      */
     Context ctx = new Context();
     ctx.c = 3;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     /*
@@ -122,12 +124,12 @@ public class Test1 extends AbstractStateMachineTest {
      * If the conditional branching is not dynamic, this test will therefore fail.
      */
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     VertexBuilderReference<Context> end1 = builder
@@ -167,7 +169,7 @@ public class Test1 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     int c;
   }
   

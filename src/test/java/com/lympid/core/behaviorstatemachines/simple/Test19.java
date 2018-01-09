@@ -21,15 +21,17 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.simple.Test19.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests an internal transition on a simple state.
  * @author Fabien Renaud 
  */
-public class Test19 extends AbstractStateMachineTest {
+public class Test19 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_go() {
@@ -54,9 +56,9 @@ public class Test19 extends AbstractStateMachineTest {
     }
     expected
       .exit("A").effect("t2");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     /*
@@ -79,8 +81,8 @@ public class Test19 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -109,7 +111,10 @@ public class Test19 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context extends SequentialContext {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test19.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    FinalState: \"end\"\n" +

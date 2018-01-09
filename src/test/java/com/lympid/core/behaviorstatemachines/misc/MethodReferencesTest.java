@@ -18,15 +18,16 @@ package com.lympid.core.behaviorstatemachines.misc;
 import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.misc.MethodReferencesTest.Context;
 
 /**
  *
  * @author Fabien Renaud 
  */
-public class MethodReferencesTest extends AbstractStateMachineTest {
+public class MethodReferencesTest extends AbstractStateMachineTest<Context> {
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     final StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -62,7 +63,7 @@ public class MethodReferencesTest extends AbstractStateMachineTest {
     
   }
   
-  private static final class Context {
+  public static final class Context {
     
   }
   

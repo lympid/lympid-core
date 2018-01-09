@@ -15,37 +15,39 @@
  */
 package com.lympid.core.behaviorstatemachines;
 
-import static com.lympid.core.behaviorstatemachines.StateMachineTester.assertTextVisitor;
 import com.lympid.core.behaviorstatemachines.builder.SequentialContextInjector;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.impl.TextVisitor;
 import com.lympid.core.common.TestUtils;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import org.junit.Before;
-import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineTester.assertTextVisitor;
 
 /**
  *
  * @author Fabien Renaud
  */
-public abstract class AbstractStateMachineTest implements StateMachineTest {
+public abstract class AbstractStateMachineTest<C> implements StateMachineTest {
 
   public static final ScheduledExecutorService THREAD_POOL = Executors.newScheduledThreadPool(1);
   private static final Map<Class, StateMachine> MACHINES = new HashMap<>();
 
-  protected static void assertSequentialContextEquals(final SequentialContext expected, final StateMachineExecutor fsm) {
+  protected static void assertSequentialContextEquals(final SequentialContext expected, final StateMachineExecutor<?> fsm) {
     TestUtils.assertSequentialContextEquals(expected, fsm);
   }
 
   @Before
   public void setUp() {
     if (MACHINES.get(getClass()) == null) {
-      StateMachineBuilder b = topLevelMachineBuilder();
+      StateMachineBuilder<?> b = topLevelMachineBuilder();
       if (sequentialContextInjection()) {
         b.accept(new SequentialContextInjector());
       }
@@ -71,27 +73,27 @@ public abstract class AbstractStateMachineTest implements StateMachineTest {
     return MACHINES.get(getClass());
   }
 
-  public <C> StateMachineExecutor<C> fsm() {
+  public StateMachineExecutor<C> fsm() {
     return fsm(null, null);
   }
   
-  public <C> StateMachineExecutor<C> fsm(ExecutorConfiguration configuration) {
+  public StateMachineExecutor<C> fsm(ExecutorConfiguration configuration) {
     return fsm(null, configuration);
   }
   
-  public <C> StateMachineExecutor<C> fsm(C context) {
+  public StateMachineExecutor<C> fsm(C context) {
     return fsm(context, null);
   }
   
-  public <C> StateMachineExecutor<C> fsm(StateMachineSnapshot<C> snapshot) {
+  public StateMachineExecutor<C> fsm(StateMachineSnapshot<C> snapshot) {
     return fsm(null, null, snapshot);
   }
   
-  public <C> StateMachineExecutor<C> fsm(C context, ExecutorConfiguration configuration) {
+  public StateMachineExecutor<C> fsm(C context, ExecutorConfiguration configuration) {
     return fsm(context, configuration, null);
   }
 
-  public <C> StateMachineExecutor<C> fsm(C context, ExecutorConfiguration configuration, StateMachineSnapshot snapshot) {
+  public StateMachineExecutor<C> fsm(C context, ExecutorConfiguration configuration, StateMachineSnapshot<C> snapshot) {
     StateMachine machine = topLevelStateMachine();
 
     if (machine.metadata().hasActivities() || machine.metadata().hasTimeEvents()) {
@@ -101,7 +103,7 @@ public abstract class AbstractStateMachineTest implements StateMachineTest {
       configuration.executor(THREAD_POOL);
     }
     
-    return new SyncStateMachineExecutor.Builder<>()
+    return new SyncStateMachineExecutor.Builder<C>()
       .setName(executorName())
       .setStateMachine(machine)
       .setContext(context)

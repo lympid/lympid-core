@@ -124,29 +124,21 @@ public class SequentialContextInjector implements Visitor {
 
   }
 
-  private static final Predicate<Collection<Object>> ADD_ENTRY_PREDICATE = new Predicate<Collection<Object>>() {
-
-    @Override
-    public boolean test(Collection<Object> coll) {
-      for (Object o : coll) {
-        if (o instanceof EntryActionSequenceBehavior) {
-          return false;
-        }
+  private static final Predicate<Collection<Object>> ADD_ENTRY_PREDICATE = coll -> {
+    for (Object o : coll) {
+      if (o instanceof EntryActionSequenceBehavior) {
+        return false;
       }
-      return true;
     }
+    return true;
   };
 
-  private static final Predicate<Collection<Object>> ADD_EXIT_PREDICATE = new Predicate<Collection<Object>>() {
-
-    @Override
-    public boolean test(Collection<Object> coll) {
-      for (Object o : coll) {
-        if (o instanceof ExitActionSequenceBehavior) {
-          return false;
-        }
+  private static final Predicate<Collection<Object>> ADD_EXIT_PREDICATE = coll -> {
+    for (Object o : coll) {
+      if (o instanceof ExitActionSequenceBehavior) {
+        return false;
       }
-      return true;
     }
+    return true;
   };
 }

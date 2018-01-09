@@ -19,22 +19,24 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.pseudo.choice.Test7.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  *
  * @author Fabien Renaud 
  */
-public class Test7 extends AbstractStateMachineTest {
+public class Test7 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
     SequentialContext expected = new SequentialContext();
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     expected
@@ -46,8 +48,8 @@ public class Test7 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -82,7 +84,10 @@ public class Test7 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context extends SequentialContext {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test7.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    FinalState: \"end\"\n" +

@@ -20,23 +20,25 @@ import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.simple.Test2.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the initial transition can fire its effect.
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test2 extends AbstractStateMachineTest<Context> {
     
   @Test
   public void run_WithAutoStart() {
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
 
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -49,7 +51,7 @@ public class Test2 extends AbstractStateMachineTest {
       .autoStart(false);
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx, config);
+    StateMachineExecutor<Context> fsm = fsm(ctx, config);
     fsm.go();
 
     assertSnapshotEquals(fsm, new ActiveStateTree(this));
@@ -60,10 +62,10 @@ public class Test2 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region("myr")
         .finalState("end");
     
@@ -82,7 +84,7 @@ public class Test2 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     int counter;
   }
   

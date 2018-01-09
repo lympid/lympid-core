@@ -19,18 +19,20 @@ package com.lympid.core.behaviorstatemachines.simple;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.simple.Test13.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Entering a simple state executes its exit action.
  * @author Fabien Renaud 
  */
-public class Test13 extends AbstractStateMachineTest {
+public class Test13 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
@@ -40,7 +42,7 @@ public class Test13 extends AbstractStateMachineTest {
     Context ctx = new Context();
     assertEquals(0, ctx.hash);
     
-    StateMachineExecutor fsm = fsm(ctx, config);
+    StateMachineExecutor<Context> fsm = fsm(ctx, config);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -48,10 +50,10 @@ public class Test13 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -64,7 +66,7 @@ public class Test13 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .exit((c) -> { c.hash = c.hashCode(); })
+          .exit(c -> c.hash = c.hashCode())
           .transition()
             .target(end);
     
@@ -76,7 +78,7 @@ public class Test13 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     int hash;
   }
   

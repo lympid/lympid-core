@@ -20,17 +20,19 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.pseudo.terminate.Test2.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests a terminate pseudo state which is the target of a transition which 
  * source is a simple state.
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test2 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
@@ -38,8 +40,8 @@ public class Test2 extends AbstractStateMachineTest {
       .effect("t0").enter("A")
       .exit("A").effect("t1");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this));
@@ -47,8 +49,8 @@ public class Test2 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -77,7 +79,10 @@ public class Test2 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context extends SequentialContext {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test2.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    PseudoState: #3 kind: INITIAL\n" +

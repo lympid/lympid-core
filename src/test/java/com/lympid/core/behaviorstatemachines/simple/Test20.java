@@ -20,13 +20,15 @@ import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.SimpleStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.listener.StringBufferLogger;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.simple.Test20.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests exceptions in state entry, exit and activity behaviors do not interrupt
@@ -36,13 +38,13 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public class Test20 extends AbstractStateMachineTest {
+public class Test20 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_log() throws InterruptedException {
     final StringBufferLogger log = new StringBufferLogger();
    
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.listeners().add(log);
     fsm.go();
     
@@ -62,7 +64,7 @@ public class Test20 extends AbstractStateMachineTest {
   
   @Test
   public void run_nolog() throws InterruptedException {   
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#6"));
@@ -77,14 +79,14 @@ public class Test20 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
-    SimpleStateBuilder<Object> stateA = new SimpleStateBuilder<>();
+    SimpleStateBuilder<Context> stateA = new SimpleStateBuilder<>();
     
     builder
       .region()
@@ -125,7 +127,10 @@ public class Test20 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context {
+  }
+
   private static final String MAIN_LOG = "tag=\"MACHINE_STARTED\" executor=\"Simple.Test20\" context=\"null\"\n" +
 "tag=\"EVENT_ACCEPTED\" executor=\"Simple.Test20\" event=\"CompletionEvent\" context=\"null\"\n" +
 "tag=\"TRANSITION_STARTED\" executor=\"Simple.Test20\" event=\"CompletionEvent\" transition=\"t0\" source=\"#4\" target=\"#6\" context=\"null\"\n" +

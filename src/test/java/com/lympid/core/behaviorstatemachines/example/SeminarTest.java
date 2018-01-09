@@ -35,6 +35,7 @@ import com.lympid.core.behaviorstatemachines.builder.ShallowHistoryBuilder;
 import com.lympid.core.behaviorstatemachines.builder.SimpleStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.example.SeminarTest.Context;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -47,15 +48,15 @@ import org.junit.Test;
  *
  */
 @Ignore
-public class SeminarTest extends AbstractStateMachineTest {
+public class SeminarTest extends AbstractStateMachineTest<Context> {
 
   @Test
   public void model() {
     Region region = StateMachineTester.assertTopLevelStateMachine(topLevelStateMachine());
     StateMachineTester.assertRegion(region, 6, 9, // TODO: confirm 9 transitions with original diagram
-      new VertexTest("Enrollment", (v) -> testEnrollmentState(v)),
-      new VertexTest("Being Taught", (v) -> testBeingTaughState(v)),
-      new VertexTest("Final Exams", (v) -> testFinalExams(v))
+      new VertexTest("Enrollment", this::testEnrollmentState),
+      new VertexTest("Being Taught", this::testBeingTaughState),
+      new VertexTest("Final Exams", this::testFinalExams)
     );
   }
 
@@ -77,7 +78,7 @@ public class SeminarTest extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>("Seminar");
 
     builder

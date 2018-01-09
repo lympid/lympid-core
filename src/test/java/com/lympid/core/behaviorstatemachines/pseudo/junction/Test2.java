@@ -22,13 +22,15 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.TransitionConstraint;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.TransitionEffectInjector;
 import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.junction.Test2.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the junction pseudo state realizes static conditional branching. 
@@ -38,7 +40,7 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test2 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_t1_t4_t10_t18_t20() {
@@ -52,7 +54,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(0, 1, 2);
     Context expectedCtx = new Context(ctx, 6);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -63,13 +65,13 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t1_t4_t10_t18() {
-    StateMachineExecutor fsm = fsm(new Context(0, 1, 3));
+    StateMachineExecutor<Context> fsm = fsm(new Context(0, 1, 3));
     fsm.go();
   }
   
   @Test(expected = IllStateMachineException.class)
   public void run_t1_t4() {
-    StateMachineExecutor fsm = fsm(new Context(0, 0, 2));
+    StateMachineExecutor<Context> fsm = fsm(new Context(0, 0, 2));
     fsm.go();
   }
   
@@ -85,7 +87,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(3, 1, 2);
     Context expectedCtx = new Context(ctx, 6);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -96,13 +98,13 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t1_t5_t11_t18() {
-    StateMachineExecutor fsm = fsm(new Context(3, 1, 3));
+    StateMachineExecutor<Context> fsm = fsm(new Context(3, 1, 3));
     fsm.go();
   }
   
   @Test(expected = IllStateMachineException.class)
   public void run_t1_t5() {
-    StateMachineExecutor fsm = fsm(new Context(3, 2, 2));
+    StateMachineExecutor<Context> fsm = fsm(new Context(3, 2, 2));
     fsm.go();
   }
   
@@ -118,7 +120,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(4, 1, 2);
     Context expectedCtx = new Context(ctx, 6);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -129,7 +131,7 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t2_t6_t12_t18() {
-    StateMachineExecutor fsm = fsm(new Context(4, 1, 0));
+    StateMachineExecutor<Context> fsm = fsm(new Context(4, 1, 0));
     fsm.go();
   }
   
@@ -144,7 +146,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(1, 1, 2);
     Context expectedCtx = new Context(ctx, 5);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -155,7 +157,7 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t2_t6_t13() {
-    StateMachineExecutor fsm = fsm(new Context(1, 1, 3));
+    StateMachineExecutor<Context> fsm = fsm(new Context(1, 1, 3));
     fsm.go();
   }
   
@@ -170,7 +172,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(4, 2, 2);
     Context expectedCtx = new Context(ctx, 5);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -181,7 +183,7 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t2_t7_t14() {
-    StateMachineExecutor fsm = fsm(new Context(4, 2, 0));
+    StateMachineExecutor<Context> fsm = fsm(new Context(4, 2, 0));
     fsm.go();
   }
   
@@ -197,7 +199,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(1, 2, 2);
     Context expectedCtx = new Context(ctx, 6);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -208,13 +210,13 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t2_t7_t15_t19() {
-    StateMachineExecutor fsm = fsm(new Context(1, 2, 0));
+    StateMachineExecutor<Context> fsm = fsm(new Context(1, 2, 0));
     fsm.go();
   }
   
   @Test(expected = IllStateMachineException.class)
   public void run_t2() {
-    StateMachineExecutor fsm = fsm(new Context(4, 0, 0));
+    StateMachineExecutor<Context> fsm = fsm(new Context(4, 0, 0));
     fsm.go();
   }
   
@@ -230,7 +232,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(2, 1, 2);
     Context expectedCtx = new Context(ctx, 6);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -241,13 +243,13 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t3_t8_t16_t19() {
-    StateMachineExecutor fsm = fsm(new Context(2, 1, -1));
+    StateMachineExecutor<Context> fsm = fsm(new Context(2, 1, -1));
     fsm.go();
   }
   
   @Test(expected = IllStateMachineException.class)
   public void run_t3_t8() {
-    StateMachineExecutor fsm = fsm(new Context(2, 0, 2));
+    StateMachineExecutor<Context> fsm = fsm(new Context(2, 0, 2));
     fsm.go();
   }
   
@@ -263,7 +265,7 @@ public class Test2 extends AbstractStateMachineTest {
     
     Context ctx = new Context(5, 1, 2);
     Context expectedCtx = new Context(ctx, 6);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -274,18 +276,18 @@ public class Test2 extends AbstractStateMachineTest {
   
   @Test(expected = IllStateMachineException.class)
   public void run_t3_t9_t17_t19() {
-    StateMachineExecutor fsm = fsm(new Context(5, 1, -1));
+    StateMachineExecutor<Context> fsm = fsm(new Context(5, 1, -1));
     fsm.go();
   }
   
   @Test(expected = IllStateMachineException.class)
   public void run_t3_t9() {
-    StateMachineExecutor fsm = fsm(new Context(5, 0, 2));
+    StateMachineExecutor<Context> fsm = fsm(new Context(5, 0, 2));
     fsm.go();
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -403,7 +405,7 @@ public class Test2 extends AbstractStateMachineTest {
       .region()
         .junction("jend")
           .transition("t20")
-            .guard((c) -> { return c.e == 2; })
+            .guard(c -> c.e == 2)
             .target("end");
     
     builder
@@ -422,7 +424,7 @@ public class Test2 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     
     private int c;
     private int d;

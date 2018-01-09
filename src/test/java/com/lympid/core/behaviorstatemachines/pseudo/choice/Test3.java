@@ -20,19 +20,21 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.TransitionConstraint;
 import com.lympid.core.behaviorstatemachines.builder.ChoiceBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.pseudo.choice.Test3.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests a cascade of choice pseudo states outgoing the initial pseudo state.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test3 extends AbstractStateMachineTest {
+public class Test3 extends AbstractStateMachineTest<Context> {
     
   @Test
   public void run_A() {
@@ -45,7 +47,7 @@ public class Test3 extends AbstractStateMachineTest {
     Context ctx = new Context();
     ctx.c = 0;
     ctx.d = 0;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -63,7 +65,7 @@ public class Test3 extends AbstractStateMachineTest {
     Context ctx = new Context();
     ctx.c = 0;
     ctx.d = -1;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -81,7 +83,7 @@ public class Test3 extends AbstractStateMachineTest {
     Context ctx = new Context();
     ctx.c = -1;
     ctx.d = -1;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -99,7 +101,7 @@ public class Test3 extends AbstractStateMachineTest {
     Context ctx = new Context();
     ctx.c = -1;
     ctx.d = 1;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -117,7 +119,7 @@ public class Test3 extends AbstractStateMachineTest {
     Context ctx = new Context();
     ctx.c = -1;
     ctx.d = 2;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -125,14 +127,14 @@ public class Test3 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
-    ChoiceBuilder choice1 = new ChoiceBuilder<Context>()
+    ChoiceBuilder<Context> choice1 = new ChoiceBuilder<Context>()
       .transition("t11")
         .guard(PositiveD.class)
         .target("A")
@@ -140,15 +142,15 @@ public class Test3 extends AbstractStateMachineTest {
         .guardElse(PositiveD.class)
         .target("B");
     
-    ChoiceBuilder choice2 = new ChoiceBuilder<Context>()
+    ChoiceBuilder<Context> choice2 = new ChoiceBuilder<Context>()
       .transition("t21")
-        .guard((c) -> { return c.d != 1 && c.d != 2; })
+        .guard(c -> c.d != 1 && c.d != 2)
         .target("C")
       .transition("t22")
-        .guard((c) -> { return c.d == 1; })
+        .guard(c -> c.d == 1)
         .target("D")
       .transition("t23")
-        .guard((c) -> { return c.d == 2; })
+        .guard(c -> c.d == 2)
         .target("E");
     
     builder

@@ -21,11 +21,13 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.simple.Test17.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests multiple outgoing  transitions with different triggers can be executed
@@ -33,18 +35,18 @@ import org.junit.Test;
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test17 extends AbstractStateMachineTest {
+public class Test17 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_NoWhere() {
     SequentialContext expected = new SequentialContext()
       .effect("t0");
     
-    SequentialContext ctx = new SequentialContext()
+    Context ctx = new Context()
       .withoutEntry()
       .withoutExit();
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -53,11 +55,11 @@ public class Test17 extends AbstractStateMachineTest {
   
   @Test
   public void run_T1() {
-    SequentialContext ctx = new SequentialContext()
+    Context ctx = new Context()
       .withoutEntry()
       .withoutExit();
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A")); 
@@ -66,11 +68,11 @@ public class Test17 extends AbstractStateMachineTest {
   
   @Test
   public void run_T2() {
-    SequentialContext ctx = new SequentialContext()
+    Context ctx = new Context()
       .withoutEntry()
       .withoutExit();
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -79,18 +81,18 @@ public class Test17 extends AbstractStateMachineTest {
   
   @Test
   public void run_T3() {
-    SequentialContext ctx = new SequentialContext()
+    Context ctx = new Context()
       .withoutEntry()
       .withoutExit();
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
     weg(fsm);
   }
 
-  private void go(StateMachineExecutor<SequentialContext> fsm) {
+  private void go(StateMachineExecutor<Context> fsm) {
     SequentialContext expected = new SequentialContext()
             .effect("t0")
             .effect("t1");
@@ -103,7 +105,7 @@ public class Test17 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
-  private void va(StateMachineExecutor<SequentialContext> fsm) {
+  private void va(StateMachineExecutor<Context> fsm) {
     SequentialContext expected = new SequentialContext()
             .effect("t0")
             .effect("t2");
@@ -116,7 +118,7 @@ public class Test17 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
 
-  private void weg(StateMachineExecutor<SequentialContext> fsm) {
+  private void weg(StateMachineExecutor<Context> fsm) {
     SequentialContext expected = new SequentialContext()
       .effect("t0")
       .effect("t3");
@@ -131,18 +133,18 @@ public class Test17 extends AbstractStateMachineTest {
   
   @Test
   public void run_T3_pauseAndResume() {
-    SequentialContext ctx = new SequentialContext()
+    Context ctx = new Context()
       .withoutEntry()
       .withoutExit();
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     ActiveStateTree active = new ActiveStateTree(this).branch("A");
     assertSnapshotEquals(fsm, active);
     
     fsm.pause();
-    StateMachineSnapshot snapshot = fsm.snapshot();
+    StateMachineSnapshot<Context> snapshot = fsm.snapshot();
     
     /*
      * All events are denied.
@@ -161,31 +163,31 @@ public class Test17 extends AbstractStateMachineTest {
     resume(snapshot);
   }
   
-  private void resume(final StateMachineExecutor<SequentialContext> fsm) {
+  private void resume(final StateMachineExecutor<Context> fsm) {
     fsm.resume();
     weg(fsm);
   }
   
-  private void resume(final StateMachineSnapshot snapshot) {
+  private void resume(final StateMachineSnapshot<Context> snapshot) {
     resume(fsm(snapshot));
   }
   
   @Test
   public void runAll_pauseAndFork() {
-    SequentialContext ctx = new SequentialContext()
+    Context ctx = new Context()
       .withoutEntry()
       .withoutExit();
     
-    StateMachineExecutor<SequentialContext> fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     ActiveStateTree active = new ActiveStateTree(this).branch("A");
     assertSnapshotEquals(fsm, active);
     
     fsm.pause();
-    StateMachineSnapshot snapshot1 = fsm.snapshot();
-    StateMachineSnapshot snapshot2 = fsm.snapshot();
-    StateMachineSnapshot snapshot3 = fsm.snapshot();
+    StateMachineSnapshot<Context> snapshot1 = fsm.snapshot();
+    StateMachineSnapshot<Context> snapshot2 = fsm.snapshot();
+    StateMachineSnapshot<Context> snapshot3 = fsm.snapshot();
     
     /*
      * All events are denied.
@@ -200,9 +202,9 @@ public class Test17 extends AbstractStateMachineTest {
     /*
      * Resuming
      */
-    StateMachineExecutor fork1 = fsm(snapshot1);    
-    StateMachineExecutor fork2 = fsm(snapshot2);
-    StateMachineExecutor fork3 = fsm(snapshot3);
+    StateMachineExecutor<Context> fork1 = fsm(snapshot1);
+    StateMachineExecutor<Context> fork2 = fsm(snapshot2);
+    StateMachineExecutor<Context> fork3 = fsm(snapshot3);
     
     fork1.resume();
     fork2.resume();
@@ -214,10 +216,10 @@ public class Test17 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -253,6 +255,9 @@ public class Test17 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+  
+  public static final class Context extends SequentialContext {
   }
   
   private static final String STDOUT = "StateMachine: \"" + Test17.class.getSimpleName() + "\"\n" +

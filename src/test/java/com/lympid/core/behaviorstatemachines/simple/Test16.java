@@ -20,19 +20,22 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.listener.StringBufferLogger;
-import java.util.concurrent.CountDownLatch;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.simple.Test16.Context;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * State entries, activity and state exists are performed in the right order.
  * @author Fabien Renaud 
  */
-public class Test16 extends AbstractStateMachineTest {
+public class Test16 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() throws InterruptedException {
@@ -49,7 +52,7 @@ public class Test16 extends AbstractStateMachineTest {
       .exit("bat");
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     addLogger(fsm, log);
     fsm.go();
     
@@ -64,10 +67,10 @@ public class Test16 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -80,15 +83,13 @@ public class Test16 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .entry((c) -> { c.enter("foo"); })
-          .entry((c) -> { c.enter("iak"); })
-          .entry((c) -> { c.enter("dir"); })
-          .entry((c) -> { c.enter("bar"); })
-          .exit((c) -> { c.exit("abs"); })
-          .exit((c) -> { c.exit("bat"); })
-          .activity((c) -> { 
-            c.activity("something");
-          })
+          .entry(c -> c.enter("foo"))
+          .entry(c -> c.enter("iak"))
+          .entry(c -> c.enter("dir"))
+          .entry(c -> c.enter("bar"))
+          .exit(c -> c.exit("abs"))
+          .exit(c -> c.exit("bat"))
+          .activity(c -> c.activity("something"))
           .transition()
             .effect((e, c) -> c.latch.countDown())
             .target(end);
@@ -101,7 +102,7 @@ public class Test16 extends AbstractStateMachineTest {
     return false;
   }
   
-  private void addLogger(StateMachineExecutor fsm, StringBufferLogger log) {    
+  private void addLogger(StateMachineExecutor<Context> fsm, StringBufferLogger log) {
     fsm.listeners().addEventAcceptedListener(log);
     fsm.listeners().addEventDeferredListener(log);
     fsm.listeners().addEventDeniedListener(log);
@@ -164,7 +165,7 @@ public class Test16 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     CountDownLatch latch = new CountDownLatch(1);
   }
   

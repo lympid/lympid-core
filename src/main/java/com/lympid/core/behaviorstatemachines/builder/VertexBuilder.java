@@ -281,7 +281,7 @@ public abstract class VertexBuilder<B extends VertexBuilder, T extends MutableVe
      */
     final State targetState = target instanceof State
             ? (State) target
-            : (State) ((PseudoState) target).state();
+            : ((PseudoState) target).state();
     if (sourceRegionOwner == targetState) {
       throw new UnsupportedOperationException("Local transitions which source and target are the same orthogonal state are not supported yet.");
       // TODO: Should the transition belong to the orthogonal state itself (and not one of its regions)?

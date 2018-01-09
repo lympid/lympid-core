@@ -20,23 +20,25 @@ import com.lympid.core.basicbehaviors.Event;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
+import com.lympid.core.behaviorstatemachines.simple.Test1.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests an initial transition with no effect.
  * @author Fabien Renaud 
  */
-public class Test1 extends AbstractStateMachineTest {
+public class Test1 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_WithAutoStart() {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .autoStart(true);
-    StateMachineExecutor fsm = fsm(config);
+    StateMachineExecutor<Context> fsm = fsm(config);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -47,7 +49,7 @@ public class Test1 extends AbstractStateMachineTest {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .autoStart(false);
     
-    StateMachineExecutor fsm = fsm(config);
+    StateMachineExecutor<Context> fsm = fsm(config);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this));
@@ -57,10 +59,10 @@ public class Test1 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -77,7 +79,10 @@ public class Test1 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    FinalState: \"end\"\n" +

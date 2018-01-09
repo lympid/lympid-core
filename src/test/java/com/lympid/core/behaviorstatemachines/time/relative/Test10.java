@@ -19,23 +19,26 @@ import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
+import com.lympid.core.behaviorstatemachines.time.relative.Test10.Context;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 /**
  * Tests that of two concurrent time events, only one gets activated.
  * 
  * @author Fabien Renaud 
  */
-public class Test10 extends AbstractStateMachineTest {
+public class Test10 extends AbstractStateMachineTest<Context> {
 
   private static final long DELAY = 50;
 
@@ -46,7 +49,7 @@ public class Test10 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     
-    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder<>()
+    StateMachineExecutor<Context> fsm = new SyncStateMachineExecutor.Builder<Context>()
       .setName(executorName())
       .setStateMachine(topLevelStateMachine())
       .setConfiguration(new ExecutorConfiguration().executor(threadPool))
@@ -66,7 +69,7 @@ public class Test10 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -107,7 +110,7 @@ public class Test10 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  private static final class Context {
+  public static final class Context {
 
     CountDownLatch latch = new CountDownLatch(1);
     AtomicInteger counter = new AtomicInteger();

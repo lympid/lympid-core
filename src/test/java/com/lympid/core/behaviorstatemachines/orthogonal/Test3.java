@@ -24,6 +24,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.orthogonal.Test3.Context;
 import org.junit.Test;
 
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
@@ -32,7 +33,7 @@ import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.
  * 
  * @author Fabien Renaud 
  */
-public class Test3 extends AbstractStateMachineTest {
+public class Test3 extends AbstractStateMachineTest<Context> {
    
   private static final int PARALLEL_REGIONS = 2;
   private static final int DEPTH = 2;
@@ -40,8 +41,8 @@ public class Test3 extends AbstractStateMachineTest {
   @Test
   public void run_noevents() {
     SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -59,8 +60,8 @@ public class Test3 extends AbstractStateMachineTest {
   
   private void run_e_f_b_c(final boolean pause) {
     SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -68,7 +69,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part2);
   }
   
-  private void run_e_f_b_c_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_b_c_Part2(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -82,7 +83,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part3);
   }
   
-  private void run_e_f_b_c_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_b_c_Part3(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
@@ -96,7 +97,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part4);
   }
   
-  private void run_e_f_b_c_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_b_c_Part4(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -109,7 +110,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_b_c_Part5);
   }
   
-  private void run_e_f_b_c_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_b_c_Part5(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
@@ -130,8 +131,8 @@ public class Test3 extends AbstractStateMachineTest {
   
   private void run_f_e_b_c(final boolean pause) {
     SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -139,7 +140,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part2);
   }
   
-  private void run_f_e_b_c_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_f_e_b_c_Part2(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -153,7 +154,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part3);
   }
   
-  private void run_f_e_b_c_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_f_e_b_c_Part3(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9")
       .exit("D").effect("t12");
@@ -167,7 +168,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part4);
   }
   
-  private void run_f_e_b_c_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_f_e_b_c_Part4(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -180,7 +181,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_f_e_b_c_Part5);
   }
   
-  private void run_f_e_b_c_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_f_e_b_c_Part5(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
@@ -201,8 +202,8 @@ public class Test3 extends AbstractStateMachineTest {
   
   private void run_e_f_c_b(final boolean pause) {
     SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -210,7 +211,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part2);
   }
   
-  private void run_e_f_c_b_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_c_b_Part2(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -224,7 +225,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part3);
   }
   
-  private void run_e_f_c_b_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_c_b_Part3(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
@@ -238,7 +239,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part4);
   }
   
-  private void run_e_f_c_b_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_c_b_Part4(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -251,7 +252,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_f_c_b_Part5);
   }
   
-  private void run_e_f_c_b_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_f_c_b_Part5(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3")
       .exit("A").effect("t6")
@@ -272,8 +273,8 @@ public class Test3 extends AbstractStateMachineTest {
   
   private void run_e_b_f_c(final boolean pause) {
     SequentialContext expected = new SequentialContext();    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -281,7 +282,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part2);
   }
   
-  private void run_e_b_f_c_Part2(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_b_f_c_Part2(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goE"));
     expected.exit("E").effect("t9");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -295,7 +296,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part3);
   }
   
-  private void run_e_b_f_c_Part3(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_b_f_c_Part3(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goB"));
     expected.exit("B").effect("t3");
     ActiveStateTree tree = new ActiveStateTree(this)
@@ -309,7 +310,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part4);
   }
   
-  private void run_e_b_f_c_Part4(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_b_f_c_Part4(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goF"));
     expected.exit("F").effect("t11")
       .exit("D").effect("t12");
@@ -323,7 +324,7 @@ public class Test3 extends AbstractStateMachineTest {
     pauseAndResume(expected, fsm, pause, this::run_e_b_f_c_Part5);
   }
   
-  private void run_e_b_f_c_Part5(SequentialContext expected, StateMachineExecutor fsm, boolean pause) {
+  private void run_e_b_f_c_Part5(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause) {
     fsm.take(new StringEvent("goC"));
     expected.exit("C").effect("t5")
       .exit("A").effect("t6")
@@ -333,7 +334,7 @@ public class Test3 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, tree);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
+  private void begin(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho")
         .effect("t7").enter("D")
@@ -351,14 +352,14 @@ public class Test3 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, tree);
   }
   
-  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor fsm1, final boolean pause, final FsmRunSequence sequence) {
+  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor<Context> fsm1, final boolean pause, final FsmRunSequence sequence) {
     if (!pause) {
       sequence.run(expected1, fsm1, pause);
       return;
     }
     
     fsm1.pause();
-    StateMachineSnapshot snapshot1 = fsm1.snapshot();
+    StateMachineSnapshot<Context> snapshot1 = fsm1.snapshot();
     SequentialContext expected2 = expected1.copy();
 
     /*
@@ -374,7 +375,7 @@ public class Test3 extends AbstractStateMachineTest {
     /*
      * Second/cloned state machine
      */
-    StateMachineExecutor fsm2 = fsm(snapshot1);
+    StateMachineExecutor<Context> fsm2 = fsm(snapshot1);
     assertSnapshotEquals(snapshot1, fsm2);
 
     fsm2.take(new StringEvent("goB"));
@@ -393,8 +394,8 @@ public class Test3 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -418,8 +419,8 @@ public class Test3 extends AbstractStateMachineTest {
   private int transitionCount = 1;
   private char stateName = 'A';
   
-  private OrthogonalStateBuilder orthogonal(final String name, int depth) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
+  private OrthogonalStateBuilder<Context> orthogonal(final String name, int depth) {
+    OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder<>(name);
     
     for (int i = 0; i < PARALLEL_REGIONS; i++) {
       String sName = Character.toString(stateName);
@@ -461,10 +462,13 @@ public class Test3 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
+
+  public static final class Context extends SequentialContext {
+  }
   
   private interface FsmRunSequence {
     
-    void run(SequentialContext expected, StateMachineExecutor fsm, boolean pause);
+    void run(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause);
     
   }
 

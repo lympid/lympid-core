@@ -28,7 +28,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionKind;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -38,15 +37,18 @@ import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.composite.Test11.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests entry/exit points sequence with multiple exit points.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test11 extends AbstractStateMachineTest {
+public class Test11 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void model() {
@@ -91,7 +93,7 @@ public class Test11 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 2;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#5"));
@@ -109,7 +111,7 @@ public class Test11 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 0;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#5"));
@@ -118,7 +120,7 @@ public class Test11 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -138,7 +140,7 @@ public class Test11 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder compositeA(final String name) {
+  private CompositeStateBuilder<Context> compositeA(final String name) {
     CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
         
     builder

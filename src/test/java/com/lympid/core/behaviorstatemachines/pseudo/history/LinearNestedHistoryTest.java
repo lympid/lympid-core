@@ -30,7 +30,7 @@ import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
  *
  * @author Fabien Renaud 
  */
-public abstract class LinearNestedHistoryTest extends AbstractHistoryTest {
+public abstract class LinearNestedHistoryTest<C> extends AbstractHistoryTest<C> {
 
   private final int depthNodeA;
   private final int depthNodeB;
@@ -66,8 +66,8 @@ public abstract class LinearNestedHistoryTest extends AbstractHistoryTest {
   }  
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<C> topLevelMachineBuilder() {
+    StateMachineBuilder<C> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -96,8 +96,8 @@ public abstract class LinearNestedHistoryTest extends AbstractHistoryTest {
     return builder;
   }
   
-  private CompositeStateBuilder composite(final String name, final int depth) {
-    final CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<C> composite(final String name, final int depth) {
+    final CompositeStateBuilder<C> builder = new CompositeStateBuilder<>(name);
     
     if (depth == depthNodeA) {
       builder

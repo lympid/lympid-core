@@ -21,18 +21,21 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import com.lympid.core.behaviorstatemachines.activity.Test5.Context;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import java.util.concurrent.CountDownLatch;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests activities in sub machine states.
  * 
  * @author Fabien Renaud 
  */
-public class Test5 extends AbstractStateMachineTest {
+public class Test5 extends AbstractStateMachineTest<Context> {
   
   private static final int ACTIVITY_VALUE_SUB1 = -7;
   private static final int ACTIVITY_VALUE_SUB2 = 11;
@@ -41,7 +44,7 @@ public class Test5 extends AbstractStateMachineTest {
   public void run() throws InterruptedException {    
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);    
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     
@@ -74,7 +77,7 @@ public class Test5 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -142,7 +145,7 @@ public class Test5 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     CountDownLatch latch11 = new CountDownLatch(1);
     CountDownLatch latch12 = new CountDownLatch(1);
     CountDownLatch latch21 = new CountDownLatch(1);

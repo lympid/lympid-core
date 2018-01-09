@@ -19,24 +19,26 @@ package com.lympid.core.behaviorstatemachines.simple;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.simple.Test12.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Entering a simple state executes its entry action.
  * @author Fabien Renaud 
  */
-public class Test12 extends AbstractStateMachineTest {
+public class Test12 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
     Context ctx = new Context();
     assertEquals(0, ctx.hash);
     
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -44,10 +46,10 @@ public class Test12 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
     
@@ -60,7 +62,7 @@ public class Test12 extends AbstractStateMachineTest {
     builder
       .region()
         .state("A")
-          .entry((c) -> { c.hash = c.hashCode(); })
+          .entry(c -> c.hash = c.hashCode())
           .transition()
             .target(end);
     
@@ -72,7 +74,7 @@ public class Test12 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     int hash;
   }
   

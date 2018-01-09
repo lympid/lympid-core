@@ -22,13 +22,16 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.pseudo.join.Test2.Context;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests a fork vertex.
@@ -36,7 +39,7 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test2 extends AbstractStateMachineTest<Context> {
     
   private static final long WAIT_TIME = 10000;
   
@@ -44,7 +47,7 @@ public class Test2 extends AbstractStateMachineTest {
   public void run_go1_go2() throws InterruptedException {
     SequentialContext expected = new SequentialContext();    
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -67,7 +70,7 @@ public class Test2 extends AbstractStateMachineTest {
   public void run_go2_go1() throws InterruptedException {
     SequentialContext expected = new SequentialContext();
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -86,7 +89,7 @@ public class Test2 extends AbstractStateMachineTest {
     end(fsm, expected);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
+  private void begin(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho")
       .effect("t4").enter("C")
@@ -94,17 +97,17 @@ public class Test2 extends AbstractStateMachineTest {
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "A").branch("ortho", "C"));
     assertSequentialContextEquals(expected, fsm);
   }
-  private void end(StateMachineExecutor fsm, SequentialContext expected) {
+  private void end(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.effect("t7");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     assertSequentialContextEquals(expected, fsm);
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
 
@@ -132,7 +135,7 @@ public class Test2 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private OrthogonalStateBuilder<Context> orthogonal(final StateMachineBuilder b, final String name) {
+  private OrthogonalStateBuilder<Context> orthogonal(final StateMachineBuilder<Context> b, final String name) {
     OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder<>(name);
     
     builder
@@ -184,7 +187,7 @@ public class Test2 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     CountDownLatch latch = new CountDownLatch(1);
     AtomicBoolean activityStarted = new AtomicBoolean();
   }

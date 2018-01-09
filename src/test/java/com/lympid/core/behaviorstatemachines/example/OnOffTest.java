@@ -23,20 +23,23 @@ import com.lympid.core.behaviorstatemachines.InitialPseudoStateTest;
 import com.lympid.core.behaviorstatemachines.Region;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
 import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import java.util.Random;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.example.OnOffTest.Context;
 import org.junit.Test;
+
+import java.util.Random;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
  * @author Fabien Renaud 
  */
-public class OnOffTest extends AbstractStateMachineTest {
+public class OnOffTest extends AbstractStateMachineTest<Context> {
 
   @Test
   public void model() {
@@ -61,7 +64,7 @@ public class OnOffTest extends AbstractStateMachineTest {
 
   @Test
   public void straightRun_offEnd() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
 
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("OFF"));
@@ -72,7 +75,7 @@ public class OnOffTest extends AbstractStateMachineTest {
 
   @Test
   public void straightRun_offOnOffEnd() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
 
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("OFF"));
@@ -89,7 +92,7 @@ public class OnOffTest extends AbstractStateMachineTest {
 
   @Test
   public void repeatRun_offOnOffEnd() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("OFF"));
@@ -109,7 +112,7 @@ public class OnOffTest extends AbstractStateMachineTest {
 
   @Test
   public void simpleRun() {
-    StateMachineExecutor fsm = fsm();
+    StateMachineExecutor<Context> fsm = fsm();
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("OFF"));
@@ -142,8 +145,8 @@ public class OnOffTest extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder<>("OnOff");
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>("OnOff");
 
     builder
       .region()
@@ -183,6 +186,9 @@ public class OnOffTest extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+
+  public static final class Context {
   }
 
   private static final String STDOUT = "StateMachine: \"OnOff\"\n" +

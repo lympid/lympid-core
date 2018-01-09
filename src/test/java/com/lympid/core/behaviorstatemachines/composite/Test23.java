@@ -20,28 +20,30 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.composite.Test23.Context;
 import com.lympid.core.behaviorstatemachines.impl.DefaultEntryException;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultEntryRule;
+import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
 
 /**
  * Tests the default entry rule of a composite state.
  * 
  * @author Fabien Renaud 
  */
-public class Test23 extends AbstractStateMachineTest {
+public class Test23 extends AbstractStateMachineTest<Context> {
   
   @Test(expected = DefaultEntryException.class)
   public void defaultEntryRule_initial() {
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     
     try {
       fsm.go();
@@ -56,12 +58,12 @@ public class Test23 extends AbstractStateMachineTest {
   @Test
   public void defaultEntryRule_none() {
     SequentialContext expected = new SequentialContext();
-    SequentialContext ctx = new SequentialContext();
+    Context ctx = new Context();
     
     ExecutorConfiguration config = new ExecutorConfiguration()
       .defaultEntryRule(DefaultEntryRule.NONE);
-    
-    StateMachineExecutor fsm = fsm(ctx, config);
+
+    StateMachineExecutor<Context> fsm = fsm(ctx, config);
     fsm.go();
     
     expected.effect("t0").enter("compo");
@@ -80,14 +82,14 @@ public class Test23 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState();
     
-    CompositeStateBuilder compo = new CompositeStateBuilder<>("compo");
+    CompositeStateBuilder<Context> compo = new CompositeStateBuilder<>("compo");
     
     compo
       .region()
@@ -118,7 +120,10 @@ public class Test23 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context extends SequentialContext {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test23.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    FinalState: #3\n" +

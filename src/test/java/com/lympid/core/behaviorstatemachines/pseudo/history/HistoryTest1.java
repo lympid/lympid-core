@@ -27,7 +27,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -35,8 +34,11 @@ import com.lympid.core.behaviorstatemachines.Vertex;
 import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest1.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests a shallow/deep history pseudo state as a default entry of a composite
@@ -44,7 +46,7 @@ import org.junit.Test;
  *
  * @author Fabien Renaud 
  */
-public abstract class HistoryTest1 extends AbstractHistoryTest {
+public abstract class HistoryTest1 extends AbstractHistoryTest<Context> {
   
   private String stdout;
   
@@ -108,8 +110,8 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
       .exit("B").effect("t2").enter("C")
       .exit("C").exit("compo").effect("t3");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -117,21 +119,21 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_end_Part2);
   }
   
-  private void run_a_b_c_end_Part2(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_end_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toB"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_end_Part3);
   }
   
-  private void run_a_b_c_end_Part3(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_end_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toC"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_end_Part4);
   }
   
-  private void run_a_b_c_end_Part4(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_end_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
@@ -156,8 +158,8 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
       .exit("B").effect("t2").enter("C")
       .exit("C").exit("compo").effect("t3");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -165,35 +167,35 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, pause, this::run_a_P_a_b_c_end_Part2);
   }
   
-  private void run_a_P_a_b_c_end_Part2(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_P_a_b_c_end_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("pause"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_P_a_b_c_end_Part3);
   }
   
-  private void run_a_P_a_b_c_end_Part3(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_P_a_b_c_end_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_P_a_b_c_end_Part4);
   }
   
-  private void run_a_P_a_b_c_end_Part4(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_P_a_b_c_end_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toB"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_P_a_b_c_end_Part5);
   }
   
-  private void run_a_P_a_b_c_end_Part5(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_P_a_b_c_end_Part5(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toC"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_P_a_b_c_end_Part6);
   }
   
-  private void run_a_P_a_b_c_end_Part6(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_P_a_b_c_end_Part6(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
@@ -218,8 +220,8 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
       .exit("B").effect("t2").enter("C")
       .exit("C").exit("compo").effect("t3");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -227,35 +229,35 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, pause, this::run_a_b_P_b_c_end_Part2);
   }
   
-  private void run_a_b_P_b_c_end_Part2(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_P_b_c_end_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toB"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_P_b_c_end_Part3);
   }
   
-  private void run_a_b_P_b_c_end_Part3(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_P_b_c_end_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("pause"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_P_b_c_end_Part4);
   }
   
-  private void run_a_b_P_b_c_end_Part4(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_P_b_c_end_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_P_b_c_end_Part5);
   }
   
-  private void run_a_b_P_b_c_end_Part5(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_P_b_c_end_Part5(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toC"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_P_b_c_end_Part6);
   }
   
-  private void run_a_b_P_b_c_end_Part6(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_P_b_c_end_Part6(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
@@ -281,8 +283,8 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
       .exit("P").effect("t5").enter("compo").enter("C")
       .exit("C").exit("compo").effect("t3");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A"));
@@ -290,49 +292,49 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_P_c_end_Part2);
   }
   
-  private void run_a_b_c_P_c_end_Part2(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_P_c_end_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toB"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_P_c_end_Part3);
   }
   
-  private void run_a_b_c_P_c_end_Part3(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_P_c_end_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toC"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_P_c_end_Part4);
   }
   
-  private void run_a_b_c_P_c_end_Part4(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_P_c_end_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("pause"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_P_c_end_Part5);
   }
   
-  private void run_a_b_c_P_c_end_Part5(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_P_c_end_Part5(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("resume"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C"));
     
     pauseAndResume(expected, fsm, pause, this::run_a_b_c_P_c_end_Part6);
   }
   
-  private void run_a_b_c_P_c_end_Part6(final SequentialContext expected, final StateMachineExecutor fsm, final boolean pause) {
+  private void run_a_b_c_P_c_end_Part6(final SequentialContext expected, final StateMachineExecutor<Context> fsm, final boolean pause) {
     fsm.take(new StringEvent("toEnd"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     
     assertSequentialContextEquals(expected, fsm);
   }
   
-  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor fsm1, final boolean pause, final FsmRunSequence sequence) {
+  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor<Context> fsm1, final boolean pause, final FsmRunSequence sequence) {
     if (!pause) {
       sequence.run(expected1, fsm1, pause);
       return;
     }
     
     fsm1.pause();
-    StateMachineSnapshot snapshot1 = fsm1.snapshot();
+    StateMachineSnapshot<Context> snapshot1 = fsm1.snapshot();
     SequentialContext expected2 = expected1.copy();
 
     /*
@@ -348,7 +350,7 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     /*
      * Second/cloned state machine
      */
-    StateMachineExecutor fsm2 = fsm(snapshot1);
+    StateMachineExecutor<Context> fsm2 = fsm(snapshot1);
     assertSnapshotEquals(snapshot1, fsm2);
 
     fsm2.take(new StringEvent("toB"));
@@ -367,8 +369,8 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -397,8 +399,8 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
     return builder;
   }
   
-  private CompositeStateBuilder composite(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> composite(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
   
     history(builder, "history");
     
@@ -430,10 +432,13 @@ public abstract class HistoryTest1 extends AbstractHistoryTest {
   public String stdOut() {
     return stdout;
   }
+
+  public static final class Context extends SequentialContext {
+  }
   
   private interface FsmRunSequence {
     
-    void run(SequentialContext expected, StateMachineExecutor fsm, boolean pause);
+    void run(SequentialContext expected, StateMachineExecutor<Context> fsm, boolean pause);
     
   }
 

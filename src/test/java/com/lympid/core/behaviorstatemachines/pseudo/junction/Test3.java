@@ -20,11 +20,13 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.TransitionConstraint;
 import com.lympid.core.behaviorstatemachines.builder.JunctionBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.pseudo.junction.Test3.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests transition default ordering with a junction pseudo state.
@@ -38,7 +40,7 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public class Test3 extends AbstractStateMachineTest {
+public class Test3 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_t1() {
@@ -47,7 +49,7 @@ public class Test3 extends AbstractStateMachineTest {
       .effect("t1");
     
     Context ctx = new Context(2);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -61,7 +63,7 @@ public class Test3 extends AbstractStateMachineTest {
       .effect("t2");
     
     Context ctx = new Context(4);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -75,7 +77,7 @@ public class Test3 extends AbstractStateMachineTest {
       .effect("t3");
     
     Context ctx = new Context(1);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -83,7 +85,7 @@ public class Test3 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -96,7 +98,7 @@ public class Test3 extends AbstractStateMachineTest {
           .transition("t0")
             .target(new JunctionBuilder<Context>()
               .transition("t1")
-                .guard((c) -> { return c.c == 2; })
+                .guard(c -> c.c == 2)
                 .target("end")
               .transition("t2")
                 .guard(IsMod2.class)
@@ -114,7 +116,7 @@ public class Test3 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     int c;
     
     private Context(final int c) {

@@ -20,19 +20,21 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.ChoiceBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.IllStateMachineException;
+import com.lympid.core.behaviorstatemachines.pseudo.choice.Test1.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests a choice pseudo state outgoing an initial transition.
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test1 extends AbstractStateMachineTest {
+public class Test1 extends AbstractStateMachineTest<Context> {
     
   @Test
   public void run_end1() {
@@ -42,7 +44,7 @@ public class Test1 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 1;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end1"));
@@ -57,7 +59,7 @@ public class Test1 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 2;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end2"));
@@ -72,7 +74,7 @@ public class Test1 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     ctx.c = 3;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     /*
@@ -86,12 +88,12 @@ public class Test1 extends AbstractStateMachineTest {
   public void run_noStart() {
     Context ctx = new Context();
     ctx.c = 4;
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     VertexBuilderReference<Context> end1 = builder
@@ -112,13 +114,13 @@ public class Test1 extends AbstractStateMachineTest {
           .transition("t0")
             .target(new ChoiceBuilder<Context>()
               .transition("t1")
-                .guard((c) -> { return c.c == 1; })
+                .guard(c -> c.c == 1)
                 .target(end1)
               .transition("t2")
-                .guard((c) -> { return c.c == 2; })
+                .guard(c -> c.c == 2)
                 .target(end2)
               .transition("t3")
-                .guard((c) -> { return c.c == 3; })
+                .guard(c -> c.c == 3)
                 .target(end3)
             );
     
@@ -130,7 +132,7 @@ public class Test1 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     int c;
   }
   

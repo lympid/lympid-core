@@ -27,7 +27,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
@@ -36,8 +35,11 @@ import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.composite.Test5.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the final state of a composite state triggers a completion event and
@@ -45,7 +47,7 @@ import org.junit.Test;
  * The state machine auto starts.
  * @author Fabien Renaud 
  */
-public class Test5 extends AbstractStateMachineTest {
+public class Test5 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void model() {
@@ -100,9 +102,9 @@ public class Test5 extends AbstractStateMachineTest {
       .exit("A").effect("t1").enter("B").enter("Ba")
       .exit("Ba").effect("t2").exit("B").effect("t3").enter("C")
       .exit("C").effect("t4");
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor<SequentialContext> fsm = fsm(ctx);
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     ActiveStateTree active = new ActiveStateTree(this).branch("B", "Ba");
@@ -110,7 +112,7 @@ public class Test5 extends AbstractStateMachineTest {
     
     if (pause) {
       fsm.pause();
-      StateMachineSnapshot snapshot = fsm.snapshot();
+      StateMachineSnapshot<Context> snapshot = fsm.snapshot();
 
       fsm.take(new StringEvent("finishIt"));
       assertSnapshotEquals(fsm, active);
@@ -122,16 +124,16 @@ public class Test5 extends AbstractStateMachineTest {
     }
   }
   
-  private void resume(final StateMachineExecutor<SequentialContext> fsm, final SequentialContext expected) {
+  private void resume(final StateMachineExecutor<Context> fsm, final SequentialContext expected) {
     fsm.resume();
     finishIt(fsm, expected);
   }
   
-  private void resume(final StateMachineSnapshot snapshot, final SequentialContext expected) {
+  private void resume(final StateMachineSnapshot<Context> snapshot, final SequentialContext expected) {
     resume(fsm(snapshot), expected);
   }
 
-  private void finishIt(StateMachineExecutor<SequentialContext> fsm, SequentialContext expected) {
+  private void finishIt(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("finishIt"));
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("#3"));
 
@@ -139,10 +141,10 @@ public class Test5 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState();
 
@@ -173,10 +175,10 @@ public class Test5 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private CompositeStateBuilder compositeB(final StateMachineBuilder b, final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> compositeB(final StateMachineBuilder<Context> b, final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
       
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("rend");
         
@@ -193,6 +195,9 @@ public class Test5 extends AbstractStateMachineTest {
   @Override
   public String stdOut() {
     return STDOUT;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 
   private static final String STDOUT = "StateMachine: \"" + Test5.class.getSimpleName() + "\"\n" +

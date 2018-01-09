@@ -21,27 +21,30 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.SyncStateMachineExecutor;
-import java.util.Random;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.terminate.Test1.Context;
 import org.junit.Test;
+
+import java.util.Random;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests an initial transition with no effect targeting a terminate pseudo state.
  * @author Fabien Renaud 
  */
-public class Test1 extends AbstractStateMachineTest {
+public class Test1 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_WithAutoStart() {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .autoStart(true);
     
-    StateMachineExecutor fsm = fsm(config);
+    StateMachineExecutor<Context> fsm = fsm(config);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this));
@@ -55,7 +58,7 @@ public class Test1 extends AbstractStateMachineTest {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .autoStart(true);
     
-    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder<>()
+    StateMachineExecutor<Context> fsm = new SyncStateMachineExecutor.Builder<Context>()
       .setId(executorId)
       .setStateMachine(machine)
       .setConfiguration(config)
@@ -71,8 +74,8 @@ public class Test1 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     VertexBuilderReference term = builder
       .region()
@@ -91,7 +94,10 @@ public class Test1 extends AbstractStateMachineTest {
   public String stdOut() {
     return STDOUT;
   }
-  
+
+  public static final class Context {
+  }
+
   private static final String STDOUT = "StateMachine: \"" + Test1.class.getSimpleName() + "\"\n" +
 "  Region: #2\n" +
 "    PseudoState: #3 kind: TERMINATE\n" +

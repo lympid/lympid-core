@@ -18,13 +18,15 @@ package com.lympid.core.behaviorstatemachines.impl;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.pseudo.history.deep.Test9;
 import com.lympid.core.common.StringTree;
-import java.util.Arrays;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import java.util.Collections;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -34,11 +36,11 @@ public class ResumableStateMachineStateTest {
 
   @Test(expected = VertexNotFoundException.class)
   public void testStateNotFound() {
-    MutableStateMachineSnapshot snapshot = new MutableStateMachineSnapshot();
+    MutableStateMachineSnapshot<Context> snapshot = new MutableStateMachineSnapshot<>();
     StringTree tree = new StringTree("100");
     snapshot.setStateConfiguration(tree);
 
-    StateMachineExecutor fsm = fsm(snapshot);
+    StateMachineExecutor<Context> fsm = fsm(snapshot);
     try {
       fsm.resume();
     } catch (VertexNotFoundException ex) {
@@ -49,10 +51,10 @@ public class ResumableStateMachineStateTest {
 
   @Test(expected = RegionNotFoundException.class)
   public void testHistoryRegionNotFound() {
-    MutableStateMachineSnapshot<?> snapshot = new MutableStateMachineSnapshot();
+    MutableStateMachineSnapshot<Context> snapshot = new MutableStateMachineSnapshot<>();
     snapshot.history().put("1", new StringTree("2"));
 
-    StateMachineExecutor fsm = fsm(snapshot);
+    StateMachineExecutor<Context> fsm = fsm(snapshot);
     try {
       fsm.resume();
     } catch (RegionNotFoundException ex) {
@@ -63,10 +65,10 @@ public class ResumableStateMachineStateTest {
 
   @Test(expected = VertexNotFoundException.class)
   public void testHistoryStateNotFound() {
-    MutableStateMachineSnapshot<?> snapshot = new MutableStateMachineSnapshot();
+    MutableStateMachineSnapshot<Context> snapshot = new MutableStateMachineSnapshot<>();
     snapshot.history().put("2", new StringTree("4"));
 
-    StateMachineExecutor fsm = fsm(snapshot);
+    StateMachineExecutor<Context> fsm = fsm(snapshot);
     try {
       fsm.resume();
     } catch (RegionNotFoundException ex) {
@@ -77,12 +79,12 @@ public class ResumableStateMachineStateTest {
 
   @Test(expected = VertexNotFoundException.class)
   public void testHistoryChildStateNotFound() {
-    MutableStateMachineSnapshot<?> snapshot = new MutableStateMachineSnapshot();
+    MutableStateMachineSnapshot<Context> snapshot = new MutableStateMachineSnapshot<>();
     StringTree history = new StringTree("5");
-    history.setChildren(Arrays.asList(new StringTree("9")));
+    history.setChildren(Collections.singletonList(new StringTree("9")));
     snapshot.history().put("2", history);
 
-    StateMachineExecutor fsm = fsm(snapshot);
+    StateMachineExecutor<Context> fsm = fsm(snapshot);
     try {
       fsm.resume();
     } catch (VertexNotFoundException ex) {
@@ -91,12 +93,12 @@ public class ResumableStateMachineStateTest {
     }
   }
 
-  private StateMachineExecutor fsm(final StateMachineSnapshot snapshot) {
+  private StateMachineExecutor<Context> fsm(final StateMachineSnapshot<Context> snapshot) {
     Test9 test = new Test9();
     test.setUp();
-    
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = new LockStateMachineExecutor.Builder<>()
+
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = new LockStateMachineExecutor.Builder<Context>()
       .setStateMachine(test.topLevelStateMachine())
       .setContext(ctx)
       .setSnapshot(snapshot)
@@ -108,5 +110,8 @@ public class ResumableStateMachineStateTest {
     assertSnapshotEquals(fsm, active);
     
     return fsm;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 }

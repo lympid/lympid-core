@@ -19,12 +19,15 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import com.lympid.core.behaviorstatemachines.activity.Test3.Context;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import java.util.concurrent.CountDownLatch;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests the state activity is being executed and that its completion triggers
@@ -32,7 +35,7 @@ import org.junit.Test;
  * 
  * @author Fabien Renaud 
  */
-public class Test3 extends AbstractStateMachineTest {
+public class Test3 extends AbstractStateMachineTest<Context> {
   
   private static final int EXPECTED_A = 654;
   private static final int EXPECTED_B = -741;
@@ -41,7 +44,7 @@ public class Test3 extends AbstractStateMachineTest {
   @Test
   public void run() throws InterruptedException {
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     ctx.latch.await();
@@ -54,7 +57,7 @@ public class Test3 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
@@ -107,7 +110,7 @@ public class Test3 extends AbstractStateMachineTest {
     return STDOUT;
   }
 
-  private static final class Context {
+  public static final class Context {
     volatile int a, b, c;
     CountDownLatch latch = new CountDownLatch(3);
   }

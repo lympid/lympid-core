@@ -16,7 +16,6 @@
 
 package com.lympid.core.behaviorstatemachines.orthogonal;
 
-import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
@@ -44,8 +43,8 @@ public class Test10  {
     }
   }
   
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(Test10.class.getSimpleName());
+  public StateMachineBuilder<Object> topLevelMachineBuilder() {
+    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(Test10.class.getSimpleName());
 
     builder
       .region()
@@ -64,8 +63,8 @@ public class Test10  {
     return builder;
   }
   
-  private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
+  private OrthogonalStateBuilder<Object> ortho(final String name) {
+    OrthogonalStateBuilder<Object> builder = new OrthogonalStateBuilder<>(name);
     
     builder
       .localTransition("t1")

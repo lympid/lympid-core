@@ -37,8 +37,8 @@ public class Test3 extends HistoryTest3 {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     toA(fsm, expected);
@@ -54,8 +54,8 @@ public class Test3 extends HistoryTest3 {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
         
     toA(fsm, expected);
@@ -75,8 +75,8 @@ public class Test3 extends HistoryTest3 {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
         
     toAB(fsm, expected);
@@ -92,47 +92,47 @@ public class Test3 extends HistoryTest3 {
   }
 
   @Override
-  protected void resumeAa(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeAa(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toAa(fsm, expected);
   }
 
   @Override
-  protected void resumeAb(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeAb(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toAa(fsm, expected);
     toAb(fsm, expected);
   }
 
-  protected void resumeAend(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeAend(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toA(fsm, expected);
   }
 
   @Override
-  protected void resumeBa(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeBa(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toBa(fsm, expected);
   }
 
   @Override
-  protected void resumeBb(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeBb(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toBa(fsm, expected);
     toBb(fsm, expected);
   }
 
-  protected void resumeBend(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeBend(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toB(fsm, expected);
   }
 
   @Override
-  protected void resumeCa(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeCa(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toCa(fsm, expected);
   }
 
   @Override
-  protected void resumeCb(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeCb(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toCa(fsm, expected);
     toCb(fsm, expected);
   }
 
-  protected void resumeCend(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeCend(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     toC(fsm, expected);
   }
 }

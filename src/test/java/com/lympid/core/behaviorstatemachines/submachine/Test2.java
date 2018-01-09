@@ -25,6 +25,7 @@ import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.SubMachineStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.SubStateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.submachine.Test2.Context;
 import org.junit.Test;
 
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
@@ -35,7 +36,7 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Fabien Renaud 
  */
-public class Test2 extends AbstractStateMachineTest {
+public class Test2 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run0() {
@@ -64,7 +65,7 @@ public class Test2 extends AbstractStateMachineTest {
   
   private void run(final int c) {
     Context ctx = new Context(c);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     
     assertFalse(ctx.enteredSubMachine);
     assertFalse(ctx.exitedSubMachine);
@@ -100,7 +101,7 @@ public class Test2 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -125,10 +126,10 @@ public class Test2 extends AbstractStateMachineTest {
       .connectionPoint()
         .exitPoint("exitPoint")
           .transition("t1")
-            .guard((c) -> { return c.c <= 0; })
+            .guard(c -> c.c <= 0)
             .target("sub::entryPoint")
           .transition("t2")
-            .guard((c) -> { return c.c > 0; })
+            .guard(c -> c.c > 0)
             .target("end");
     
     builder
@@ -145,7 +146,7 @@ public class Test2 extends AbstractStateMachineTest {
       .connectionPoint()
         .entryPoint(new EntryPointBuilder<Context>("entryPoint")
           .transition("t2")
-            .effect((c) -> { c.c++; })
+            .effect(c -> c.c++)
             .target("A")
         )
         .exitPoint("exitPoint");
@@ -171,14 +172,11 @@ public class Test2 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     int c;
     boolean enteredSubMachine;
     boolean exitedSubMachine;
-    
-    Context() {
-    }
-    
+
     Context(final int c) {
       this.c = c;
     }

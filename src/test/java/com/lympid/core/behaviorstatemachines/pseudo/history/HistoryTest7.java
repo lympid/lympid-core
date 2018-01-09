@@ -21,14 +21,16 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.PseudoStateKind;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest7.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  *
  * @author Fabien Renaud 
  */
-public abstract class HistoryTest7 extends LinearNestedHistoryTest {
+public abstract class HistoryTest7 extends LinearNestedHistoryTest<Context> {
 
   private String stdout;
   
@@ -41,8 +43,8 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     SequentialContext expected = new SequentialContext()
       .effect("t0");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);    
@@ -55,8 +57,8 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     SequentialContext expected = new SequentialContext()
       .effect("t0");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -70,8 +72,8 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     SequentialContext expected = new SequentialContext()
       .effect("t0");
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);    
@@ -80,27 +82,27 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     fireEnd(fsm, expected);
   }
 
-  protected final void fireEnd(StateMachineExecutor fsm, SequentialContext expected) {
+  protected final void fireEnd(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("end"));
     expected.exit("Aaaab").exit("Aaaa").exit("Aaa").exit("Aa").exit("A").effect("t2");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
     assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void fireGo(StateMachineExecutor fsm, SequentialContext expected) {
+  protected final void fireGo(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("go"));
     expected.exit("Aaaaa").effect("t1").enter("Aaaab");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaab"));
     assertSequentialContextEquals(expected, fsm);
   }
 
-  protected final void begin(StateMachineExecutor fsm, SequentialContext expected) {
+  protected final void begin(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.enter("A").enter("Aa").enter("Aaa").enter("Aaaa").enter("Aaaaa");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A", "Aa", "Aaa", "Aaaa", "Aaaaa"));
     assertSequentialContextEquals(expected, fsm);
   }
   
-  protected final void pauseAndResumeA(final StateMachineExecutor fsm, final SequentialContext expected) {
+  protected final void pauseAndResumeA(final StateMachineExecutor<Context> fsm, final SequentialContext expected) {
     fsm.take(new StringEvent("pause"));
     expected.exit("Aaaaa").exit("Aaaa").exit("Aaa").exit("Aa").exit("A").effect("t3").enter("P");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
@@ -111,7 +113,7 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     resumeA(fsm, expected);
   }
   
-  protected final void pauseAndResumeB(final StateMachineExecutor fsm, final SequentialContext expected) {
+  protected final void pauseAndResumeB(final StateMachineExecutor<Context> fsm, final SequentialContext expected) {
     fsm.take(new StringEvent("pause"));
     expected.exit("Aaaab").exit("Aaaa").exit("Aaa").exit("Aa").exit("A").effect("t3").enter("P");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("P"));
@@ -122,13 +124,16 @@ public abstract class HistoryTest7 extends LinearNestedHistoryTest {
     resumeB(fsm, expected);
   }
   
-  protected abstract void resumeA(final StateMachineExecutor fsm, final SequentialContext expected);
+  protected abstract void resumeA(final StateMachineExecutor<Context> fsm, final SequentialContext expected);
   
-  protected abstract void resumeB(final StateMachineExecutor fsm, final SequentialContext expected);
+  protected abstract void resumeB(final StateMachineExecutor<Context> fsm, final SequentialContext expected);
   
   @Override
   public String stdOut() {
     return stdout;
+  }
+
+  public static final class Context extends SequentialContext {
   }
   
   @Override

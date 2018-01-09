@@ -21,6 +21,7 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.submachine.Test3.Context;
 import org.junit.Test;
 
 import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
@@ -31,14 +32,14 @@ import static org.junit.Assert.assertEquals;
  * 
  * @author Fabien Renaud 
  */
-public class Test3 extends AbstractStateMachineTest {
+public class Test3 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
     int counter = 0;
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);    
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("sub1", "A"));
@@ -73,7 +74,7 @@ public class Test3 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -141,7 +142,7 @@ public class Test3 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context {
+  public static final class Context {
     int c;
   }
   

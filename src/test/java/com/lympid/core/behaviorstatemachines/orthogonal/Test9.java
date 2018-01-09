@@ -16,13 +16,13 @@
 
 package com.lympid.core.behaviorstatemachines.orthogonal;
 
-import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Transitions from an entry point to an exit point of the same orthogonal state
@@ -44,8 +44,8 @@ public class Test9  {
     }
   }
   
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(Test9.class.getSimpleName());
+  public StateMachineBuilder<Object> topLevelMachineBuilder() {
+    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(Test9.class.getSimpleName());
 
     builder
       .region()
@@ -64,8 +64,8 @@ public class Test9  {
     return builder;
   }
   
-  private OrthogonalStateBuilder ortho() {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>();
+  private OrthogonalStateBuilder<Object> ortho() {
+    OrthogonalStateBuilder<Object> builder = new OrthogonalStateBuilder<>();
         
     builder
       .connectionPoint()

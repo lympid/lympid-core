@@ -23,15 +23,17 @@ import com.lympid.core.behaviorstatemachines.BiTransitionBehavior;
 import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.simple.Test21.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests two internal transitions on a simple state.
  * @author Fabien Renaud 
  */
-public class Test21 extends AbstractStateMachineTest {
+public class Test21 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run_go() {
@@ -59,7 +61,7 @@ public class Test21 extends AbstractStateMachineTest {
       .exit("A").effect("t2");
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     /*
@@ -84,7 +86,7 @@ public class Test21 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -122,7 +124,7 @@ public class Test21 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     private boolean lastIsTry;
   }
   
@@ -133,8 +135,6 @@ public class Test21 extends AbstractStateMachineTest {
       return !ctx.lastIsTry;
     }
 
-    
-    
   }
   
   public static final class TryEffect implements BiTransitionBehavior<StringEvent, Context> {

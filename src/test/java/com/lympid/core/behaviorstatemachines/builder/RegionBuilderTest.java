@@ -15,13 +15,13 @@
  */
 package com.lympid.core.behaviorstatemachines.builder;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -30,12 +30,12 @@ import org.junit.Test;
 public class RegionBuilderTest {
 
   private static final String VERTEX_NAME = "A";
-  private static final CompositeStateBuilder FIRST_VERTEX = new CompositeStateBuilder<>(VERTEX_NAME);
+  private static final CompositeStateBuilder<Object> FIRST_VERTEX = new CompositeStateBuilder<>(VERTEX_NAME);
   private RegionBuilder region;
 
   @Before
   public void setUp() {
-    StateMachineBuilder builder = new StateMachineBuilder<>("abc");
+    StateMachineBuilder<Object> builder = new StateMachineBuilder<>("abc");
     builder.region("regionName").state(FIRST_VERTEX);
     region = builder.region("regionName");
   }
@@ -52,9 +52,9 @@ public class RegionBuilderTest {
   
   @Test
   public void vertexRegistry() {
-    SimpleStateBuilder stateBuilder1 = new SimpleStateBuilder<>("B");
-    SimpleStateBuilder stateBuilder2 = region.state(stateBuilder1);
-    SimpleStateBuilder stateBuilder3 = region.state(stateBuilder1);
+    SimpleStateBuilder<Object> stateBuilder1 = new SimpleStateBuilder<>("B");
+    SimpleStateBuilder<Object> stateBuilder2 = region.state(stateBuilder1);
+    SimpleStateBuilder<Object> stateBuilder3 = region.state(stateBuilder1);
     assertTrue(stateBuilder1 == stateBuilder2);
     assertTrue(stateBuilder1 == stateBuilder3);
   }

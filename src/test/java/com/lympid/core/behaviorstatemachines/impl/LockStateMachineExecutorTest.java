@@ -59,7 +59,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   
   @Test(expected = BadConfigurationException.class)
   public void go_noExecutor() {
-    StateMachineExecutor fsm = new LockStateMachineExecutor.Builder<>()
+    StateMachineExecutor<Context> fsm = new LockStateMachineExecutor.Builder<Context>()
       .setStateMachine(topLevelStateMachine())
       .setContext(new Context())
       .build();
@@ -78,7 +78,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
       .build();
   }
   
-  private StateMachineExecutor<Context> fsm(final int id, final StateMachineSnapshot snapshot) {
+  private StateMachineExecutor<Context> fsm(final int id, final StateMachineSnapshot<Context> snapshot) {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .executor(AbstractStateMachineTest.THREAD_POOL);
     
@@ -132,7 +132,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
   }
   
-  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor fsm1, final Context ctx, final boolean pause, final FsmRunSequence sequence) throws InterruptedException {
+  private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor<Context> fsm1, final Context ctx, final boolean pause, final FsmRunSequence sequence) throws InterruptedException {
     if (!pause) {
       sequence.run(expected1, fsm1, ctx, pause);
       return;
@@ -152,7 +152,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     /*
      * Second/cloned state machine
      */
-    StateMachineExecutor fsm2 = fsm(fsm1.getId(), snapshot1);
+    StateMachineExecutor<Context> fsm2 = fsm(fsm1.getId(), snapshot1);
     assertSnapshotEquals(snapshot1, fsm2);
 
     fsm2.take(new StringEvent("go"));
@@ -173,7 +173,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>("noname");
     
     builder
@@ -221,11 +221,11 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   
   private interface FsmRunSequence {
     
-    void run(SequentialContext expected, StateMachineExecutor fsm, Context ctx, boolean pause) throws InterruptedException;
+    void run(SequentialContext expected, StateMachineExecutor<Context> fsm, Context ctx, boolean pause) throws InterruptedException;
     
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     
     final CountDownLatch latch1;
     final CountDownLatch latch2;

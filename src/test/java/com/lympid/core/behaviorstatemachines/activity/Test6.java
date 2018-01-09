@@ -20,20 +20,23 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import com.lympid.core.behaviorstatemachines.activity.Test6.Context;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration.DefaultEntryRule;
-import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests the default entry rule of an empty composite state.
  * 
  * @author Fabien Renaud 
  */
-public class Test6 extends AbstractStateMachineTest {
+public class Test6 extends AbstractStateMachineTest<Context> {
     
   @Test
   public void run() throws InterruptedException {
@@ -43,7 +46,7 @@ public class Test6 extends AbstractStateMachineTest {
       .defaultEntryRule(DefaultEntryRule.NONE);
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx, config);
+    StateMachineExecutor<Context> fsm = fsm(ctx, config);
     fsm.go();
     
     expected.effect("t0").enter("compo");
@@ -56,7 +59,7 @@ public class Test6 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -85,7 +88,7 @@ public class Test6 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     CountDownLatch latch = new CountDownLatch(1);
   }
   

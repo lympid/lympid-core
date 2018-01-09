@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
  */
 public final class StateMachineProcessorTester {
 
-  public static void assertSnapshotHistoryEquals(final StateMachineExecutor fsm, final String region, final ActiveStateTree expected) {
+  public static void assertSnapshotHistoryEquals(final StateMachineExecutor<?> fsm, final String region, final ActiveStateTree expected) {
     StateMachineSnapshot<?> snapshot = fsm.snapshot();
     assertEquals(fsm.stateMachine().getId(), snapshot.stateMachine());
 
@@ -50,17 +50,17 @@ public final class StateMachineProcessorTester {
     assertStateConfigurationEquals(expected, history);
   }
 
-  public static void assertSnapshotEquals(final StateMachineExecutor fsm, final ActiveStateTree expected) {
+  public static void assertSnapshotEquals(final StateMachineExecutor<?> fsm, final ActiveStateTree expected) {
     StateMachineSnapshot<?> snapshot = fsm.snapshot();
     assertEquals(fsm.stateMachine().getId(), snapshot.stateMachine());
     assertSnapshotEquals(snapshot, expected.tree());
   }
 
-  public static void assertSnapshotEquals(final StateMachineSnapshot snapshot, final ActiveStateTree expected) {
+  public static void assertSnapshotEquals(final StateMachineSnapshot<?> snapshot, final ActiveStateTree expected) {
     assertSnapshotEquals(snapshot, expected.tree());
   }
 
-  public static void assertSnapshotEquals(final StateMachineSnapshot expected, final StateMachineExecutor fsm) {
+  public static void assertSnapshotEquals(final StateMachineSnapshot expected, final StateMachineExecutor<?> fsm) {
     assertSnapshotEquals(expected, fsm.snapshot());
   }
 
@@ -109,7 +109,7 @@ public final class StateMachineProcessorTester {
     }
   }
 
-  private static void assertNotStartedOrTerminated(final StateMachineSnapshot snapshot) {
+  private static void assertNotStartedOrTerminated(final StateMachineSnapshot<?> snapshot) {
     assertNull(snapshot.stateConfiguration());
     assertTrue(!snapshot.isStarted() || snapshot.isTerminated());
   }

@@ -20,16 +20,18 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.pseudo.junction.Test6.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Test the full tree of possible path is traversed before picking one enabled.
  * 
  * @author Fabien Renaud 
  */
-public class Test6 extends AbstractStateMachineTest {
+public class Test6 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void t1_t4() {
@@ -67,7 +69,7 @@ public class Test6 extends AbstractStateMachineTest {
       .exit("A").effect("t" + i).effect("t" + j).effect("t" + (j + 6));
     
     Context ctx = new Context(j);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -95,7 +97,7 @@ public class Test6 extends AbstractStateMachineTest {
       .effect("t0").enter("A");
     
     Context ctx = new Context(j);
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("A"));
@@ -103,7 +105,7 @@ public class Test6 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -156,7 +158,7 @@ public class Test6 extends AbstractStateMachineTest {
         .region()
           .junction("j" + j)
             .transition("t1" + i)
-              .guard((c) -> { return c.c == j; })
+              .guard(c -> c.c == j)
               .target("end");
     }
     
@@ -168,7 +170,7 @@ public class Test6 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     int c;
 
     public Context(int c) {

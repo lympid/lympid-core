@@ -40,8 +40,8 @@ public class Test3 extends HistoryTest3 {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
 
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
 
     toA(fsm, expected);
@@ -54,8 +54,8 @@ public class Test3 extends HistoryTest3 {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
 
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
 
     toA(fsm, expected);
@@ -72,8 +72,8 @@ public class Test3 extends HistoryTest3 {
     SequentialContext expected = new SequentialContext()
       .effect("t0").enter("compo");
 
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
 
     toAB(fsm, expected);
@@ -86,42 +86,42 @@ public class Test3 extends HistoryTest3 {
   }
 
   @Override
-  protected void resumeAa(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeAa(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.enter("A").enter("Aa");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Aa"));
     assertSequentialContextEquals(expected, fsm);
   }
 
   @Override
-  protected void resumeAb(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeAb(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.enter("A").enter("Ab");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "A", "Ab"));
     assertSequentialContextEquals(expected, fsm);
   }
 
   @Override
-  protected void resumeBa(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeBa(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.enter("B").enter("Ba");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Ba"));
     assertSequentialContextEquals(expected, fsm);
   }
 
   @Override
-  protected void resumeBb(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeBb(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.enter("B").enter("Bb");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "B", "Bb"));
     assertSequentialContextEquals(expected, fsm);
   }
 
   @Override
-  protected void resumeCa(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeCa(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.enter("C").enter("Ca");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Ca"));
     assertSequentialContextEquals(expected, fsm);
   }
 
   @Override
-  protected void resumeCb(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resumeCb(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected.enter("C").enter("Cb");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo", "C", "Cb"));
     assertSequentialContextEquals(expected, fsm);

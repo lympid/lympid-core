@@ -18,21 +18,22 @@ package com.lympid.core.behaviorstatemachines.submachine;
 import com.lympid.core.basicbehaviors.StringEvent;
 import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
-import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.submachine.Test1.Context;
 import com.lympid.core.common.Copyable;
+import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
  *
  * @author Fabien Renaud 
  */
-public class Test1 extends AbstractStateMachineTest {
+public class Test1 extends AbstractStateMachineTest<Context> {
   
   @Test
   public void run() {
@@ -46,7 +47,7 @@ public class Test1 extends AbstractStateMachineTest {
 
   private void run(final boolean pause) {
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     
     assertFalse(ctx.enteredSubMachine);
     assertFalse(ctx.exitedSubMachine);
@@ -59,7 +60,7 @@ public class Test1 extends AbstractStateMachineTest {
     
     if (pause) {
       fsm.pause();
-      StateMachineSnapshot snapshot = fsm.snapshot();
+      StateMachineSnapshot<Context> snapshot = fsm.snapshot();
       
       fsm.take(new StringEvent("go"));
       assertSnapshotEquals(fsm, active);
@@ -71,16 +72,16 @@ public class Test1 extends AbstractStateMachineTest {
     }
   }
   
-  private void resume(final StateMachineExecutor<SequentialContext> fsm) {
+  private void resume(final StateMachineExecutor<Context> fsm) {
     fsm.resume();
     goEnd(fsm);
   }
   
-  private void resume(final StateMachineSnapshot snapshot) {
+  private void resume(final StateMachineSnapshot<Context> snapshot) {
     resume(fsm(snapshot));
   }
 
-  private void goEnd(StateMachineExecutor fsm) {
+  private void goEnd(StateMachineExecutor<Context> fsm) {
       fsm.take(new StringEvent("go"));
       
       assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -90,7 +91,7 @@ public class Test1 extends AbstractStateMachineTest {
   }
 
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
     StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
@@ -102,8 +103,8 @@ public class Test1 extends AbstractStateMachineTest {
     builder
       .region()
         .state(subStateMachine("sub"))
-          .entry((c) -> { c.enteredSubMachine = true; })
-          .exit((c) -> { c.exitedSubMachine = true; })
+          .entry(c -> c.enteredSubMachine = true)
+          .exit(c -> c.exitedSubMachine = true)
           .transition("t1")
             .target("end");
     
@@ -142,7 +143,7 @@ public class Test1 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context implements Copyable<Context> {
+  public static final class Context implements Copyable<Context> {
     boolean enteredSubMachine;
     boolean exitedSubMachine;
 

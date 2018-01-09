@@ -26,14 +26,14 @@ public class OrthogonalStateBuilderTest {
   
   @Test(expected = StateConstraintException.class)
   public void notEnoughRegions_0() {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>();
+    OrthogonalStateBuilder<?> builder = new OrthogonalStateBuilder<>();
     builder.setId("1123");
     builder.vertex(new VertexSet());
   }
   
   @Test(expected = StateConstraintException.class)
   public void notEnoughRegions_1() {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>();
+    OrthogonalStateBuilder<?> builder = new OrthogonalStateBuilder<>();
     builder.setId("1123");
     
     builder.region("r1");
@@ -43,7 +43,7 @@ public class OrthogonalStateBuilderTest {
   
   @Test
   public void enoughRegions() {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>();
+    OrthogonalStateBuilder<?> builder = new OrthogonalStateBuilder<>();
     builder.setId("1123");
     
     builder.region("r1");

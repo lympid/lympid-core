@@ -36,7 +36,7 @@ public class Test9 extends HistoryTest9 {
   }
   
   @Override
-  protected void resume_B1A_B2A_sub1(StateMachineExecutor fsm, SequentialContext expected) {
+  protected void resume_B1A_B2A_sub1(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     assertSnapshotHistoryEquals(fsm, "#7", new ActiveStateTree(this)
       .branch("B", "B1", "B1A")
       .branch("B", "B2A")

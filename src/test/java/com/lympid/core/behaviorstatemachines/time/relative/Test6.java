@@ -21,20 +21,23 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.VertexBuilderReference;
+import com.lympid.core.behaviorstatemachines.time.relative.Test6.Context;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 
 /**
  * Tests parallel time transitions in an orthogonal state.
  * 
  * @author Fabien Renaud 
  */
-public class Test6 extends AbstractStateMachineTest {
+public class Test6 extends AbstractStateMachineTest<Context> {
   
   private static final long DELAY_REGION_1 = 10;
   private static final long DELAY_REGION_2 = 50;
@@ -44,7 +47,7 @@ public class Test6 extends AbstractStateMachineTest {
     SequentialContext expected = new SequentialContext();
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -58,7 +61,7 @@ public class Test6 extends AbstractStateMachineTest {
     SequentialContext expected = new SequentialContext();
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -73,7 +76,7 @@ public class Test6 extends AbstractStateMachineTest {
     SequentialContext expected = new SequentialContext();
     
     Context ctx = new Context();
-    StateMachineExecutor fsm = fsm(ctx);
+    StateMachineExecutor<Context> fsm = fsm(ctx);
     fsm.go();
     
     begin(fsm, expected);
@@ -82,7 +85,7 @@ public class Test6 extends AbstractStateMachineTest {
     fireEnd(fsm, expected);
   }
 
-  private void begin(StateMachineExecutor fsm, SequentialContext expected) {
+  private void begin(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     expected
       .effect("t0").enter("ortho")
       .effect("t4").enter("C")
@@ -91,21 +94,21 @@ public class Test6 extends AbstractStateMachineTest {
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void waitTimer1(StateMachineExecutor fsm, SequentialContext expected, Context ctx, String otherRegionState) throws InterruptedException {
+  private void waitTimer1(StateMachineExecutor<Context> fsm, SequentialContext expected, Context ctx, String otherRegionState) throws InterruptedException {
     ctx.latch1.await(DELAY_REGION_2, TimeUnit.MILLISECONDS);
     expected.exit("A").effect("t2").enter("B").exit("B").effect("t3");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", "end1").branch("ortho", otherRegionState));
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void waitTimer2(StateMachineExecutor fsm, SequentialContext expected, Context ctx, String otherRegionState) throws InterruptedException {
+  private void waitTimer2(StateMachineExecutor<Context> fsm, SequentialContext expected, Context ctx, String otherRegionState) throws InterruptedException {
     ctx.latch2.await(DELAY_REGION_2, TimeUnit.MILLISECONDS);
     expected.exit("C").effect("t5").enter("D").exit("D").effect("t6");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("ortho", otherRegionState).branch("ortho", "end2"));
     assertSequentialContextEquals(expected, fsm);
   }
 
-  private void fireEnd(StateMachineExecutor fsm, SequentialContext expected) {
+  private void fireEnd(StateMachineExecutor<Context> fsm, SequentialContext expected) {
     fsm.take(new StringEvent("end"));
     expected.exit("ortho").effect("t7");
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("end"));
@@ -113,10 +116,10 @@ public class Test6 extends AbstractStateMachineTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
-    VertexBuilderReference end = builder
+    VertexBuilderReference<Context> end = builder
       .region()
         .finalState("end");
 
@@ -136,7 +139,7 @@ public class Test6 extends AbstractStateMachineTest {
     return builder;
   }
   
-  private OrthogonalStateBuilder orthogonal(final String name) {
+  private OrthogonalStateBuilder<Context> orthogonal(final String name) {
     OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder<>(name);
     
     builder
@@ -195,7 +198,7 @@ public class Test6 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static final class Context extends SequentialContext {
+  public static final class Context extends SequentialContext {
     CountDownLatch latch1 = new CountDownLatch(1);
     CountDownLatch latch2 = new CountDownLatch(1);
   }

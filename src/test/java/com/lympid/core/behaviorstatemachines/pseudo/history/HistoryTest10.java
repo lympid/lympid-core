@@ -27,7 +27,6 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.SimpleStateTest;
 import com.lympid.core.behaviorstatemachines.State;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineTester;
 import com.lympid.core.behaviorstatemachines.TransitionTest;
 import com.lympid.core.behaviorstatemachines.Vertex;
@@ -35,8 +34,11 @@ import com.lympid.core.behaviorstatemachines.VertexTest;
 import com.lympid.core.behaviorstatemachines.builder.CompositeStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.impl.ExecutorConfiguration;
-import static org.junit.Assert.assertEquals;
+import com.lympid.core.behaviorstatemachines.pseudo.history.HistoryTest10.Context;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests a shallow/deep history pseudo state can be entered when a composite
@@ -46,7 +48,7 @@ import org.junit.Test;
  *
  * @author Fabien Renaud 
  */
-public abstract class HistoryTest10 extends AbstractHistoryTest {
+public abstract class HistoryTest10 extends AbstractHistoryTest<Context> {
   
   private String stdout;
   
@@ -106,8 +108,8 @@ public abstract class HistoryTest10 extends AbstractHistoryTest {
     ExecutorConfiguration configuration = new ExecutorConfiguration()
       .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx, configuration);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx, configuration);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
@@ -145,8 +147,8 @@ public abstract class HistoryTest10 extends AbstractHistoryTest {
     ExecutorConfiguration configuration = new ExecutorConfiguration()
       .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx, configuration);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx, configuration);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
@@ -190,8 +192,8 @@ public abstract class HistoryTest10 extends AbstractHistoryTest {
     ExecutorConfiguration configuration = new ExecutorConfiguration()
       .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx, configuration);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx, configuration);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
@@ -235,8 +237,8 @@ public abstract class HistoryTest10 extends AbstractHistoryTest {
     ExecutorConfiguration configuration = new ExecutorConfiguration()
       .defaultEntryRule(ExecutorConfiguration.DefaultEntryRule.NONE);
     
-    SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = fsm(ctx, configuration);
+    Context ctx = new Context();
+    StateMachineExecutor<Context> fsm = fsm(ctx, configuration);
     fsm.go();
     
     assertSnapshotEquals(fsm, new ActiveStateTree(this).branch("compo"));
@@ -266,8 +268,8 @@ public abstract class HistoryTest10 extends AbstractHistoryTest {
   }
   
   @Override
-  public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder<>(name());
+  public StateMachineBuilder<Context> topLevelMachineBuilder() {
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -296,8 +298,8 @@ public abstract class HistoryTest10 extends AbstractHistoryTest {
     return builder;
   }
   
-  private CompositeStateBuilder composite(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
+  private CompositeStateBuilder<Context> composite(final String name) {
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     historyTransitionTo(builder, "A", "history", "t1");
     
@@ -328,6 +330,9 @@ public abstract class HistoryTest10 extends AbstractHistoryTest {
   @Override
   public String stdOut() {
     return stdout;
+  }
+
+  public static final class Context extends SequentialContext {
   }
 
   @Override
