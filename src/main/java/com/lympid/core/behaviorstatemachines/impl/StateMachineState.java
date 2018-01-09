@@ -31,7 +31,7 @@ import java.util.concurrent.locks.Lock;
  */
 public interface StateMachineState {
 
-  public static StateMachineState synchronizedMachineState(StateMachineState inst) {
+  static StateMachineState synchronizedMachineState(StateMachineState inst) {
     return new SynchronizedStateMachineState(inst);
   }
 
@@ -91,7 +91,7 @@ public interface StateMachineState {
 
   void set(StateMachineSnapshot<?> snapshot);
 
-  public static class SynchronizedStateMachineState implements StateMachineState {
+  class SynchronizedStateMachineState implements StateMachineState {
 
     private final StateMachineState inst;
     private final Object mutex = new Object();

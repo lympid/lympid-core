@@ -85,7 +85,7 @@ public enum ExecutorEvent {
 
   private final Class listenerClass;
 
-  private ExecutorEvent(Class listenerClass) {
+  ExecutorEvent(Class listenerClass) {
     this.listenerClass = listenerClass;
   }
 

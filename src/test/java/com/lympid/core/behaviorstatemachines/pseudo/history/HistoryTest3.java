@@ -582,7 +582,7 @@ public abstract class HistoryTest3 extends AbstractHistoryTest {
     return stdout;
   }
   
-  private static interface FsmRunSequence {
+  private interface FsmRunSequence {
     
     void run(SequentialContext expected, StateMachineExecutor fsm);
     

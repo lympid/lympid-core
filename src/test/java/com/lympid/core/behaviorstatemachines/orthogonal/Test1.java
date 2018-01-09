@@ -276,7 +276,7 @@ public class Test1 extends AbstractStateMachineTest {
     return STDOUT;
   }
   
-  private static interface FsmRunSequence {
+  private interface FsmRunSequence {
     
     void run(SequentialContext expected, StateMachineExecutor fsm);
     

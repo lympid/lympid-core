@@ -219,7 +219,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     return builder;
   }
   
-  private static interface FsmRunSequence {
+  private interface FsmRunSequence {
     
     void run(SequentialContext expected, StateMachineExecutor fsm, Context ctx, boolean pause) throws InterruptedException;
     

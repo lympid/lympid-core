@@ -26,16 +26,18 @@ import com.lympid.core.behaviorstatemachines.impl.MutablePseudoState;
 import com.lympid.core.behaviorstatemachines.impl.MutableRegion;
 import com.lympid.core.behaviorstatemachines.impl.MutableState;
 import com.lympid.core.behaviorstatemachines.impl.MutableTransition;
-import static com.lympid.core.common.TestUtils.randomPseudoState;
 import com.lympid.core.common.Trigger;
+import org.junit.Test;
+
 import java.util.Arrays;
+
+import static com.lympid.core.common.TestUtils.randomPseudoState;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import org.junit.Test;
 
 /**
  *
- * @author Fabien Renaud 
+ * @author Fabien Renaud
  */
 public class TransitionConstraintsTest {
 
@@ -357,7 +359,7 @@ public class TransitionConstraintsTest {
   public void constraint5and6_fail() {
     for (PseudoStateKind kind : PseudoStateKind.values()) {
       MutablePseudoState ps = new MutablePseudoState(kind);
-      
+
       MutableTransition t = new MutableTransition(null, ps, null, null, null, TransitionKind.EXTERNAL);
       t.triggers().add(new Trigger(null));
       ps.setOutgoing(Arrays.asList(t));
@@ -385,11 +387,9 @@ public class TransitionConstraintsTest {
       StandardValidator.validate(t);
     }
   }
-  
-  private static final BiTransitionBehavior EMPTY_BEHAVIOR = (BiTransitionBehavior) (Object t, Object u) -> {
+
+  private static final BiTransitionBehavior EMPTY_BEHAVIOR = (t, u) -> {
   };
 
-  private static final BiTransitionConstraint EMPTY_GUARD = (BiTransitionConstraint) (Object t, Object u) -> {
-    return false;
-  };
+  private static final BiTransitionConstraint EMPTY_GUARD = (t, u) -> false;
 }
