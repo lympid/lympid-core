@@ -46,7 +46,7 @@ public class Test10 extends AbstractStateMachineTest {
     
     Context ctx = new Context();
     
-    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder()
+    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder<>()
       .setName(executorName())
       .setStateMachine(topLevelStateMachine())
       .setConfiguration(new ExecutorConfiguration().executor(threadPool))

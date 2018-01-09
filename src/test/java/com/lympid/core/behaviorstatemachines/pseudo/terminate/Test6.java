@@ -58,7 +58,7 @@ public class Test6 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -81,7 +81,7 @@ public class Test6 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compositeA(final String name) {
-    final CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    final CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -91,7 +91,7 @@ public class Test6 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compositeAa(final String name) {
-    final CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    final CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -101,7 +101,7 @@ public class Test6 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compositeAaa(final String name) {
-    final CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    final CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -111,7 +111,7 @@ public class Test6 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compositeAaaa(final String name) {
-    final CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    final CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()

@@ -62,7 +62,7 @@ public class Test11 {
   }
 
   private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder(name);
+    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
 
     builder
       .localTransition("t1")

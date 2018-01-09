@@ -38,7 +38,7 @@ public class ConnectionPointReferenceBuilderTest {
 
   @Before
   public void setUp() {
-    refBuilder = new ConnectionPointReferenceBuilder("foo");
+    refBuilder = new ConnectionPointReferenceBuilder<>("foo");
 
     exitPoint1 = new MutablePseudoState(PseudoStateKind.EXIT_POINT);
     exitPoint2 = new MutablePseudoState(PseudoStateKind.EXIT_POINT);

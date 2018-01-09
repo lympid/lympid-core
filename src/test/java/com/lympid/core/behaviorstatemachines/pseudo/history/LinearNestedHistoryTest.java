@@ -67,7 +67,7 @@ public abstract class LinearNestedHistoryTest extends AbstractHistoryTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -97,7 +97,7 @@ public abstract class LinearNestedHistoryTest extends AbstractHistoryTest {
   }
   
   private CompositeStateBuilder composite(final String name, final int depth) {
-    final CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    final CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     if (depth == depthNodeA) {
       builder

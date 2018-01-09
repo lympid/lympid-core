@@ -139,7 +139,7 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     VertexBuilderReference end = builder
       .region()
@@ -162,7 +162,7 @@ public class Test4 extends AbstractStateMachineTest {
   }
   
   private OrthogonalStateBuilder<Context> orthogonal(final String name) {
-    OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder(name);
+    OrthogonalStateBuilder<Context> builder = new OrthogonalStateBuilder<>(name);
     builder
       .activity((c) -> {
         c.c++;

@@ -105,7 +105,7 @@ public class Test4 extends AbstractStateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
 
     VertexBuilderReference end = builder
       .region()
@@ -137,7 +137,7 @@ public class Test4 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compositeB(final StateMachineBuilder b, final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()

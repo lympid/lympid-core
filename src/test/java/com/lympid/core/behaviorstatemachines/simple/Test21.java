@@ -85,7 +85,7 @@ public class Test21 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()

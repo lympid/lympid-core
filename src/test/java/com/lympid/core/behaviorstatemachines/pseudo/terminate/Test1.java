@@ -55,7 +55,7 @@ public class Test1 extends AbstractStateMachineTest {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .autoStart(true);
     
-    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder()
+    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder<>()
       .setId(executorId)
       .setStateMachine(machine)
       .setConfiguration(config)
@@ -72,7 +72,7 @@ public class Test1 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
     
     VertexBuilderReference term = builder
       .region()

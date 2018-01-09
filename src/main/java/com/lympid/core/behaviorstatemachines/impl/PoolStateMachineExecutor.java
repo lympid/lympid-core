@@ -127,7 +127,7 @@ public class PoolStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
     
     @Override
     public StateMachineExecutor<C> build() {
-      return new PoolStateMachineExecutor<C>(
+      return new PoolStateMachineExecutor<>(
         getId(),
         getName(),
         getMachine(),

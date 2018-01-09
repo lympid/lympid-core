@@ -82,7 +82,7 @@ public class Test9 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
     
     VertexBuilderReference end = builder
       .region()

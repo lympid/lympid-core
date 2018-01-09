@@ -102,7 +102,7 @@ public class Test19 extends AbstractStateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(name());
 
     VertexBuilderReference end = builder
       .region()
@@ -125,7 +125,7 @@ public class Test19 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder<SequentialContext> compositeA(final String name) {
-    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder<>(name);
     
     VertexBuilderReference rend = builder
       .region()

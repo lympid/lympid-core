@@ -180,7 +180,7 @@ public class Test22 extends AbstractStateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -216,7 +216,7 @@ public class Test22 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder composite() {
-    CompositeStateBuilder<Context> builder = new CompositeStateBuilder();
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>();
     
     builder
       .entry((c) -> c.enter("B"))

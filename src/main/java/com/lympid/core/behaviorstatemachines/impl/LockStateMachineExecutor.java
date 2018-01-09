@@ -121,7 +121,7 @@ public class LockStateMachineExecutor<C> extends AbstractStateMachineExecutor<C>
 
     @Override
     public StateMachineExecutor<C> build() {
-      return new LockStateMachineExecutor<C>(
+      return new LockStateMachineExecutor<>(
         getId(),
         getName(),
         getMachine(),

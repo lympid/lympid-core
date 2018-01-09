@@ -219,7 +219,7 @@ public abstract class HistoryTest4 extends AbstractHistoryTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -249,7 +249,7 @@ public abstract class HistoryTest4 extends AbstractHistoryTest {
   }
   
   private CompositeStateBuilder composite(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     historyTransitionTo(builder, "A", "history", "t1");
     

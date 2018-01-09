@@ -98,7 +98,7 @@ public class Test4 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -132,7 +132,7 @@ public class Test4 extends AbstractStateMachineTest {
   }
   
   private StateMachineBuilder<Context> subStateMachine(final String name) {
-    SubStateMachineBuilder<Context> builder = new SubStateMachineBuilder(name);
+    SubStateMachineBuilder<Context> builder = new SubStateMachineBuilder<>(name);
     
     builder
       .connectionPoint()

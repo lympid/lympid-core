@@ -65,7 +65,7 @@ public class Test9  {
   }
   
   private OrthogonalStateBuilder ortho() {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder();
+    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>();
         
     builder
       .connectionPoint()

@@ -101,7 +101,7 @@ public abstract class AbstractStateMachineTest implements StateMachineTest {
       configuration.executor(THREAD_POOL);
     }
     
-    return new SyncStateMachineExecutor.Builder()
+    return new SyncStateMachineExecutor.Builder<>()
       .setName(executorName())
       .setStateMachine(machine)
       .setContext(context)

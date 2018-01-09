@@ -119,7 +119,7 @@ public class Test11 extends AbstractStateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -139,7 +139,7 @@ public class Test11 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compositeA(final String name) {
-    CompositeStateBuilder<Context> builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
         
     builder
       .connectionPoint()

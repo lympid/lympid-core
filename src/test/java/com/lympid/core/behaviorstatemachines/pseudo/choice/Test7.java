@@ -47,7 +47,7 @@ public class Test7 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -57,7 +57,7 @@ public class Test7 extends AbstractStateMachineTest {
     
     builder
       .region()
-        .state(new CompositeStateBuilder("A"))
+        .state(new CompositeStateBuilder<>("A"))
           .region()
             .choice("choice1")
               .transition("t1")
@@ -65,7 +65,7 @@ public class Test7 extends AbstractStateMachineTest {
     
     builder
       .region()
-        .state(new CompositeStateBuilder("B"))
+        .state(new CompositeStateBuilder<>("B"))
           .region()
             .choice("choice2")
               .transition("t2")

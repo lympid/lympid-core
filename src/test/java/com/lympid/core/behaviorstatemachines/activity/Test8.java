@@ -83,7 +83,7 @@ public class Test8 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder composite(final String name) {
-    CompositeStateBuilder<Context> builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()

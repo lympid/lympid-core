@@ -20,10 +20,11 @@ import com.lympid.core.behaviorstatemachines.AbstractStateMachineTest;
 import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Tests chaining the same sub state machine with no entry/exit points.
@@ -73,7 +74,7 @@ public class Test3 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -113,7 +114,7 @@ public class Test3 extends AbstractStateMachineTest {
   }
   
   private StateMachineBuilder<Context> subStateMachine(final String name) {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name);
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name);
     
     builder
       .region()

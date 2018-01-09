@@ -20,8 +20,9 @@ import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.builder.ExitPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.OrthogonalStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Local transitions outgoing an orthogonal state and targeting an exit point of
@@ -64,7 +65,7 @@ public class Test10  {
   }
   
   private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder(name);
+    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
     
     builder
       .localTransition("t1")

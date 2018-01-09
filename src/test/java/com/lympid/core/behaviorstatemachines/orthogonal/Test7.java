@@ -96,7 +96,7 @@ public class Test7 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -118,7 +118,7 @@ public class Test7 extends AbstractStateMachineTest {
   }
   
   private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder(name);
+    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
     
     builder
       .connectionPoint()
@@ -145,7 +145,7 @@ public class Test7 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compo1(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -161,7 +161,7 @@ public class Test7 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder compo2(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .connectionPoint()

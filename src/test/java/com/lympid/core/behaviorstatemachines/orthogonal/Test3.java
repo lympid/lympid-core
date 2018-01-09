@@ -393,7 +393,7 @@ public class Test3 extends AbstractStateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -418,7 +418,7 @@ public class Test3 extends AbstractStateMachineTest {
   private char stateName = 'A';
   
   private OrthogonalStateBuilder orthogonal(final String name, int depth) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder(name);
+    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
     
     for (int i = 0; i < PARALLEL_REGIONS; i++) {
       String sName = Character.toString(stateName);

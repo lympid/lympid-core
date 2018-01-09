@@ -21,14 +21,15 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateBehavior;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.builder.EntryPointBuilder;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
 import com.lympid.core.behaviorstatemachines.builder.SubMachineStateBuilder;
 import com.lympid.core.behaviorstatemachines.builder.SubStateMachineBuilder;
+import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
  *
@@ -100,7 +101,7 @@ public class Test2 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -138,7 +139,7 @@ public class Test2 extends AbstractStateMachineTest {
   }
   
   private StateMachineBuilder<Context> subStateMachine(final String name) {
-    SubStateMachineBuilder<Context> builder = new SubStateMachineBuilder(name);
+    SubStateMachineBuilder<Context> builder = new SubStateMachineBuilder<>(name);
         
     builder
       .connectionPoint()

@@ -96,7 +96,7 @@ public class ResumableStateMachineStateTest {
     test.setUp();
     
     SequentialContext ctx = new SequentialContext();
-    StateMachineExecutor fsm = new LockStateMachineExecutor.Builder()
+    StateMachineExecutor fsm = new LockStateMachineExecutor.Builder<>()
       .setStateMachine(test.topLevelStateMachine())
       .setContext(ctx)
       .setSnapshot(snapshot)

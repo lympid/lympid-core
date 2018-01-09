@@ -76,7 +76,7 @@ public class Test3 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder<Context> compositeA(String name) {
-    CompositeStateBuilder<Context> builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -90,7 +90,7 @@ public class Test3 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder<Context> compositeB(String name) {
-    CompositeStateBuilder<Context> builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()

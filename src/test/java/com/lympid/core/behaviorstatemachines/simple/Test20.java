@@ -84,7 +84,7 @@ public class Test20 extends AbstractStateMachineTest {
       .region()
         .finalState("end");
     
-    SimpleStateBuilder<Object> stateA = new SimpleStateBuilder();
+    SimpleStateBuilder<Object> stateA = new SimpleStateBuilder<>();
     
     builder
       .region()

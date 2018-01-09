@@ -75,7 +75,7 @@ public class Test5 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -115,7 +115,7 @@ public class Test5 extends AbstractStateMachineTest {
   }
   
   private StateMachineBuilder<Context> subStateMachine(final String name) {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name);
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name);
     
     builder
       .region()

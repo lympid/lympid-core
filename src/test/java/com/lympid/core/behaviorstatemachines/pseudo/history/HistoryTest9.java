@@ -420,7 +420,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder builder = new StateMachineBuilder(name());
+    StateMachineBuilder builder = new StateMachineBuilder<>(name());
     
     builder
       .region()
@@ -450,7 +450,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
   }
   
   private CompositeStateBuilder compo(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -478,7 +478,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
   }
 
   private OrthogonalStateBuilder ortho(final String name) {
-    OrthogonalStateBuilder builder = new OrthogonalStateBuilder(name);
+    OrthogonalStateBuilder builder = new OrthogonalStateBuilder<>(name);
     
     /*
      * Region 1
@@ -560,7 +560,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
   }
 
   private CompositeStateBuilder compositeB1(final String name) {
-    CompositeStateBuilder builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()
@@ -573,7 +573,7 @@ public abstract class HistoryTest9 extends AbstractHistoryTest {
   }
   
   private StateMachineBuilder submachine(final String name) {
-    StateMachineBuilder builder = new StateMachineBuilder(name);
+    StateMachineBuilder builder = new StateMachineBuilder<>(name);
     
     builder
       .region()

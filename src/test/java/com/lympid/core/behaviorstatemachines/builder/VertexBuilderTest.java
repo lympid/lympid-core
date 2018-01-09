@@ -29,7 +29,7 @@ public class VertexBuilderTest {
 
   @Test(expected = TransitionCreationException.class)
   public void connect_noSource() {
-    SimpleStateBuilder builder = new SimpleStateBuilder("A");
+    SimpleStateBuilder builder = new SimpleStateBuilder<>("A");
     builder.setId("897234");
     try {
       builder.connect(new VertexSet());
@@ -42,7 +42,7 @@ public class VertexBuilderTest {
 
   @Test(expected = RuntimeException.class)
   public void connect_unregisteredTarget() {
-    SimpleStateBuilder builderA = new SimpleStateBuilder("A");
+    SimpleStateBuilder builderA = new SimpleStateBuilder<>("A");
     builderA.transition().target("B");
 
     MutableState stateA = new MutableState();
@@ -56,7 +56,7 @@ public class VertexBuilderTest {
 
   @Test(expected = RuntimeException.class)
   public void connect_noCommonAncestor() {
-    SimpleStateBuilder builderA = new SimpleStateBuilder("A");
+    SimpleStateBuilder builderA = new SimpleStateBuilder<>("A");
     builderA.transition().target("B");
 
     MutableState stateA = new MutableState();

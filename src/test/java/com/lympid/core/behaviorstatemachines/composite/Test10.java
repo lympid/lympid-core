@@ -113,7 +113,7 @@ public class Test10 extends AbstractStateMachineTest {
   }
   
   private CompositeStateBuilder<SequentialContext> compositeA() {
-    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder();
+    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder<>();
     
     builder
       .entry(EntryABehavior.class)

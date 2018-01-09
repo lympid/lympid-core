@@ -143,7 +143,7 @@ public class OnOffTest extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder("OnOff");
+    StateMachineBuilder<Object> builder = new StateMachineBuilder<>("OnOff");
 
     builder
       .region()

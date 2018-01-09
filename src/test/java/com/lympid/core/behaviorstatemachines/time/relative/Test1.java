@@ -38,7 +38,7 @@ public class Test1 extends AbstractStateMachineTest {
   
   @Test(expected = BadConfigurationException.class)
   public void go_fail() {
-    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder()
+    StateMachineExecutor fsm = new SyncStateMachineExecutor.Builder<>()
       .setName(executorName())
       .setStateMachine(topLevelStateMachine())
       .setContext(new Context())

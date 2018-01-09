@@ -287,7 +287,7 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<SequentialContext> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -324,7 +324,7 @@ public abstract class HistoryTest6 extends AbstractHistoryTest<SequentialContext
   }
   
   private CompositeStateBuilder<SequentialContext> composite(final String name) {
-    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder<SequentialContext> builder = new CompositeStateBuilder<>(name);
   
     history(builder);
     

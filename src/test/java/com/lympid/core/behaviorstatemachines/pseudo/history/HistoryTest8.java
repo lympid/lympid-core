@@ -177,7 +177,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>(name());
 
     builder
       .region()
@@ -207,7 +207,7 @@ public abstract class HistoryTest8 extends AbstractHistoryTest {
   }
   
   private CompositeStateBuilder<Context> composite(final String name) {
-    CompositeStateBuilder<Context> builder = new CompositeStateBuilder(name);
+    CompositeStateBuilder<Context> builder = new CompositeStateBuilder<>(name);
     
     builder
       .region()

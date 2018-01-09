@@ -21,15 +21,17 @@ import com.lympid.core.behaviorstatemachines.ActiveStateTree;
 import com.lympid.core.behaviorstatemachines.SequentialContext;
 import com.lympid.core.behaviorstatemachines.StateMachine;
 import com.lympid.core.behaviorstatemachines.StateMachineExecutor;
-import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
 import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.StateMachineTest;
 import com.lympid.core.behaviorstatemachines.builder.SequentialContextInjector;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
-import static com.lympid.core.common.TestUtils.assertSequentialContextEquals;
+import org.junit.Test;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import org.junit.Test;
+
+import static com.lympid.core.behaviorstatemachines.StateMachineProcessorTester.assertSnapshotEquals;
+import static com.lympid.core.common.TestUtils.assertSequentialContextEquals;
 
 /**
  *
@@ -57,7 +59,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   
   @Test(expected = BadConfigurationException.class)
   public void go_noExecutor() {
-    StateMachineExecutor fsm = new LockStateMachineExecutor.Builder()
+    StateMachineExecutor fsm = new LockStateMachineExecutor.Builder<>()
       .setStateMachine(topLevelStateMachine())
       .setContext(new Context())
       .build();
@@ -68,7 +70,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .executor(AbstractStateMachineTest.THREAD_POOL);
     
-    return new LockStateMachineExecutor.Builder()
+    return new LockStateMachineExecutor.Builder<Context>()
       .setId(id)
       .setStateMachine(topLevelStateMachine())
       .setContext(ctx)
@@ -80,7 +82,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
     ExecutorConfiguration config = new ExecutorConfiguration()
       .executor(AbstractStateMachineTest.THREAD_POOL);
     
-    return new LockStateMachineExecutor.Builder()
+    return new LockStateMachineExecutor.Builder<Context>()
       .setId(id)
       .setStateMachine(topLevelStateMachine())
       .setSnapshot(snapshot)
@@ -172,7 +174,7 @@ public class LockStateMachineExecutorTest implements StateMachineTest {
   
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Context> builder = new StateMachineBuilder("noname");
+    StateMachineBuilder<Context> builder = new StateMachineBuilder<>("noname");
     
     builder
       .region()

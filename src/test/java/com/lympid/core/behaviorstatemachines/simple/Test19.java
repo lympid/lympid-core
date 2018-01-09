@@ -80,7 +80,7 @@ public class Test19 extends AbstractStateMachineTest {
 
   @Override
   public StateMachineBuilder topLevelMachineBuilder() {
-    StateMachineBuilder<Object> builder = new StateMachineBuilder(name());
+    StateMachineBuilder<Object> builder = new StateMachineBuilder<>(name());
     
     builder
       .region()

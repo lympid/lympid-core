@@ -28,7 +28,7 @@ public class StateMachineBuilderTest {
   
   @Test
   public void testInstance() {
-    StateMachineBuilder builder = new StateMachineBuilder("testInstance");
+    StateMachineBuilder builder = new StateMachineBuilder<>("testInstance");
     
     builder
       .region()
