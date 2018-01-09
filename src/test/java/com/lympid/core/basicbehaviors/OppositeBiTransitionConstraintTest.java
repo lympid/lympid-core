@@ -16,9 +16,10 @@
 package com.lympid.core.basicbehaviors;
 
 import com.lympid.core.behaviorstatemachines.BiTransitionConstraint;
+import org.junit.Test;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Test;
 
 /**
  *
@@ -26,8 +27,8 @@ import org.junit.Test;
  */
 public class OppositeBiTransitionConstraintTest {
 
-  private static final BiTransitionConstraint TRUE_CONSTRAINT = (BiTransitionConstraint) (Object t, Object u) -> true;
-  private static final BiTransitionConstraint FALSE_CONSTRAINT = (BiTransitionConstraint) (Object t, Object u) -> false;
+  private static final BiTransitionConstraint TRUE_CONSTRAINT = (t, u) -> true;
+  private static final BiTransitionConstraint FALSE_CONSTRAINT = (t, u) -> false;
 
   @Test
   public void test() {

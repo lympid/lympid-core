@@ -27,12 +27,14 @@ import com.lympid.core.behaviorstatemachines.impl.MutableRegion;
 import com.lympid.core.behaviorstatemachines.impl.MutableState;
 import com.lympid.core.behaviorstatemachines.impl.MutableTransition;
 import com.lympid.core.common.Trigger;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 /**
  *
@@ -675,10 +677,8 @@ public class PseudoStateConstraintsTest {
     StandardValidator.validate(mps);
   }
 
-  private static final BiTransitionBehavior EMPTY_BEHAVIOR = (BiTransitionBehavior) (Object t, Object u) -> {
+  private static final BiTransitionBehavior EMPTY_BEHAVIOR = (t, u) -> {
   };
 
-  private static final BiTransitionConstraint EMPTY_GUARD = (BiTransitionConstraint) (Object t, Object u) -> {
-    return false;
-  };
+  private static final BiTransitionConstraint EMPTY_GUARD = (t, u) -> false;
 }
