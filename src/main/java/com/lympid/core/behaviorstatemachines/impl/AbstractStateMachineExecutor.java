@@ -53,7 +53,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   private final StateMachineState machineState;
   private final C context;
   private final ExecutorConfiguration configuration;
-  private ExecutorListener listeners = ExecutorListener.DEFAULT;
+  private ExecutorListener<C> listeners = ExecutorListener.DEFAULT; // TODO: create default()
   private boolean go;
 
   public AbstractStateMachineExecutor(
@@ -96,7 +96,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   @Override
   public ExecutorListener listeners() {
     if (listeners == ExecutorListener.DEFAULT) {
-      listeners = new ExecutorListener();
+      listeners = new ExecutorListener<>();
     }
     return listeners;
   }
@@ -111,6 +111,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   }
 
   private void internalGo() {
+    System.out.println(id + "_" + name + ": internalGo");
     checkConfiguration();
     
     if (machineState.isPaused()) {
@@ -136,6 +137,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
 
   @Override
   public void resume() {
+    System.out.println(id + "_" + name + ": resume. isPaused=" + machineState.isPaused());
     if (!machineState.isPaused()) {
       throw new IllegalStartException("resume() can only be invoked to resume a paused state machine executor.");
     }
@@ -143,6 +145,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   }
   
   private void internalResume() {
+    System.out.println(id + "_" + name + ": internalResume");
     machineState.resume();
     doAllActivities();
     postFire();
@@ -268,7 +271,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
 
     final Collection<? extends TimeEvent> timeEvents = state.outgoingTimeEvents();
     if (timeEvents.isEmpty()) {
-      status.setEventTimers(Collections.EMPTY_LIST);
+      status.setEventTimers(Collections.emptyList());
       return;
     }
 

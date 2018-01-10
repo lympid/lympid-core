@@ -174,7 +174,7 @@ public final class StateMachineShardPoolExecutor<C> {
   }
 
   void go(final PoolStateMachineExecutor<C> executor) {
-    queue(executor).add(new StateMachineStart<>(executor));
+    queue(executor).add(new StateMachineGo<>(executor));
   }
 
   void take(final PoolStateMachineExecutor<C> executor, final Event event) {
@@ -195,11 +195,11 @@ public final class StateMachineShardPoolExecutor<C> {
   }
 
   void resume(final PoolStateMachineExecutor<C> executor) {
-    queue(executor).add(new StateMachineResumeRunnable(executor));
+    queue(executor).add(new StateMachineResumeRunnable<>(executor));
   }
 
   void pause(final PoolStateMachineExecutor<C> executor) {
-    queue(executor).addFirst(new StateMachinePauseRunnable(executor));
+    queue(executor).addFirst(new StateMachinePauseRunnable<>(executor));
   }
 
   Future<StateMachineSnapshot<C>> snapshot(final PoolStateMachineExecutor<C> executor) {
@@ -208,11 +208,11 @@ public final class StateMachineShardPoolExecutor<C> {
     return runnable;
   }
 
-  private static final class StateMachineStart<C> implements Runnable {
+  private static final class StateMachineGo<C> implements Runnable {
 
     private final PoolStateMachineExecutor<C> executor;
 
-    public StateMachineStart(final PoolStateMachineExecutor<C> executor) {
+    public StateMachineGo(final PoolStateMachineExecutor<C> executor) {
       this.executor = executor;
     }
 

@@ -24,6 +24,7 @@ import com.lympid.core.behaviorstatemachines.StateMachineSnapshot;
 import com.lympid.core.behaviorstatemachines.StateMachineTest;
 import com.lympid.core.behaviorstatemachines.builder.SequentialContextInjector;
 import com.lympid.core.behaviorstatemachines.builder.StateMachineBuilder;
+import com.lympid.core.behaviorstatemachines.listener.StdoutLogger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,16 +51,22 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
 
   @Test
   public void run1() throws InterruptedException {
+    System.out.println("run1");
+    System.out.println("----------");
     run(0, false);
   }
 
   @Test
   public void run1_pause() throws InterruptedException {
+    System.out.println("run1_pause");
+    System.out.println("----------");
     run(0, true);
   }
 
   @Test
   public void run2() throws InterruptedException {
+    System.out.println("run2");
+    System.out.println("----------");
     run(17, false);
   }
   
@@ -86,12 +93,14 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
     Context ctx = new Context();
     
     StateMachineExecutor<Context> fsm = fsm(id, ctx);
+    fsm.listeners().add(new StdoutLogger());
     fsm.go();
     
     pauseAndResume(expected, fsm, ctx, pause, this::run_Part2);
   }
   
   private void run_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
+    System.out.println("run_Part2");
     ctx.latchA.await();
     expected.effect("t0").enter("A");
     assertSequentialContextEquals(expected, fsm);
@@ -100,6 +109,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   }
   
   private void run_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
+    System.out.println("run_Part3");
     ctx.latchB.await();
     expected.exit("A").effect("t1").enter("B");
     assertSequentialContextEquals(expected, fsm);
@@ -108,6 +118,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   }
   
   private void run_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
+    System.out.println("run_Part4");
     ctx.latchC.await();
     expected.activity("something").exit("B").effect("t2").enter("C");
     assertSequentialContextEquals(expected, fsm);
@@ -116,6 +127,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   }
   
   private void run_Part5(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
+    System.out.println("run_Part5");
     fsm.take(new StringEvent("go"));
     ctx.latchEnd.await();
     Thread.sleep(2);
@@ -125,6 +137,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor<Context> fsm1,  final Context ctx, final boolean pause, final FsmRunSequence sequence) throws InterruptedException {
     if (!pause) {
+      System.out.println("> fsm1.resume (1)");
       sequence.run(expected1, fsm1, ctx, pause);
       return;
     }
@@ -137,6 +150,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
      * First state machine
      */
     fsm1.take(new StringEvent("go"));
+    System.out.println("> fsm1.resume (2)");
     fsm1.resume();
     sequence.run(expected1, fsm1, ctx, pause);
 
@@ -149,6 +163,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
     fsm2.take(new StringEvent("go"));
     assertSnapshotEquals(snapshot1, fsm2);
 
+    System.out.println("> fsm2.resume");
     fsm2.resume();
     assertSnapshotEquals(snapshot1, fsm2);
 
