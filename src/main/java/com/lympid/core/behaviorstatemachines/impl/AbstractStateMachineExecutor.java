@@ -111,7 +111,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   }
 
   private void internalGo() {
-    System.out.println(id + "_" + name + ": internalGo");
+    System.out.println(name + ": internalGo");
     checkConfiguration();
     
     if (machineState.isPaused()) {
@@ -132,12 +132,13 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
 
   @Override
   public void pause() {
+    System.out.println(name + ": pause");
     machineState.pause();
   }
 
   @Override
   public void resume() {
-    System.out.println(id + "_" + name + ": resume. isPaused=" + machineState.isPaused());
+    System.out.println(name + ": resume. isPaused=" + machineState.isPaused());
     if (!machineState.isPaused()) {
       throw new IllegalStartException("resume() can only be invoked to resume a paused state machine executor.");
     }
@@ -145,7 +146,7 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   }
   
   private void internalResume() {
-    System.out.println(id + "_" + name + ": internalResume");
+    System.out.println(name + ": internalResume");
     machineState.resume();
     doAllActivities();
     postFire();

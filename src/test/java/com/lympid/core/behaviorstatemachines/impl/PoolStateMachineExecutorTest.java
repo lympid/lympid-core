@@ -137,20 +137,22 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   private void pauseAndResume(final SequentialContext expected1, final StateMachineExecutor<Context> fsm1,  final Context ctx, final boolean pause, final FsmRunSequence sequence) throws InterruptedException {
     if (!pause) {
-      System.out.println("> fsm1.resume (1)");
+      System.out.println("> fsm1(" + fsm1.getId() + ".resume (1)");
       sequence.run(expected1, fsm1, ctx, pause);
       return;
     }
     
     fsm1.pause();
     StateMachineSnapshot<Context> snapshot1 = fsm1.snapshot();
+    System.out.println("snapshot1: ");
+    System.out.println(snapshot1.stateConfiguration().toString());
     SequentialContext expected2 = expected1.copy();
     
     /*
      * First state machine
      */
     fsm1.take(new StringEvent("go"));
-    System.out.println("> fsm1.resume (2)");
+    System.out.println("> fsm1(" + fsm1.getId() + ".resume (2)");
     fsm1.resume();
     sequence.run(expected1, fsm1, ctx, pause);
 
@@ -163,7 +165,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
     fsm2.take(new StringEvent("go"));
     assertSnapshotEquals(snapshot1, fsm2);
 
-    System.out.println("> fsm2.resume");
+    System.out.println("> fsm2(" + fsm2.getId() + ".resume");
     fsm2.resume();
     assertSnapshotEquals(snapshot1, fsm2);
 
