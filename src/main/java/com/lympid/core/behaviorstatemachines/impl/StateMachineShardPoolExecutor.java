@@ -208,16 +208,21 @@ public final class StateMachineShardPoolExecutor<C> {
     return runnable;
   }
 
+  private static final AtomicInteger COUNTER = new AtomicInteger();
+
   private static final class StateMachineGo<C> implements Runnable {
 
+    private final int id = COUNTER.incrementAndGet();
     private final PoolStateMachineExecutor<C> executor;
 
     public StateMachineGo(final PoolStateMachineExecutor<C> executor) {
       this.executor = executor;
+      System.out.println(getClass().getSimpleName() + "#" + id + " scheduled");
     }
 
     @Override
     public void run() {
+      System.out.println(getClass().getSimpleName() + "#" + id + " running");
       executor.doGo();
     }
 
@@ -225,16 +230,20 @@ public final class StateMachineShardPoolExecutor<C> {
 
   private static final class StateMachineEvent<C> implements Runnable {
 
+    private final int id = COUNTER.incrementAndGet();
     private final PoolStateMachineExecutor<C> executor;
     private final Event event;
 
     public StateMachineEvent(final PoolStateMachineExecutor<C> executor, final Event event) {
       this.executor = executor;
       this.event = event;
+      System.out.println(getClass().getSimpleName() + "#" + id + " scheduled");
     }
 
     @Override
     public void run() {
+
+      System.out.println(getClass().getSimpleName() + "#" + id + " running");
       executor.doTake(event);
     }
 
@@ -242,6 +251,7 @@ public final class StateMachineShardPoolExecutor<C> {
 
   private static final class StateMachineStateEvent<C> implements Runnable {
 
+    private final int id = COUNTER.incrementAndGet();
     private final PoolStateMachineExecutor<C> executor;
     private final Event event;
     private final State state;
@@ -250,10 +260,13 @@ public final class StateMachineShardPoolExecutor<C> {
       this.executor = executor;
       this.event = event;
       this.state = state;
+      System.out.println(getClass().getSimpleName() + "#" + id + " scheduled");
     }
 
     @Override
     public void run() {
+
+      System.out.println(getClass().getSimpleName() + "#" + id + " running");
       executor.doTake(event, state);
     }
 
@@ -261,10 +274,12 @@ public final class StateMachineShardPoolExecutor<C> {
 
   private static final class StateMachineCompletionEvent<C> implements Runnable {
 
+    private final int id = COUNTER.incrementAndGet();
     private final PoolStateMachineExecutor<C> executor;
 
     public StateMachineCompletionEvent(final PoolStateMachineExecutor<C> executor) {
       this.executor = executor;
+      System.out.println(getClass().getSimpleName() + "#" + id + " scheduled");
     }
 
     @Override
@@ -276,14 +291,18 @@ public final class StateMachineShardPoolExecutor<C> {
 
   private static final class StateMachinePauseRunnable<C> implements Runnable {
 
+    private final int id = COUNTER.incrementAndGet();
     private final PoolStateMachineExecutor<C> executor;
 
     public StateMachinePauseRunnable(final PoolStateMachineExecutor<C> executor) {
       this.executor = executor;
+      System.out.println(getClass().getSimpleName() + "#" + id + " scheduled");
     }
 
     @Override
     public void run() {
+
+      System.out.println(getClass().getSimpleName() + "#" + id + " running");
       executor.doPause();
     }
 
@@ -291,14 +310,18 @@ public final class StateMachineShardPoolExecutor<C> {
 
   private static final class StateMachineResumeRunnable<C> implements Runnable {
 
+    private final int id = COUNTER.incrementAndGet();
     private final PoolStateMachineExecutor<C> executor;
 
     public StateMachineResumeRunnable(final PoolStateMachineExecutor<C> executor) {
       this.executor = executor;
+      System.out.println(getClass().getSimpleName() + "#" + id + " scheduled");
     }
 
     @Override
     public void run() {
+
+      System.out.println(getClass().getSimpleName() + "#" + id + " running");
       executor.doResume();
     }
 
