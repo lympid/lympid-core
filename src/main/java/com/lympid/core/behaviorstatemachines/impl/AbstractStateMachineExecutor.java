@@ -559,12 +559,17 @@ public abstract class AbstractStateMachineExecutor<C> implements StateMachineExe
   }
 
   private void doActivity(final State state) {
+    System.out.println("doActivity: state=" + state.getName());
     try {
       machineState.activityLock(state).lock();
+      System.out.println("doActivity: state=" + state.getName() + " LOCKED");
       Future<?> f = configuration.executor().submit(new RunnableActivity(this, state));
+      System.out.println("doActivity: state=" + state.getName() + " SCHEDULED");
       machineState.setActivity(state, f);
     } finally {
+      System.out.println("doActivity: state=" + state.getName() + " UNLOCKING");
       machineState.activityLock(state).unlock();
+      System.out.println("doActivity: state=" + state.getName() + " UNLOCKED");
     }
   }
 

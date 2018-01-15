@@ -199,12 +199,12 @@ public final class StateMachineShardPoolExecutor<C> {
   }
 
   void pause(final PoolStateMachineExecutor<C> executor) {
-    queue(executor).add(new StateMachinePauseRunnable<>(executor));
+    queue(executor).addFirst(new StateMachinePauseRunnable<>(executor));
   }
 
   Future<StateMachineSnapshot<C>> snapshot(final PoolStateMachineExecutor<C> executor) {
     StateMachineSnapshotRunnable<C> runnable = new StateMachineSnapshotRunnable<>(executor);
-    queue(executor).add(runnable);
+    queue(executor).addFirst(runnable);
     return runnable;
   }
 

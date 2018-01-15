@@ -101,7 +101,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   private void run_Part2(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
     System.out.println("run_Part2");
-    ctx.latchA.await();
+    ctx.latchA.await(5, TimeUnit.SECONDS);
     expected.effect("t0").enter("A");
     assertSequentialContextEquals(expected, fsm);
     
@@ -110,7 +110,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   private void run_Part3(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
     System.out.println("run_Part3");
-    ctx.latchB.await();
+    ctx.latchB.await(5, TimeUnit.SECONDS);
     expected.exit("A").effect("t1").enter("B");
     assertSequentialContextEquals(expected, fsm);
     
@@ -119,7 +119,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   
   private void run_Part4(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
     System.out.println("run_Part4");
-    ctx.latchC.await();
+    ctx.latchC.await(5, TimeUnit.SECONDS);
     expected.activity("something").exit("B").effect("t2").enter("C");
     assertSequentialContextEquals(expected, fsm);
     
@@ -129,7 +129,7 @@ public class PoolStateMachineExecutorTest implements StateMachineTest {
   private void run_Part5(final SequentialContext expected, final StateMachineExecutor<Context> fsm,  final Context ctx, final boolean pause) throws InterruptedException {
     System.out.println("run_Part5");
     fsm.take(new StringEvent("go"));
-    ctx.latchEnd.await();
+    ctx.latchEnd.await(5, TimeUnit.SECONDS);
     Thread.sleep(2);
     expected.exit("C").effect("t3");
     assertSequentialContextEquals(expected, fsm);
